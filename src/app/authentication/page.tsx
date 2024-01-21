@@ -12,7 +12,10 @@ export const metadata: Metadata = {
 };
 
 const AuthenticationPage = async () => {
-	const providers = await getProviders();
+	const providers = await getProviders().catch((err) => {
+		console.log(err);
+		return null;
+	});
 	return (
 		<div className="container h-screen relative flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
 			<Link

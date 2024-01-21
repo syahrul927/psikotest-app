@@ -41,14 +41,14 @@ export default function RootLayout({
 				<div className="absolute w-full h-screen -z-10 backdrop-blur-2xl bg-background/90" /> */}
 				<NextAuthProvider>
 					<TRPCReactProvider cookies={cookies().toString()}>
-						<ThemeProvider
+						{/* <ThemeProvider
 							attribute="class"
 							defaultTheme="light"
 							enableSystem
 							disableTransitionOnChange
-						>
-							<div className="flex flex-col">{children}</div>
-						</ThemeProvider>
+						> */}
+						<div className="flex flex-col">{children}</div>
+						{/* </ThemeProvider> */}
 					</TRPCReactProvider>
 				</NextAuthProvider>
 				<TailwindIndicator />
