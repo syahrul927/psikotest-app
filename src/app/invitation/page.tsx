@@ -5,17 +5,34 @@ import { cn, makeid } from "~/lib/utils";
 import { Card, CardContent } from "../_components/ui/card";
 import { Label } from "../_components/ui/label";
 import Numpad from "./components/numpad";
+import Spinner from "../_components/ui/spinner";
 
+const generate = () => {
+	return Math.floor(Math.random() * 9) + 1;
+};
 const InvitationPage = () => {
-	const arr = [3, 5, 2, 2, 3, 5, 6, 2, 1, 7, 4, 9, 3, 1];
+	const [arr, setArr] = useState<number[]>([]);
 	const [answer, setAnswer] = useState<number | undefined>();
 	const [transition, setTransition] = useState(false);
 	const [start, setStart] = useState(0);
 	const [end, setEnd] = useState(2);
 
+	// countdown second
 	const [time, setTime] = useState(300);
 
 	useEffect(() => {
+		const ars = Array.from({ length: 10 }).map(() => generate());
+		setArr(ars);
+		setTimeout(() => {
+			setDisplay(
+				ars
+					.slice(start, end)
+					.map((value, index) => (
+						<Item index={index} key={makeid(5)} str={`${value}`} />
+					)),
+			);
+		}, 3000);
+
 		const timer = setInterval(() => {
 			setTime((time) => {
 				if (time === 0) {
@@ -26,13 +43,7 @@ const InvitationPage = () => {
 		}, 1000);
 	}, []);
 	// const [active, setActive] = useState(false);
-	const [display, setDisplay] = useState<ReactNode[]>(
-		arr
-			.slice(start, end)
-			.map((value, index) => (
-				<Item index={index} key={makeid(5)} str={`${value}`} />
-			)),
-	);
+	const [display, setDisplay] = useState<ReactNode[]>([]);
 	const onClick = (number: number) => {
 		setAnswer(number);
 		doTransition();
@@ -67,35 +78,41 @@ const InvitationPage = () => {
 				</div>
 			</div>
 			<div className="w-full h-full flex justify-center items-center">
-				<div className="relative max-w-sm space-y-6 h-full flex flex-col justify-center">
-					{display.map((item) => item)}
-					<div className="absolute -translate-y-3 self-center w-8 h-8 flex justify-center items-center">
-						<PlusIcon size={32} />
-					</div>
-				</div>
-				<div className="flex text-center justify-center gap-3 relative">
-					<div className="flex justify-center items-center">
-						<EqualIcon size={24} />
-					</div>
-					<Label
-						className={cn(
-							"text-5xl font-semibold transition-all text-muted-foreground",
-							transition ? "opacity-0" : "opacity-100",
-						)}
-					>
-						?
-					</Label>
-					<Label
-						className={cn(
-							"text-5xl font-semibold transition-all absolute translate-x-4",
-							transition
-								? " translate-y-0 opacity-100"
-								: "-translate-y-16 opacity-15",
-						)}
-					>
-						{answer ?? ""}
-					</Label>
-				</div>
+				{display.length ? (
+					<>
+						<div className="relative max-w-sm space-y-6 h-full flex flex-col justify-center">
+							{display.map((item) => item)}
+							<div className="absolute -translate-y-3 self-center w-8 h-8 flex justify-center items-center">
+								<PlusIcon size={32} />
+							</div>
+						</div>
+						<div className="flex text-center justify-center gap-3 relative">
+							<div className="flex justify-center items-center">
+								<EqualIcon size={24} />
+							</div>
+							<Label
+								className={cn(
+									"text-5xl font-semibold transition-all text-muted-foreground",
+									transition ? "opacity-0" : "opacity-100",
+								)}
+							>
+								?
+							</Label>
+							<Label
+								className={cn(
+									"text-5xl font-semibold transition-all absolute translate-x-4",
+									transition
+										? " translate-y-0 opacity-100"
+										: "-translate-y-16 opacity-15",
+								)}
+							>
+								{answer ?? ""}
+							</Label>
+						</div>
+					</>
+				) : (
+					<Spinner />
+				)}
 			</div>
 			<Numpad onClick={onClick} />
 		</div>
