@@ -21,7 +21,7 @@ const InvitationPage = () => {
 	const [time, setTime] = useState(300);
 
 	useEffect(() => {
-		const ars = Array.from({ length: 10 }).map(() => generate());
+		const ars = Array.from({ length: 50 }).map(() => generate());
 		setArr(ars);
 		setTimeout(() => {
 			setDisplay(
