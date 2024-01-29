@@ -1,66 +1,63 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const arr = [3, 5, 2, 2, 3, 5, 6, 2, 1, 7, 4, 9, 3, 1];
+interface MatrixItem {
+	x: number;
+	y: number;
+	value: number;
+}
 
-const SamplePage = () => {
-	const [start, setStart] = React.useState(0);
-	const [end, setEnd] = React.useState(3);
-	const [active, setActive] = React.useState(arr.slice(start, end));
-	const [transition, setTransition] = React.useState(false);
+interface MatrixDisplayProps {
+	matrix: MatrixItem[];
+}
 
-	const onNext = () => {
-		const st = end === 3 ? start : start + 1;
-		const ed = end + 1;
+const MatrixDisplay: React.FC<MatrixDisplayProps> = ({ matrix }) => {
+	// State untuk menyimpan dua nilai terkiri dan dua nilai terbawah
+	const [bottomLeftValues, setBottomLeftValues] = useState<number[]>([]);
 
-		// Aktifkan animasi
-		setTransition(true);
+	// Fungsi untuk mendapatkan dua nilai terbawah dari kiri
+	const getBottomLeftValues = () => {
+		const bottomLeftValues = matrix.slice(0, 2).map((item) => item.value);
 
-		// Atur timeout untuk menonaktifkan animasi setelah selesai transisi
-		setTimeout(() => {
-			setTransition(false);
-		}, 500);
-
-		setActive(arr.slice(st, ed));
-		setStart(st);
-		setEnd(ed);
+		setBottomLeftValues(bottomLeftValues);
 	};
 
+	useEffect(() => {
+		getBottomLeftValues();
+	}, [matrix]);
+
 	return (
-		<div className="w-full h-screen bg-purple-200 flex items-center justify-center flex-col gap-4">
-			<div
-				className={`max-w-lg w-full text-4xl text-center rounded-lg flex flex-col items-center min-h-[60dvh] bg-white border-2 border-black py-20 px-2 transform ${
-					transition
-						? "transition-transform duration-500 ease-in-out"
-						: ""
-				}`}
-			>
-				<div
-					className={`opacity-25 ${
-						active.length < 4 ? "hidden" : ""
-					}`}
-				>
-					{active[0]}
-				</div>
-				<div className="font-bold text-6xl my-6">
-					{active.length < 4 ? active[0] : active[1]}
-				</div>
-				<div className="">+</div>
-				<div className="font-bold text-6xl my-6">
-					{active.length < 4 ? active[1] : active[2]}
-				</div>
-				<div className={`opacity-25`}>
-					{active.length < 4 ? active[2] : active[3]}
-				</div>
-			</div>
-			<button
-				onClick={onNext}
-				className="px-8 my-8 py-2 focus:bg-black/20 rounded-lg border-2 bg-purple-600 text-white border-black capitalize"
-			>
-				Next
-			</button>
+		<div>
+			<h2>Dua Nilai Terbawah dari Kiri:</h2>
+			<ul>
+				{bottomLeftValues.map((value, index) => (
+					<li key={index}>{value}</li>
+				))}
+			</ul>
 		</div>
 	);
 };
 
-export default SamplePage;
+const App: React.FC = () => {
+	// Matriks objek
+	const matrixArray: MatrixItem[] = [
+		{ x: 1, y: 1, value: 1 },
+		{ x: 1, y: 2, value: 2 },
+		{ x: 1, y: 3, value: 3 },
+		{ x: 2, y: 1, value: 4 },
+		{ x: 2, y: 2, value: 5 },
+		{ x: 2, y: 3, value: 6 },
+		{ x: 3, y: 1, value: 7 },
+		{ x: 3, y: 2, value: 8 },
+		{ x: 3, y: 3, value: 9 },
+	];
+
+	return (
+		<div>
+			<h1>Matrix Display</h1>
+			<MatrixDisplay matrix={matrixArray} />
+		</div>
+	);
+};
+
+export default App;

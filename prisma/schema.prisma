@@ -106,3 +106,13 @@ enum Status {
     ACTIVE
     INACTIVE
 }
+
+model KraepelinTemplate {
+    id      String @id @default(cuid())
+    version String
+    x       Int
+    y       Int
+    value   Int
+
+    @@index([version, x, y])
+}

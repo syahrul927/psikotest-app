@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Button, type ButtonProps } from "~/app/_components/ui/button";
-import { useCarousel } from "~/app/_components/ui/carousel";
-import { Input } from "~/app/_components/ui/input";
 import { cn } from "~/lib/utils";
 
 const Numpad = ({
@@ -23,7 +21,7 @@ const Numpad = ({
 	}, [answer]);
 
 	return (
-		<div className="flex flex-col border shadow-md bg-white rounded-t-2xl space-y-3 px-6 justify-center items-center w-full py-6">
+		<div className="flex flex-col border shadow-md bg-white rounded-t-2xl space-y-3 px-6 justify-center items-center w-full pt-6 pb-10">
 			<div className="w-full grid grid-cols-3 gap-6">
 				{Array.from({ length: 9 }).map((_, index) => (
 					<Pad

@@ -1,7 +1,6 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { getServerSession, type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -67,10 +66,6 @@ export const authOptions: NextAuthOptions = {
 					role: user.role,
 				};
 			},
-		}),
-		GoogleProvider({
-			clientId: env.GOOGLE_CLIENT_ID,
-			clientSecret: env.GOOGLE_CLIENT_SECRET,
 		}),
 		/**
 		 * ...add more providers here.
