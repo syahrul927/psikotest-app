@@ -1,46 +1,43 @@
-import Spinner from "~/app/_components/ui/spinner";
-import { type Variants, motion } from "framer-motion";
-import { Card, CardContent } from "~/app/_components/ui/card";
-import { cn } from "~/lib/utils";
+import { motion, type Variants } from "framer-motion";
 import { EqualIcon, PlusIcon } from "lucide-react";
+import { Card, CardContent } from "~/app/_components/ui/card";
 import { Label } from "~/app/_components/ui/label";
-import { RouterOutputs } from "~/trpc/shared";
+import Spinner from "~/app/_components/ui/spinner";
+import { cn } from "~/lib/utils";
+import { type RouterOutputs } from "~/trpc/shared";
 
 interface RollerProps {
 	display: RouterOutputs["testKraepelin"]["getTemplate"];
 	answer?: number;
-	x: number;
-	y: number;
+	down: number;
+	up: number;
 }
 
 const ShowingVariant: Variants = {
 	init: { y: 24 },
 	animate: { y: 0 },
 };
-const Roller = ({ display, answer, x, y }: RollerProps) => {
-	const currentActive = [x, y];
+const Roller = ({ display, answer, down, up }: RollerProps) => {
+	console.log(up, down);
 	return display.length ? (
 		<>
 			<div className="relative max-w-sm space-y-6 h-full flex flex-col justify-center">
-				<div className="flex flex-col-reverse">
-					{display.map((item, index) => (
-						<motion.div
-							key={`${item.value}x${item.x}-${item.y}`}
-							variants={ShowingVariant}
-							initial="init"
-							animate="animate"
-							className={cn(
-								currentActive.includes(index)
-									? "block"
-									: "hidden absolute",
-							)}
-						>
-							<Item str={`${item.value}`} />
-						</motion.div>
-					))}
-				</div>
-				<div className="absolute -translate-y-3 self-center w-8 h-8 flex justify-center items-center">
-					<PlusIcon size={32} />
+				<div className="-translate-y-3 relative overflow-hidden self-center w-16 h-36 flex justify-center items-center">
+					{display.map((item, index) => {
+						return (
+							<div
+								key={`${item.value}x${item.x}-${item.y}`}
+								className={cn(
+									"transition-all ease-in-out absolute duration-200",
+									position(index, up, down),
+								)}
+							>
+								<Item str={`${item.value}`} />
+							</div>
+						);
+					})}
+
+					<PlusIcon size={32} className="absolute" />
 				</div>
 			</div>
 			<div className="flex text-center justify-center gap-3 relative">
@@ -66,10 +63,23 @@ interface ItemProps {
 }
 const Item = (props: ItemProps) => {
 	return (
-		<Card className={cn("border-none bg-none shadow-none transition-all")}>
+		<Card className={cn("border-none bg-transparent shadow-none")}>
 			<CardContent className="flex items-center justify-center p-6">
 				<span className="text-6xl font-semibold">{props.str}</span>
 			</CardContent>
 		</Card>
 	);
+};
+
+const position = (index: number, up: number, down: number) => {
+	if (index === up) {
+		return "-translate-y-12";
+	}
+	if (index === down) {
+		return "translate-y-12 ";
+	}
+	if (index < up) {
+		return "-translate-y-24 ";
+	}
+	return "translate-y-24 ";
 };

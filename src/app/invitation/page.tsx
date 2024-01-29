@@ -1,11 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useCountdown } from "usehooks-ts";
+import { api } from "~/trpc/react";
 import Roller from "./components/Roller";
 import Header from "./components/header";
 import Numpad from "./components/numpad";
-import { useCountdown } from "usehooks-ts";
-import { api } from "~/trpc/react";
 import { useDisplay } from "./hooks/use-display";
+import { Button } from "../_components/ui/button";
+import { cn } from "~/lib/utils";
 
 const InvitationPage = () => {
 	const { data } = api.testKraepelin.getTemplate.useQuery(undefined, {
@@ -13,29 +15,48 @@ const InvitationPage = () => {
 		refetchOnWindowFocus: false,
 		refetchOnMount: false,
 	});
-	const { x, y } = useDisplay({ array: data });
-	const [intervalValue, setIntervalValue] = useState<number>(1000);
-	const [count, { startCountdown, stopCountdown, resetCountdown }] =
-		useCountdown({
-			countStart: 30,
-			intervalMs: intervalValue,
-		});
+	const { setArray, currentColumn } = useDisplay();
+	const [active, setActive] = useState({
+		up: 0,
+		down: 0,
+	});
+	const [count, { startCountdown }] = useCountdown({
+		countStart: 30,
+		intervalMs: 1000,
+	});
 	useEffect(() => {
-		if (startCountdown) {
-			startCountdown();
+		if (data?.length) {
+			setArray(data);
 		}
 	}, [data]);
+
+	useEffect(() => {
+		if (currentColumn.length && startCountdown) {
+			setActive({
+				down: currentColumn.length - 1,
+				up: currentColumn.length - 2,
+			});
+			startCountdown();
+		}
+	}, [currentColumn]);
+
 	const onClickNumpad = () => {
-		return;
+		if (active.up !== 0) {
+			setActive({ up: active.up - 1, down: active.down - 1 });
+		}
 	};
 
 	return (
 		<div className="flex flex-col h-[100dvh] relative items-center justify-between w-full">
 			<Header time={count} totalColumn={40} currentColumn={1} />
 			<div className="w-full h-full flex justify-center items-center">
-				<Roller display={data ?? []} x={x} y={y} />
+				<Roller
+					display={currentColumn}
+					down={active.down}
+					up={active.up}
+				/>
 			</div>
-			<Numpad onClick={onClickNumpad} />
+			<Numpad onClick={() => onClickNumpad()} />
 		</div>
 	);
 };

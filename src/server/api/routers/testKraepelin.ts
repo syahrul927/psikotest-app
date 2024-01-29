@@ -11,10 +11,9 @@ export const testKrapelinRouter = createTRPCRouter({
 					x: "asc",
 				},
 				{
-					y: "desc",
+					y: "asc",
 				},
 			],
-			take: 5,
 		});
 		return template;
 	}),

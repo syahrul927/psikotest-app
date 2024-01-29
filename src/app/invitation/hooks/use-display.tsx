@@ -1,27 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import _ from "underscore";
 import { type RouterOutputs } from "~/trpc/shared";
 
-interface useDisplayProps {
-	array?: RouterOutputs["testKraepelin"]["getTemplate"];
-}
-export const useDisplay = (props: useDisplayProps) => {
-	const [template, setTemplate] = useState<
-		Record<string, number | undefined>
-	>({});
-	const [x, setX] = useState<number>(0);
-	const [y, setY] = useState<number>(1);
-	const submitAnswer = (subx: number, suby: number, answer: number) => {
-		const temp = {
-			[`${subx}-${suby}`]: answer,
-		};
-		setTemplate({ ...template, ...temp });
-	};
+type TemplateType = RouterOutputs["testKraepelin"]["getTemplate"];
+export const useDisplay = () => {
+	const [template, setTemplate] = useState<_.Dictionary<TemplateType>>({});
+	const [indexColumn, setIndexColumn] = useState(1);
+	const [currentColumn, setCurrentColumn] = useState<TemplateType>([]);
 
+	const setArray = (value: TemplateType) => {
+		const temp = _.groupBy(value, "x");
+		setTemplate(temp);
+	};
+	useEffect(() => {
+		if (template) {
+			const temp = template[indexColumn];
+			if (temp) {
+				setCurrentColumn(temp);
+			}
+		}
+	}, [template]);
+
+	const nextColumn = () => {
+		const next = indexColumn + 1;
+		setIndexColumn(next);
+	};
 	return {
-		template,
-		submitAnswer,
-		x,
-		y,
+		setArray,
+		currentColumn,
+		nextColumn,
 	};
 };
