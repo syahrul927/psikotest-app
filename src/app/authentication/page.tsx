@@ -1,5 +1,5 @@
 import { type Metadata } from "next";
-import { getProviders } from "next-auth/react";
+import { getCsrfToken, getProviders } from "next-auth/react";
 import Link from "next/link";
 import { env } from "~/env";
 import { cn } from "~/lib/utils";
@@ -12,10 +12,7 @@ export const metadata: Metadata = {
 };
 
 const AuthenticationPage = async () => {
-	const providers = await getProviders().catch((err) => {
-		console.log(err);
-		return null;
-	});
+	const token = await getCsrfToken();
 	return (
 		<div className="container h-screen relative flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
 			<Link
@@ -65,7 +62,7 @@ const AuthenticationPage = async () => {
 							Enter your email and password below to login
 						</p>
 					</div>
-					<UserSigninForm providers={providers} />
+					<UserSigninForm csrfToken={token} />
 					<p className="px-8 text-center text-sm text-muted-foreground">
 						By clicking continue, you agree to our{" "}
 						<Link

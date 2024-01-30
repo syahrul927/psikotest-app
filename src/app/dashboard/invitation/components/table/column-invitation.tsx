@@ -8,6 +8,12 @@ import {
 	Settings2,
 	TrashIcon,
 } from "lucide-react";
+import Link from "next/link";
+import AlertConfirm from "~/app/_components/alert-confirm";
+import {
+	AlertDialog,
+	AlertDialogTrigger,
+} from "~/app/_components/ui/alert-dialog";
 import { Button } from "~/app/_components/ui/button";
 import {
 	DropdownMenu,
@@ -18,69 +24,58 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "~/app/_components/ui/dropdown-menu";
-import { cn } from "~/lib/utils";
-import { type ProductTableProps } from "../../data/schemas";
-import Link from "next/link";
-import {
-	AlertDialog,
-	AlertDialogTrigger,
-} from "~/app/_components/ui/alert-dialog";
-import AlertConfirm from "~/app/_components/alert-confirm";
-import { api } from "~/trpc/react";
+import { statuses } from "../../data/data";
+import { type InvitationTableProps } from "../../data/schemas";
 
-export const columnsPost: ColumnDef<ProductTableProps>[] = [
+export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 	{
 		accessorKey: "name",
-		header: "Product Name",
+		header: "Invitation Name",
 		cell: ({ row }) => {
 			return (
-				<div className="flex space-x-2">
-					<span className="max-w-[500px] min-w-full truncate font-medium">
-						{row.getValue("name")}
-					</span>
-				</div>
+				<span className="font-semibold">{row.getValue("name")}</span>
 			);
-		},
-	},
-	{
-		accessorKey: "price",
-		header: () => <div className="text-right">Price</div>,
-		cell: ({ row }) => {
-			const price = parseFloat(row.getValue("price"));
-			const formatted = new Intl.NumberFormat("en-US", {
-				style: "currency",
-				currency: "IDR",
-			}).format(price);
-
-			return <div className="text-right font-medium">{formatted}</div>;
 		},
 	},
 	{
 		accessorKey: "status",
-		header: () => <div className="text-center">Status</div>,
-		filterFn: (row, id, value: string) => {
+		header: "Status",
+		filterFn: (row, id, value: string[]) => {
 			return value.includes(row.getValue(id));
 		},
-		cell({ row }) {
+		cell: ({ row }) => {
+			const status = statuses.find(
+				(status) => status.value === row.getValue("status"),
+			);
+			if (!status) {
+				return null;
+			}
 			return (
-				<div
-					className={cn(
-						"px-2 text-center py-1 rounded-sm font-medium capitalize",
-						row.getValue("status") === "active"
-							? "text-foreground"
-							: "text-muted-foreground",
+				<div className="flex w-[200px] items-center">
+					{status.icon && (
+						<status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
 					)}
-				>
-					{row.getValue("status")}
+					<span>{status.label}</span>
 				</div>
 			);
 		},
+	},
+	{
+		accessorKey: "profileName",
+		header: "Profile Name",
+		cell: ({ row }) => {
+			return <span>{row.getValue("profileName")}</span>;
+		},
+	},
+	{
+		accessorKey: "secretKey",
+		header: "Secret Key",
 	},
 	{
 		header: "",
 		accessorKey: "action",
 		cell({ row }) {
-			const { name, id, onDelete } = row.original;
+			const { name, id, onDelete, status } = row.original;
 			return (
 				<DropdownMenu>
 					<AlertDialog>
@@ -90,16 +85,27 @@ export const columnsPost: ColumnDef<ProductTableProps>[] = [
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
-							<DropdownMenuLabel>Information</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuGroup>
-								<Link href={`/products/${row.original.id}`}>
-									<DropdownMenuItem>
-										<EyeIcon size={16} className="mr-2 " />
-										<span>View Detail</span>
-									</DropdownMenuItem>
-								</Link>
-							</DropdownMenuGroup>
+							{status === "DONE" ? (
+								<>
+									<DropdownMenuLabel>
+										Information
+									</DropdownMenuLabel>
+									<DropdownMenuSeparator />
+									<DropdownMenuGroup>
+										<Link
+											href={`/dashboard/invitation/${row.original.id}`}
+										>
+											<DropdownMenuItem>
+												<EyeIcon
+													size={16}
+													className="mr-2 "
+												/>
+												<span>Hasil Test</span>
+											</DropdownMenuItem>
+										</Link>
+									</DropdownMenuGroup>
+								</>
+							) : null}
 							<DropdownMenuLabel>Action</DropdownMenuLabel>
 							<DropdownMenuSeparator />
 							<DropdownMenuGroup>

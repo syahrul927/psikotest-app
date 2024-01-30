@@ -11,7 +11,7 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "../../../../_components/ui/dropdown-menu";
-import { ProductTableSchema } from "../../data/schemas";
+import { InvitationTableSchema } from "../../data/schemas";
 
 interface DataTableRowActionsProps<TData> {
 	row: Row<TData>;
@@ -20,7 +20,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
 	row,
 }: DataTableRowActionsProps<TData>) {
-	const task = ProductTableSchema.parse(row.original);
+	const task = InvitationTableSchema.parse(row.original);
 
 	return (
 		<DropdownMenu>

@@ -14,24 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Product {
-    id          String   @id @default(cuid())
-    name        String
-    slug        String   @unique
-    description String?
-    images      String[]
-    variants    String[]
-    addon       Json?
-    price       Float
-    status      Status
-    createdAt   DateTime @default(now()) @db.Timestamptz(3)
-    updatedAt   DateTime @updatedAt @db.Timestamptz(3)
-    createdBy   User     @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([slug, createdById, createdAt])
-}
-
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -51,13 +33,6 @@ model Account {
     @@unique([provider, providerAccountId])
 }
 
-enum UserRole {
-    USER
-    ADMIN
-
-    @@map("RoleAccount")
-}
-
 model Session {
     id           String   @id @default(cuid())
     sessionToken String   @unique
@@ -67,31 +42,16 @@ model Session {
 }
 
 model User {
-    id            String      @id @default(cuid())
+    id            String    @id @default(cuid())
     name          String?
-    email         String?     @unique
+    email         String?   @unique
     emailVerified DateTime?
     image         String?
-    role          UserRole    @default(USER)
+    password      String
     accounts      Account[]
     sessions      Session[]
-    Product       Product[]
-    createdAt     DateTime    @default(now()) @db.Timestamptz(3)
-    updatedAt     DateTime    @updatedAt @db.Timestamptz(3)
-    AssetUser     AssetUser[]
-}
-
-model AssetUser {
-    id        String   @id @default(cuid())
-    name      String
-    url       String
-    key       String
-    size      Float
-    createdAt DateTime @default(now()) @db.Timestamptz(3)
-    userId    String
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@index([userId, key, url])
+    createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+    updatedAt     DateTime  @updatedAt @db.Timestamptz(3)
 }
 
 model VerificationToken {
@@ -129,7 +89,10 @@ model TesterProfile {
 
 model Invitation {
     id              String         @id @default(cuid())
+    name            String?
+    secretKey       String
     startAt         DateTime?      @db.Timestamptz(3)
+    endAt           DateTime?      @db.Timestamptz(3)
     testerProfileId String?
     testerProfile   TesterProfile? @relation(fields: [testerProfileId], references: [id])
     createdAt       DateTime       @db.Timestamptz(3)

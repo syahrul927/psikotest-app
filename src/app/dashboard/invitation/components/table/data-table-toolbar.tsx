@@ -52,9 +52,9 @@ export function DataTableToolbar<TData>({
 					</Button>
 				)}
 			</div>
-			<DataTableViewOptions table={table} />
-			<Link href="/products/add">
-				<Button className="h-8 sm:ml-3">Add New</Button>
+			{/* <DataTableViewOptions table={table} /> */}
+			<Link href="/dashboard/invitation/add">
+				<Button className="h-8 sm:ml-3">Buat Baru</Button>
 			</Link>
 		</div>
 	);

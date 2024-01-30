@@ -1,6 +1,7 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { getServerSession, type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { verify } from "argon2";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -57,13 +58,20 @@ export const authOptions: NextAuthOptions = {
 						email: creds.email,
 					},
 				});
-				if (!user) return null;
+				if (!user?.password) return null;
+				const isValidPassword = await verify(
+					user.password,
+					creds?.password,
+				);
+
+				if (!isValidPassword) {
+					return null;
+				}
 				return {
 					id: user.id,
 					email: user.email,
 					name: user.name,
 					image: user.image,
-					role: user.role,
 				};
 			},
 		}),

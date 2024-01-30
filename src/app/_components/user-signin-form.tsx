@@ -10,105 +10,144 @@ import {
 	signIn,
 	type ClientSafeProvider,
 	type LiteralUnion,
+	useSession,
 } from "next-auth/react";
 import { type BuiltInProviderType } from "next-auth/providers/index";
+import { useRouter } from "next/navigation";
+import { useToast } from "./ui/use-toast";
+import { z } from "zod";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "./ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
-	providers: Record<
-		LiteralUnion<BuiltInProviderType, string>,
-		ClientSafeProvider
-	> | null;
+	csrfToken?: string;
 }
+const formSchema = z.object({
+	email: z.string().email({ message: "Format email harus sesuai" }),
+	password: z.string().min(6, {
+		message: "Password minimal 6 karakter",
+	}),
+	csrfToken: z.string().optional(),
+});
+
 export function UserSigninForm({
 	className,
-	providers,
+	csrfToken,
 	...props
 }: Readonly<UserAuthFormProps>) {
-	const [isLoading, setIsLoading] = React.useState<boolean>(false);
+	const [isLoading, setLoading] = React.useState<boolean>(false);
+	const router = useRouter();
+	const { toast } = useToast();
+	const form = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			csrfToken,
+		},
+	});
+	const { data } = useSession();
 
-	async function onSubmit(event: React.SyntheticEvent) {
-		event.preventDefault();
-		setIsLoading(true);
+	const onSubmit = async (values: z.infer<typeof formSchema>) => {
+		setLoading(true);
+		void signIn("credentials", {
+			email: values.email,
+			password: values.password,
+			redirect: false,
+		})
+			.then((resp) => {
+				setLoading(false);
+				if (!resp?.ok) {
+					toast({
+						title: "Gagal Login",
+						description: "Username atau Password salah!",
+					});
+					return;
+				}
 
-		setTimeout(() => {
-			setIsLoading(false);
-		}, 3000);
-	}
+				toast({
+					title: `Hi,`,
+					description: "Selamat Datang!",
+				});
+				void router.push("/dashboard");
+			})
+			.catch((e) => {
+				console.log(e);
+				setLoading(false);
+				toast({
+					title: "Maaf masalah terjadi",
+					description: "Segera hubungi developer 😭",
+				});
+			});
+	};
 
 	return (
-		<div className={cn("grid gap-6", className)} {...props}>
-			<form onSubmit={onSubmit}>
-				<div className="grid gap-2">
-					<div className="grid gap-1">
-						<Label className="sr-only" htmlFor="email">
-							Email
-						</Label>
-						<Input
-							id="email"
-							placeholder="name@example.com"
-							type="email"
-							autoCapitalize="none"
-							autoComplete="email"
-							autoCorrect="off"
-							disabled={isLoading}
-						/>
-					</div>
-					<div className="grid gap-1">
-						<Label className="sr-only" htmlFor="email">
-							Password
-						</Label>
-						<Input
-							id="password"
-							placeholder="password"
-							type="password"
-							autoCapitalize="none"
-							autoComplete="email"
-							autoCorrect="off"
-							disabled={isLoading}
-						/>
-					</div>
-					<Button disabled={isLoading}>
-						{isLoading && (
-							<Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-						)}
-						Sign In
-					</Button>
-				</div>
-			</form>
-			<div className="relative">
-				<div className="absolute inset-0 flex items-center">
-					<span className="w-full border-t" />
-				</div>
-				<div className="relative flex justify-center text-xs uppercase">
-					<span className="bg-background px-2 text-muted-foreground">
-						Or continue with
-					</span>
-				</div>
-			</div>
-			{providers &&
-				Object.values(providers)
-					.filter((item) => item.type !== "credentials")
-					.map((item) => (
-						<Button
-							key={item.id}
-							variant="outline"
-							type="button"
-							onClick={() =>
-								signIn(item.id, {
-									redirect: true,
-									callbackUrl: "/",
-								})
-							}
-							disabled={isLoading}
-						>
-							{isLoading ? (
+		<Form {...form}>
+			<div className={cn("grid gap-6", className)} {...props}>
+				<form onSubmit={form.handleSubmit(onSubmit)}>
+					<div className="grid gap-2">
+						<div className="grid gap-1">
+							<FormField
+								control={form.control}
+								name="email"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel htmlFor="email">
+											Email
+										</FormLabel>
+										<FormControl>
+											<Input
+												id="email"
+												placeholder="name@example.com"
+												type="email"
+												autoCapitalize="none"
+												autoComplete="email"
+												autoCorrect="off"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+						<div className="grid gap-1">
+							<FormField
+								control={form.control}
+								name="password"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel htmlFor="password">
+											Password
+										</FormLabel>
+										<FormControl>
+											<Input
+												id="password"
+												placeholder="password"
+												type="password"
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+						<Button disabled={isLoading}>
+							{isLoading && (
 								<Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-							) : (
-								<Icons.google className="mr-2 h-4 w-4" />
-							)}{" "}
-							{item.name}
+							)}
+							Sign In
 						</Button>
-					))}
-		</div>
+					</div>
+				</form>
+			</div>
+		</Form>
 	);
 }

@@ -23,7 +23,7 @@ const Numpad = ({
 
 	return (
 		<div className="flex flex-col border shadow-md bg-white rounded-t-2xl space-y-3 px-6 justify-center items-center w-full pt-6 pb-10">
-			<div className="w-full grid grid-cols-3 gap-6">
+			<div className="w-full grid grid-cols-3 gap-6 max-w-lg">
 				{Array.from({ length: 9 }).map((_, index) => (
 					<Pad
 						value={index + 1}
