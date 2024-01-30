@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import _ from "underscore";
 import { type RouterOutputs } from "~/trpc/shared";
 
@@ -20,15 +20,16 @@ export const useDisplay = () => {
 				setCurrentColumn(temp);
 			}
 		}
-	}, [template]);
+	}, [template, indexColumn]);
 
 	const nextColumn = () => {
-		const next = indexColumn + 1;
-		setIndexColumn(next);
+		setIndexColumn(indexColumn + 1);
 	};
 	return {
 		setArray,
 		currentColumn,
 		nextColumn,
+		indexColumn,
+		totalColumn: Object.keys(template).length,
 	};
 };

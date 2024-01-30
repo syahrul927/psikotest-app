@@ -1,14 +1,16 @@
+import { DeleteIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button, type ButtonProps } from "~/app/_components/ui/button";
 import { cn } from "~/lib/utils";
 
 const Numpad = ({
 	onClick: onClickParent,
+	onClickUndo,
 }: {
 	onClick: (number: number) => void;
+	onClickUndo: () => void;
 }) => {
 	const [answer, setAnswer] = useState<number | undefined>();
-	// const { scrollNext } = useCarousel();
 	const onClick = (number: number) => {
 		setAnswer(number);
 		onClickParent(number);
@@ -16,7 +18,6 @@ const Numpad = ({
 	useEffect(() => {
 		if (answer) {
 			setAnswer(undefined);
-			// onActive(false);
 		}
 	}, [answer]);
 
@@ -35,6 +36,9 @@ const Numpad = ({
 					className="col-start-2"
 					onClick={() => onClick(0)}
 				/>
+				<Pad value={""} onClick={onClickUndo}>
+					<DeleteIcon className="text-4xl font-bold" />
+				</Pad>
 			</div>
 		</div>
 	);
@@ -44,7 +48,7 @@ export default Numpad;
 interface PadProps extends ButtonProps {
 	value: string | number;
 }
-const Pad = ({ value, className, ...props }: PadProps) => {
+const Pad = ({ value, children, className, ...props }: PadProps) => {
 	return (
 		<Button
 			variant={"ghost"}
@@ -54,7 +58,7 @@ const Pad = ({ value, className, ...props }: PadProps) => {
 			)}
 			{...props}
 		>
-			{value}
+			{children} {value}
 		</Button>
 	);
 };

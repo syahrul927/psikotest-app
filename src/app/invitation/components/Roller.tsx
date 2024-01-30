@@ -1,5 +1,6 @@
-import { motion, type Variants } from "framer-motion";
+import { type Variants } from "framer-motion";
 import { EqualIcon, PlusIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "~/app/_components/ui/card";
 import { Label } from "~/app/_components/ui/label";
 import Spinner from "~/app/_components/ui/spinner";
@@ -14,11 +15,17 @@ interface RollerProps {
 }
 
 const ShowingVariant: Variants = {
-	init: { y: 24 },
-	animate: { y: 0 },
+	init: { y: 0, scale: 1, opacity: 1 },
+	animate: { y: -48, scale: 0.9, opacity: 0.4 },
 };
 const Roller = ({ display, answer, down, up }: RollerProps) => {
-	console.log(up, down);
+	const [transition, setTransition] = useState(false);
+	useEffect(() => {
+		setTransition(true);
+		setTimeout(() => {
+			setTransition(false);
+		}, 150);
+	}, [answer]);
 	return display.length ? (
 		<>
 			<div className="relative max-w-sm space-y-6 h-full flex flex-col justify-center">
@@ -44,11 +51,26 @@ const Roller = ({ display, answer, down, up }: RollerProps) => {
 				<div className="flex justify-center items-center">
 					<EqualIcon size={24} />
 				</div>
-				<motion.div key={answer}>
-					<Label className={cn("text-5xl font-semibold")}>
-						{answer ?? "?"}
+				<div className="relative flex justify-center">
+					<Label
+						className={cn(
+							"text-5xl font-semibold absolute transition-all duration-150",
+							transition
+								? "translate-y-0 opacity-100"
+								: "-translate-y-16 opacity-30",
+						)}
+					>
+						{answer}
 					</Label>
-				</motion.div>
+					<Label
+						className={cn(
+							"text-5xl font-semibold transition-all duration-150",
+							!transition ? " opacity-100" : "opacity-30",
+						)}
+					>
+						?
+					</Label>
+				</div>
 			</div>
 		</>
 	) : (

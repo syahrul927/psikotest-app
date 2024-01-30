@@ -116,3 +116,64 @@ model KraepelinTemplate {
 
     @@index([version, x, y])
 }
+
+model TesterProfile {
+    id                  String       @id @default(cuid())
+    name                String
+    phone               String
+    address             String
+    eductionId          String
+    eductionDescription String?
+    Invitation          Invitation[]
+}
+
+model Invitation {
+    id              String         @id @default(cuid())
+    startAt         DateTime?      @db.Timestamptz(3)
+    testerProfileId String?
+    testerProfile   TesterProfile? @relation(fields: [testerProfileId], references: [id])
+    createdAt       DateTime       @db.Timestamptz(3)
+    updatedAt       DateTime       @updatedAt @db.Timestamptz(3)
+}
+
+model KraepelinResult {
+    id                     String                   @id @default(cuid())
+    invitationId           String
+    panker                 Float?
+    highestJanker          Int?
+    lowestJanker           Int?
+    janker                 Int?
+    tianker                Int?
+    hanker                 Float?
+    totalAnswered          Int?
+    totalIncorrect         Int?
+    totalNotAnswered       Int?
+    highestFilled          Int?
+    lowestFilled           Int?
+    deciel                 Float?
+    KraepelinResultSummary KraepelinResultSummary[]
+    KraepelinResultDetail  KraepelinResultDetail[]
+
+    @@index([invitationId])
+}
+
+model KraepelinResultSummary {
+    id                String          @id @default(cuid())
+    kraepelinResult   KraepelinResult @relation(fields: [kraepelinResultId], references: [id])
+    kraepelinResultId String
+    x                 Int
+    answered          Int
+}
+
+model KraepelinResultDetail {
+    id                String          @id @default(cuid())
+    kraepelinResult   KraepelinResult @relation(fields: [kraepelinResultId], references: [id])
+    kraepelinResultId String
+    xA                Int
+    yA                Int
+    xB                Int
+    yB                Int
+    a                 Int
+    b                 Int
+    value             Int
+}
