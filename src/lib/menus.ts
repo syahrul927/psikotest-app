@@ -1,17 +1,17 @@
 import { HomeIcon, SendIcon } from "lucide-react";
-import { type NavLinkProps } from "~/app/dashboard/components/nav";
+import { type NavLinkProps } from "~/app/(dashboard)/components/nav";
 
 const Menus: NavLinkProps[] = [
 	{
 		title: "Home",
 		icon: HomeIcon,
-		url: "/dashboard/",
+		url: "/",
 		variant: "ghost",
 	},
 	{
 		title: "Invitation",
 		icon: SendIcon,
-		url: "/dashboard/invitation",
+		url: "/invitation",
 		variant: "ghost",
 	},
 ];

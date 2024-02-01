@@ -26,8 +26,13 @@ import {
 } from "~/app/_components/ui/dropdown-menu";
 import { statuses } from "../../data/data";
 import { type InvitationTableProps } from "../../data/schemas";
+import { cn } from "~/lib/utils";
 
 export const columnsPost: ColumnDef<InvitationTableProps>[] = [
+	{
+		accessorKey: "id",
+		header: "ID",
+	},
 	{
 		accessorKey: "name",
 		header: "Invitation Name",
@@ -55,7 +60,7 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 					{status.icon && (
 						<status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
 					)}
-					<span>{status.label}</span>
+					<span className="font-medium">{status.label}</span>
 				</div>
 			);
 		},
@@ -64,7 +69,7 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 		accessorKey: "profileName",
 		header: "Profile Name",
 		cell: ({ row }) => {
-			return <span>{row.getValue("profileName")}</span>;
+			return <span>{row.getValue("profileName") ?? "-"}</span>;
 		},
 	},
 	{
@@ -93,7 +98,7 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 									<DropdownMenuSeparator />
 									<DropdownMenuGroup>
 										<Link
-											href={`/dashboard/invitation/${row.original.id}`}
+											href={`/invitation/${row.original.id}`}
 										>
 											<DropdownMenuItem>
 												<EyeIcon
@@ -111,34 +116,36 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 							<DropdownMenuGroup>
 								<Link
 									className="w-auto"
-									href={`/products/update/?id=${row.original.id}`}
+									href={`/invitation/update/?id=${row.original.id}`}
 								>
 									<DropdownMenuItem>
 										<Settings2
 											size={16}
 											className="mr-2 "
 										/>
-										<span>Update Product</span>
+										<span>Update Invitation</span>
 									</DropdownMenuItem>
 								</Link>
 								<DropdownMenuItem>
 									<CopyIcon size={16} className="mr-2 " />
 									<span>Copy</span>
 								</DropdownMenuItem>
-								<DropdownMenuItem className="text-red-600">
-									<AlertDialogTrigger className="flex w-full justify-start">
-										<TrashIcon
-											size={16}
-											className="mr-2 "
-										/>
-										<span>Delete</span>
-									</AlertDialogTrigger>
-								</DropdownMenuItem>
+								{status !== "DONE" ? (
+									<DropdownMenuItem className="text-red-600">
+										<AlertDialogTrigger className="flex w-full justify-start">
+											<TrashIcon
+												size={16}
+												className="mr-2 "
+											/>
+											<span>Delete</span>
+										</AlertDialogTrigger>
+									</DropdownMenuItem>
+								) : null}
 							</DropdownMenuGroup>
 						</DropdownMenuContent>
 						<AlertConfirm
-							title={`Are you sure to delete ${name} from product ?`}
-							description="This will permanently delete your menu."
+							title={`Apakah kamu yakin ingin menghapus ${name} ?`}
+							description="Ini akan menghapus permanen"
 							onAction={() => onDelete(id)}
 							buttonVariant={{
 								variant: "destructive",

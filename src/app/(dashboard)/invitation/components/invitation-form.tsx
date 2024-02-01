@@ -56,7 +56,7 @@ export const InvitationForm = (props: InvitationFormProps) => {
 				title: "Berhasil",
 				description: "Undangan berhasil dibuat",
 			});
-			router.push("/dashboard/invitation");
+			router.push("/invitation");
 		},
 		onError: (err) => {
 			toast({

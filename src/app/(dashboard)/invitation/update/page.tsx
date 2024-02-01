@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 import { type PageType } from "~/types/page-type";
-import { InvitationForm } from "../components/product-form";
+import { InvitationForm } from "../components/invitation-form";
 import { api } from "~/trpc/server";
 
-export default async function UpdateProductPage({ searchParams }: PageType) {
+export default async function UpdateInvitationPage({ searchParams }: PageType) {
 	const id = searchParams.id;
 	if (!id || id instanceof Array) {
-		redirect("/products");
+		redirect("/invitation");
 	}
 	const data = await api.invitation.getById.query(id);
 	return (

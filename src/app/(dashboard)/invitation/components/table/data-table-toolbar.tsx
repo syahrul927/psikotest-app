@@ -53,7 +53,7 @@ export function DataTableToolbar<TData>({
 				)}
 			</div>
 			{/* <DataTableViewOptions table={table} /> */}
-			<Link href="/dashboard/invitation/add">
+			<Link href="/invitation/add">
 				<Button className="h-8 sm:ml-3">Buat Baru</Button>
 			</Link>
 		</div>

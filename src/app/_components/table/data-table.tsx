@@ -15,8 +15,8 @@ import {
 	type ColumnDef,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { DataTablePagination } from "~/app/dashboard/invitation/components/table/data-table-pagination";
-import { DataTableToolbar } from "~/app/dashboard/invitation/components/table/data-table-toolbar";
+import { DataTablePagination } from "~/app/(dashboard)/invitation/components/table/data-table-pagination";
+import { DataTableToolbar } from "~/app/(dashboard)/invitation/components/table/data-table-toolbar";
 import {
 	Table,
 	TableBody,

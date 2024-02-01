@@ -1,7 +1,7 @@
 "use client";
-import { InvitationForm } from "../components/product-form";
+import { InvitationForm } from "../components/invitation-form";
 
-export default function AddProductPage() {
+export default function AddInvitationPage() {
 	return (
 		<div className="flex flex-col h-full max-w-xl">
 			<InvitationForm />

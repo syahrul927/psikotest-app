@@ -2,12 +2,13 @@
 import { useEffect, useState } from "react";
 import { useCountdown } from "usehooks-ts";
 import { api } from "~/trpc/react";
-import Roller from "./components/Roller";
-import Header from "./components/header";
-import Numpad from "./components/numpad";
-import { useDisplay } from "./hooks/use-display";
+import Roller from "../components/Roller";
+import Header from "../components/header";
+import Numpad from "../components/numpad";
+import { useDisplay } from "../hooks/use-display";
+import { PageType } from "~/types/page-type";
 
-const InvitationPage = () => {
+const InvitationPage = ({ params }: PageType) => {
 	const { data } = api.testKraepelin.getTemplate.useQuery(undefined, {
 		refetchOnReconnect: false,
 		refetchOnWindowFocus: false,
@@ -77,7 +78,7 @@ const InvitationPage = () => {
 				yB: active.indexDown + 1,
 				a: quetion.a,
 				b: quetion.b,
-				id: "abc",
+				id: params.slug,
 			});
 			setActive({
 				indexUp: active.indexUp - 1,

@@ -37,7 +37,7 @@ export default function DashboardInvitationPage() {
 	return (
 		<div className="flex flex-col space-y-4">
 			<div className="flex flex-col space-y-4">
-				<SummaryProduct
+				<SummaryInvitation
 					total={data?.total}
 					done={data?.done}
 					onProgress={data?.onProgress}
@@ -66,8 +66,7 @@ export default function DashboardInvitationPage() {
 									id,
 									name,
 									status,
-									profileName: testerProfile?.name ?? "-",
-
+									profileName: testerProfile?.name,
 									secretKey,
 									onDelete,
 								}),
@@ -80,18 +79,18 @@ export default function DashboardInvitationPage() {
 	);
 }
 
-interface SummaryProductProps {
+interface SummaryInvitationProps {
 	pending?: number;
 	onProgress?: number;
 	done?: number;
 	total?: number;
 }
-const SummaryProduct = ({
+const SummaryInvitation = ({
 	pending = 0,
 	onProgress = 0,
 	done = 0,
 	total = 0,
-}: SummaryProductProps) => {
+}: SummaryInvitationProps) => {
 	return (
 		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 			<Card className="">

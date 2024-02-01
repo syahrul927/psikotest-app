@@ -75,7 +75,7 @@ export function UserSigninForm({
 					title: `Hi,`,
 					description: "Selamat Datang!",
 				});
-				void router.push("/dashboard");
+				void router.push("/");
 			})
 			.catch((e) => {
 				console.log(e);

@@ -1,8 +1,13 @@
-const Spinner = () => {
+import React from "react";
+import { cn } from "~/lib/utils";
+
+const Spinner: React.FC<React.HtmlHTMLAttributes<HTMLDivElement>> = ({
+	className,
+}) => {
 	return (
 		<div aria-label="Loading..." role="status">
 			<svg
-				className="animate-spin w-6 h-6 fill-slate-800"
+				className={cn("animate-spin w-6 h-6 fill-slate-800", className)}
 				viewBox="3 3 18 18"
 			>
 				<path

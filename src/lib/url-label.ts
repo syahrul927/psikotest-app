@@ -2,12 +2,12 @@ export type LabelType = { label: string; description?: string; url: string };
 const PathLabel: LabelType[] = [
 	{
 		label: "Home",
-		url: "/dashboard",
+		url: "/",
 		description: "Aktifitas Terakhir",
 	},
 	{
 		label: "Invitation",
-		url: "/dashboard/invitation*",
+		url: "/invitation*",
 		description: "Tempat mengatur undangan psikotest",
 	},
 ];
