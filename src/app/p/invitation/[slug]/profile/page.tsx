@@ -143,13 +143,13 @@ const ProfilePage = ({ params }: PageType) => {
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										<SelectItem value="ACTIVE">
+										<SelectItem value="SMA/SMK">
 											SMA / SMK
 										</SelectItem>
-										<SelectItem value="INACTIVE">
+										<SelectItem value="S1IPA">
 											S1 IPA
 										</SelectItem>
-										<SelectItem value="INACTIVE">
+										<SelectItem value="S1IPS">
 											S1 IPS
 										</SelectItem>
 									</SelectContent>
