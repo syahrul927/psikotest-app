@@ -49,7 +49,7 @@ const ProfilePage = ({ params }: PageType) => {
 	const onSubmit = async (data: FormValues) => {
 		setLoading(true);
 		setTimeout(() => setLoading(false), 1000);
-		router.push("/p/invitation/");
+		router.push(`/p/invitation/${params.slug}`);
 	};
 	return (
 		<div className="flex flex-col w-full max-h-[100dvh] p-6 overflow-y-auto ">
