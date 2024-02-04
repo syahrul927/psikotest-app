@@ -51,17 +51,13 @@ export const invitationRouter = createTRPCRouter({
 			},
 		});
 		let pending = 0;
-		let onProgress = 0;
 		let done = 0;
 		const invitations: ResponseInvitationRouterSchema[] = array.map(
 			(item) => {
 				let status = "PENDING";
-				if (item.endAt) {
+				if (item.startAt) {
 					status = "DONE";
 					done++;
-				} else if (item.startAt) {
-					status = "ONPROGRESS";
-					onProgress++;
 				} else {
 					pending++;
 				}
@@ -74,7 +70,6 @@ export const invitationRouter = createTRPCRouter({
 		return {
 			invitations,
 			pending,
-			onProgress,
 			done,
 			total: invitations.length,
 		};

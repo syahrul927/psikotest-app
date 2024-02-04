@@ -7,7 +7,6 @@ import { fontSans } from "~/lib/fonts";
 import { cn } from "~/lib/utils";
 import { TRPCReactProvider } from "~/trpc/react";
 import { TailwindIndicator } from "./_components/tailwind-indicator";
-import { ThemeProvider } from "./_components/theme-provider";
 import { Toaster } from "./_components/ui/toaster";
 import NextAuthProvider from "./context/NextAuthProvider";
 

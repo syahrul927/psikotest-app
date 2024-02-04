@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "~/app/_components/ui/button";
@@ -17,7 +17,11 @@ import {
 } from "~/app/_components/ui/form";
 import { Input } from "~/app/_components/ui/input";
 import { Label } from "~/app/_components/ui/label";
+import { useToast } from "~/app/_components/ui/use-toast";
 import { cn } from "~/lib/utils";
+import { api } from "~/trpc/react";
+import { useAccessInvitation } from "../../hooks/use-access";
+import Link from "next/link";
 
 const formSchema = z.object({
 	secretKey: z.string({ required_error: "Secret Key wajib diisi!" }),
@@ -30,19 +34,44 @@ interface ConfirmationTestProps {
 }
 const ConfirmationTest = ({ slug }: ConfirmationTestProps) => {
 	const router = useRouter();
+	const { toast } = useToast();
+	const { setAccess, resetAccess } = useAccessInvitation();
 	const form = useForm<FormValues>({
+		defaultValues: {
+			invitationId: "",
+			secretKey: "",
+		},
 		resolver: zodResolver(formSchema),
 		mode: "onSubmit",
 	});
-	const [loading, setLoading] = useState(false);
+	const { mutate, isLoading: loading } =
+		api.publicInvitation.confirmationSecretKey.useMutation({
+			onSuccess: (data) => {
+				if (data.step === 0) {
+					setAccess(slug, true);
+					return router.push(`/p/invitation/${slug}/profile`);
+				}
+				if (data.step === 1) {
+					setAccess(data.resultId, true);
+					return router.push(`/p/invitation/${slug}/`);
+				}
+			},
+			onError: (_err) => {
+				toast({
+					variant: "destructive",
+					title: "Password salah atau Link tidak valid",
+					description:
+						"Periksa kembali link atau hubungi kembali admin.",
+				});
+				resetAccess();
+			},
+		});
 
 	useEffect(() => {
 		form.setValue("invitationId", slug);
 	}, [slug]);
 	const onSubmit = async (data: FormValues) => {
-		setLoading(true);
-		setTimeout(() => setLoading(false), 1000);
-		router.push(`/p/invitation/${slug}/profile`);
+		mutate({ id: data.invitationId, secretKey: data.secretKey });
 	};
 	return (
 		<div className={cn("flex flex-col py-2 space-y-12 max-w-xl h-full")}>
@@ -77,14 +106,15 @@ const ConfirmationTest = ({ slug }: ConfirmationTestProps) => {
 								<FormLabel>Secret Key</FormLabel>
 								<FormControl>
 									<Input
-										placeholder="***"
-										type="password"
+										placeholder="secret key"
 										{...field}
 									/>
 								</FormControl>
 								<FormDescription>
 									Secretkey untuk memastikan kamu yang di
 									undang mengikuti proses psikotest.
+									Perhatikan juga huruf besar, huruf kecil dan
+									juga angka.
 								</FormDescription>
 								<FormMessage />
 							</FormItem>
@@ -93,6 +123,19 @@ const ConfirmationTest = ({ slug }: ConfirmationTestProps) => {
 					<Button isLoading={loading} type="submit">
 						Lanjutkan
 					</Button>
+
+					<p className="text-muted-foreground text-center">
+						Silahkan mencoba terlebih dahulu sebelum melakukan{" "}
+						<Link href={"/p/invitation/training"}>
+							<Button
+								variant={"link"}
+								size={"icon"}
+								className="px-0"
+							>
+								disini.
+							</Button>
+						</Link>
+					</p>
 				</form>
 			</Form>
 		</div>

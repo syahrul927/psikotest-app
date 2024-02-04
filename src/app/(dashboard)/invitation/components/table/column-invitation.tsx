@@ -26,13 +26,9 @@ import {
 } from "~/app/_components/ui/dropdown-menu";
 import { statuses } from "../../data/data";
 import { type InvitationTableProps } from "../../data/schemas";
-import { cn } from "~/lib/utils";
+import { localDate } from "~/lib/utils";
 
 export const columnsPost: ColumnDef<InvitationTableProps>[] = [
-	{
-		accessorKey: "id",
-		header: "ID",
-	},
 	{
 		accessorKey: "name",
 		header: "Invitation Name",
@@ -40,6 +36,14 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 			return (
 				<span className="font-semibold">{row.getValue("name")}</span>
 			);
+		},
+	},
+	{
+		accessorKey: "startAt",
+		header: "Start Time",
+		cell: ({ row }) => {
+			const date: Date = row.getValue("startAt");
+			return <span>{date ? localDate(date) : "Not yet started"}</span>;
 		},
 	},
 	{

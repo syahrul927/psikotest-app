@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
+import { TRPCError } from "@trpc/server";
 
 export const testKrapelinRouter = createTRPCRouter({
 	getTemplate: publicProcedure.query(async ({ ctx }) => {
@@ -18,6 +19,46 @@ export const testKrapelinRouter = createTRPCRouter({
 		});
 		return template;
 	}),
+	getLatest: publicProcedure
+		.input(
+			z.object({
+				invitationId: z.string(),
+				resultId: z.string(),
+			}),
+		)
+		.query(async ({ ctx, input }) => {
+			const latest = await ctx.db.kraepelinResultDetail.findFirst({
+				where: {
+					kraepelinResultId: input.resultId,
+				},
+				orderBy: [
+					{
+						xB: "asc",
+					},
+					{
+						yB: "asc",
+					},
+				],
+			});
+			const invitation = await ctx.db.invitation.findUnique({
+				where: {
+					id: input.invitationId,
+				},
+			});
+			if (!invitation) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Undangan tidak valid",
+				});
+			}
+
+			return {
+				latest: {
+					x: latest?.xB,
+					y: latest?.yB,
+				},
+			};
+		}),
 	submitAnswer: publicProcedure
 		.input(
 			z.object({

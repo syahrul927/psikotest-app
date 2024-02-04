@@ -1,10 +1,12 @@
 import { type Metadata } from "next";
-import { getCsrfToken, getProviders } from "next-auth/react";
+import { getCsrfToken } from "next-auth/react";
 import Link from "next/link";
 import { env } from "~/env";
 import { cn } from "~/lib/utils";
 import { buttonVariants } from "../_components/ui/button";
 import { UserSigninForm } from "../_components/user-signin-form";
+import { getServerAuthSession } from "~/server/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
 	title: "Authentication",
@@ -13,6 +15,10 @@ export const metadata: Metadata = {
 
 const AuthenticationPage = async () => {
 	const token = await getCsrfToken();
+	const session = await getServerAuthSession();
+	if (session) {
+		redirect("/");
+	}
 	return (
 		<div className="container h-screen relative flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
 			<Link
@@ -63,23 +69,6 @@ const AuthenticationPage = async () => {
 						</p>
 					</div>
 					<UserSigninForm csrfToken={token} />
-					<p className="px-8 text-center text-sm text-muted-foreground">
-						By clicking continue, you agree to our{" "}
-						<Link
-							href="/terms"
-							className="underline underline-offset-4 hover:text-primary"
-						>
-							Terms of Service
-						</Link>{" "}
-						and{" "}
-						<Link
-							href="/privacy"
-							className="underline underline-offset-4 hover:text-primary"
-						>
-							Privacy Policy
-						</Link>
-						.
-					</p>
 				</div>
 			</div>
 		</div>

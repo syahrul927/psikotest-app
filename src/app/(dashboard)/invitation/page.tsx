@@ -1,10 +1,9 @@
 "use client";
 import {
-	Layers2Icon,
-	LayersIcon,
-	PartyPopperIcon,
-	SparkleIcon,
-} from "lucide-react";
+	CheckCircledIcon,
+	CircleIcon,
+	InfoCircledIcon,
+} from "@radix-ui/react-icons";
 import { DataTable } from "~/app/_components/table/data-table";
 import {
 	Card,
@@ -12,15 +11,9 @@ import {
 	CardHeader,
 	CardTitle,
 } from "~/app/_components/ui/card";
+import { useToast } from "~/app/_components/ui/use-toast";
 import { api } from "~/trpc/react";
 import { columnsPost } from "./components/table/column-invitation";
-import { useToast } from "~/app/_components/ui/use-toast";
-import {
-	CheckCircledIcon,
-	CircleIcon,
-	InfoCircledIcon,
-	StopwatchIcon,
-} from "@radix-ui/react-icons";
 
 export default function DashboardInvitationPage() {
 	const { data, refetch } = api.invitation.getAll.useQuery();
@@ -40,7 +33,6 @@ export default function DashboardInvitationPage() {
 				<SummaryInvitation
 					total={data?.total}
 					done={data?.done}
-					onProgress={data?.onProgress}
 					pending={data?.pending}
 				/>
 			</div>
@@ -62,9 +54,11 @@ export default function DashboardInvitationPage() {
 									status,
 									secretKey,
 									testerProfile,
+									startAt,
 								}) => ({
 									id,
 									name,
+									startAt,
 									status,
 									profileName: testerProfile?.name,
 									secretKey,
@@ -81,13 +75,11 @@ export default function DashboardInvitationPage() {
 
 interface SummaryInvitationProps {
 	pending?: number;
-	onProgress?: number;
 	done?: number;
 	total?: number;
 }
 const SummaryInvitation = ({
 	pending = 0,
-	onProgress = 0,
 	done = 0,
 	total = 0,
 }: SummaryInvitationProps) => {
@@ -109,7 +101,7 @@ const SummaryInvitation = ({
 					</p>
 				</CardContent>
 			</Card>
-			<Card className="">
+			{/* <Card className="">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 					<CardTitle className="text-sm font-medium">
 						On Progress
@@ -122,7 +114,7 @@ const SummaryInvitation = ({
 						Sedang dikerjakan
 					</p>
 				</CardContent>
-			</Card>
+			</Card> */}
 			<Card className="">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 					<CardTitle className="text-sm font-medium">Done</CardTitle>

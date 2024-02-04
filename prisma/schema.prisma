@@ -62,11 +62,6 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-enum Status {
-    ACTIVE
-    INACTIVE
-}
-
 model KraepelinTemplate {
     id      String @id @default(cuid())
     version String
@@ -92,7 +87,6 @@ model Invitation {
     name            String?
     secretKey       String
     startAt         DateTime?      @db.Timestamptz(3)
-    endAt           DateTime?      @db.Timestamptz(3)
     testerProfileId String?
     testerProfile   TesterProfile? @relation(fields: [testerProfileId], references: [id])
     createdAt       DateTime       @db.Timestamptz(3)
@@ -120,6 +114,7 @@ model KraepelinResult {
     @@index([invitationId])
 }
 
+// 1 Baris berapa yang terjawab ada di table ini, misalkan baris ke (x) terjawab berapa
 model KraepelinResultSummary {
     id                String          @id @default(cuid())
     kraepelinResult   KraepelinResult @relation(fields: [kraepelinResultId], references: [id])
@@ -139,4 +134,5 @@ model KraepelinResultDetail {
     a                 Int
     b                 Int
     value             Int
+    createdAt         DateTime        @default(now()) @db.Timestamptz(3)
 }

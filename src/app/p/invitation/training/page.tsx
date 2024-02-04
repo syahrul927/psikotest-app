@@ -1,38 +1,31 @@
 "use client";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCountdown } from "usehooks-ts";
-import { api } from "~/trpc/react";
+import { Button } from "~/app/_components/ui/button";
+import { type RouterOutputs } from "~/trpc/shared";
 import { type PageType } from "~/types/page-type";
 import Roller from "../components/Roller";
 import Header from "../components/header";
 import Numpad from "../components/numpad";
 import { useDisplay } from "../hooks/use-display";
-import { useAccessInvitation } from "../hooks/use-access";
-import { useRouter } from "next/navigation";
-import Spinner from "~/app/_components/ui/spinner";
-import { useToast } from "~/app/_components/ui/use-toast";
+import {
+	Alert,
+	AlertDescription,
+	AlertTitle,
+} from "~/app/_components/ui/alert";
+import { RocketIcon } from "lucide-react";
+import { makeid } from "~/lib/utils";
 
-const InvitationPage = ({ params }: PageType) => {
+const generate = () => {
+	return Math.floor(Math.random() * 9) + 1;
+};
+type Template = RouterOutputs["testKraepelin"]["getTemplate"];
+
+const TrainingPage = ({ params }: PageType) => {
 	const router = useRouter();
-	const { access, id } = useAccessInvitation();
-	const { toast } = useToast();
-	const { refetch: fetchLatest, data: latest } =
-		api.testKraepelin.getLatest.useQuery(
-			{ invitationId: params.slug, resultId: id ?? "" },
-			{
-				enabled: false,
-				refetchOnReconnect: false,
-				refetchOnWindowFocus: false,
-				refetchOnMount: false,
-			},
-		);
-	const { data, refetch: fetchTemplate } =
-		api.testKraepelin.getTemplate.useQuery(undefined, {
-			enabled: false,
-			refetchOnReconnect: false,
-			refetchOnWindowFocus: false,
-			refetchOnMount: false,
-		});
+	const [data, setData] = useState<Template>([]);
 	const [activeUndo, setActiveUndo] = useState(2);
 	const { setArray, currentColumn, nextColumn, totalColumn, indexColumn } =
 		useDisplay();
@@ -55,13 +48,21 @@ const InvitationPage = ({ params }: PageType) => {
 		}
 	}, [data]);
 	useEffect(() => {
-		if (latest?.latest.x && latest.latest.y) {
-			setActive({
-				indexUp: latest.latest.y - 2,
-				indexDown: latest.latest.y - 1,
-			});
-		}
-	}, [latest]);
+		setData(
+			Array.from({ length: 61 * 4 }).map((_, idx) => {
+				const index = idx + 1;
+				const x = Math.floor(index / 62);
+				const y = index % 61;
+				return {
+					id: `${idx}-${generate()}-${makeid(4)}`,
+					value: generate(),
+					x: x + 1,
+					y: y == 0 ? 61 : y,
+					version: "version-1",
+				};
+			}),
+		);
+	}, []);
 
 	useEffect(() => {
 		if (currentColumn.length && startCountdown) {
@@ -73,7 +74,6 @@ const InvitationPage = ({ params }: PageType) => {
 		}
 	}, [currentColumn]);
 	useEffect(() => {
-		console.log("active", active);
 		if (active.indexDown === 0 && active.indexUp === 0) return;
 		setQuetion({
 			a: currentColumn[active.indexUp]?.value ?? 0,
@@ -85,13 +85,7 @@ const InvitationPage = ({ params }: PageType) => {
 			if (indexColumn < totalColumn) {
 				nextColumn();
 				resetCountdown();
-				return;
 			}
-			toast({
-				title: "Yeay 🎉🎉🎉",
-				description: "Kamu berhasil menyelesaikannya..",
-			});
-			router.push("/p/invitation/thanks");
 		}
 	}, [count]);
 
@@ -102,16 +96,16 @@ const InvitationPage = ({ params }: PageType) => {
 	};
 	const onClickNumpad = (answer: number) => {
 		if (active.indexUp !== 0) {
-			mutate({
-				value: answer,
-				xA: indexColumn,
-				yA: active.indexUp + 1,
-				xB: indexColumn,
-				yB: active.indexDown + 1,
-				a: quetion.a,
-				b: quetion.b,
-				id: id ?? "",
-			});
+			// mutate({
+			// 	value: answer,
+			// 	xA: indexColumn,
+			// 	yA: active.indexUp + 1,
+			// 	xB: indexColumn,
+			// 	yB: active.indexDown + 1,
+			// 	a: quetion.a,
+			// 	b: quetion.b,
+			// 	id: params.slug,
+			// });
 			setActive({
 				indexUp: active.indexUp - 1,
 				indexDown: active.indexDown - 1,
@@ -120,7 +114,6 @@ const InvitationPage = ({ params }: PageType) => {
 			setAnswer(answer);
 		}
 	};
-	const { mutate } = api.testKraepelin.submitAnswer.useMutation();
 
 	const undo = () => {
 		if (activeUndo === 2 && active.indexDown !== currentColumn.length - 1) {
@@ -132,25 +125,27 @@ const InvitationPage = ({ params }: PageType) => {
 		}
 	};
 
-	useEffect(() => {
-		if (access) {
-			void fetchLatest();
-			void fetchTemplate();
-			return;
-		}
-		router.push(`/p/invitation/${params.slug}/confirmation`);
-	}, [router, access]);
-	return !access ? (
-		<div className="flex justify-center items-center py-16">
-			<Spinner />
-		</div>
-	) : (
+	return (
 		<div className="flex flex-col h-[100dvh] relative items-center justify-between w-full">
 			<Header
 				time={count}
 				totalColumn={totalColumn}
 				currentColumn={indexColumn}
 			/>
+
+			<div className="w-full flex items-center justify-between px-3">
+				<Button onClick={() => router.back()} variant={"ghost"}>
+					<ArrowLeftIcon />
+					Kembali{" "}
+				</Button>
+				<Alert className="max-w-md">
+					<RocketIcon className="h-4 w-4" />
+					<AlertTitle>Percobaan</AlertTitle>
+					<AlertDescription>
+						Silahkan mencoba cara melakukan kraepelin!
+					</AlertDescription>
+				</Alert>
+			</div>
 			<div className="w-full h-full flex relative justify-center items-center">
 				<Roller
 					display={currentColumn}
@@ -168,4 +163,4 @@ const InvitationPage = ({ params }: PageType) => {
 		</div>
 	);
 };
-export default InvitationPage;
+export default TrainingPage;

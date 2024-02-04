@@ -22,7 +22,7 @@ export function DataTableToolbar<TData>({
 		<div className="flex sm:items-center sm:justify-between space-y-2 sm:space-y-0 flex-col sm:flex-row">
 			<div className="flex flex-1 items-center space-x-2">
 				<Input
-					placeholder="Filter tasks..."
+					placeholder="Filter Invitation..."
 					value={
 						(table.getColumn("name")?.getFilterValue() as string) ??
 						""

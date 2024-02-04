@@ -25,11 +25,16 @@ export const useDisplay = () => {
 	const nextColumn = () => {
 		setIndexColumn(indexColumn + 1);
 	};
+
+	const forwardColumn = (index: number) => {
+		setIndexColumn(index);
+	};
 	return {
 		setArray,
 		currentColumn,
 		nextColumn,
 		indexColumn,
+		forwardColumn,
 		totalColumn: Object.keys(template).length,
 	};
 };

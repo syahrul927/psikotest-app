@@ -1,19 +1,151 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
+
+function compareDates(firstDate: Date, secondDate: Date): boolean {
+	const timeDifference: number = Math.abs(
+		firstDate.getTime() - secondDate.getTime(),
+	);
+	const minutesDifference: number = timeDifference / (1000 * 60);
+	if (minutesDifference > 20) {
+		return false;
+	} else {
+		return true;
+	}
+}
 
 export const pubInvitationRouter = createTRPCRouter({
 	findInvitation: publicProcedure
 		.input(z.string())
 		.query(async ({ ctx, input }) => {
-			return await ctx.db.invitation.findUnique({
+			const invitation = await ctx.db.invitation.findUnique({
 				where: {
 					id: input,
-					AND: {
-						endAt: null,
-						startAt: null,
-						testerProfileId: null,
+				},
+			});
+			if (invitation?.startAt) {
+				if (!compareDates(new Date(), invitation.startAt)) {
+					return undefined;
+				}
+			}
+			return invitation;
+		}),
+	confirmationSecretKey: publicProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				secretKey: z.string(),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id, secretKey } = input;
+			const invitation = await ctx.db.invitation.findFirst({
+				where: {
+					id,
+				},
+			});
+			if (!invitation || invitation.secretKey !== secretKey) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Invalid invitation!",
+				});
+			}
+			let step = 0;
+			let resultId = "";
+			if (invitation.startAt) {
+				step = 1;
+				const result = await ctx.db.kraepelinResult.findFirst({
+					where: {
+						invitationId: id,
+					},
+				});
+				resultId = result?.id ?? "";
+			}
+			return {
+				step,
+				resultId,
+			};
+		}),
+	profileUpdate: publicProcedure
+		.input(
+			z.object({
+				id: z.string(),
+				name: z.string(),
+				phone: z.string(),
+				address: z.string(),
+				education: z.string(),
+				educationDescription: z.string().optional(),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			const {
+				id,
+				name,
+				phone,
+				address,
+				education,
+				educationDescription,
+			} = input;
+			const invitation = await ctx.db.invitation.findFirst({
+				where: {
+					id,
+				},
+			});
+			if (!invitation || invitation.startAt !== null) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Invalid invitation!",
+				});
+			}
+			await ctx.db.invitation.update({
+				where: {
+					id,
+				},
+				data: {
+					testerProfile: {
+						create: {
+							address,
+							phone,
+							name,
+							eductionId: education,
+							eductionDescription: educationDescription,
+						},
 					},
 				},
 			});
+		}),
+	startInvitation: publicProcedure
+		.input(
+			z.object({
+				id: z.string(),
+			}),
+		)
+		.mutation(async ({ ctx, input }) => {
+			const { id } = input;
+			const invitation = await ctx.db.invitation.findFirst({
+				where: {
+					id,
+				},
+			});
+			if (!invitation || invitation.startAt !== null) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message: "Invalid invitation!",
+				});
+			}
+			const resultId = await ctx.db.kraepelinResult.create({
+				data: {
+					invitationId: id,
+				},
+			});
+			await ctx.db.invitation.update({
+				where: {
+					id,
+				},
+				data: {
+					startAt: new Date(),
+				},
+			});
+			return { resultId: resultId.id };
 		}),
 });

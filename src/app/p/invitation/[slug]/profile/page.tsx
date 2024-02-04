@@ -8,7 +8,6 @@ import { Button } from "~/app/_components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -22,8 +21,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "~/app/_components/ui/select";
+import Spinner from "~/app/_components/ui/spinner";
 import { Textarea } from "~/app/_components/ui/textarea";
-import { PageType } from "~/types/page-type";
+import { api } from "~/trpc/react";
+import { type PageType } from "~/types/page-type";
+import { useAccessInvitation } from "../../hooks/use-access";
+import { useToast } from "~/app/_components/ui/use-toast";
+import { ModalConfirm } from "./components/modal";
 
 const formSchema = z.object({
 	name: z.string(),
@@ -34,27 +38,91 @@ const formSchema = z.object({
 	invitationId: z.string(),
 });
 
+const defaultValues: Partial<FormValues> = {};
 type FormValues = z.infer<typeof formSchema>;
 const ProfilePage = ({ params }: PageType) => {
 	const router = useRouter();
-	const [loading, setLoading] = useState(false);
+	const { toast } = useToast();
+	const { access, resetAccess, setAccess } = useAccessInvitation();
 	const form = useForm<FormValues>({
+		defaultValues,
 		resolver: zodResolver(formSchema),
 		mode: "onSubmit",
 	});
+	const [modal, setModal] = useState(false);
+	const { mutate: startTest } =
+		api.publicInvitation.startInvitation.useMutation({
+			onSuccess(resp) {
+				setAccess(resp.resultId, true);
+				router.push(`/p/invitation/${params.slug}`);
+			},
+			onError(_err) {
+				toast({
+					variant: "destructive",
+					title: "Terjadi masalah",
+					description: "Segera hubungi admin.",
+				});
+				resetAccess();
+				router.push(`/p/invitation/${params.slug}/confirmation`);
+			},
+		});
+	const { mutate, isLoading: loading } =
+		api.publicInvitation.profileUpdate.useMutation({
+			onSuccess: () => {
+				setModal(true);
+			},
+			onError: () => {
+				toast({
+					variant: "destructive",
+					title: "Undangan tidak valid",
+					description: "Segera hubungi admin.",
+				});
+				resetAccess();
+				router.push(`/p/invitation/${params.slug}/confirmation`);
+			},
+		});
+
+	const onConfirm = () => {
+		void startTest({ id: params.slug });
+	};
+	const onSubmit = async (data: FormValues) => {
+		const {
+			address,
+			education,
+			invitationId,
+			name,
+			phone,
+			educationDescription,
+		} = data;
+		mutate({
+			address,
+			education,
+			name,
+			id: invitationId,
+			phone,
+			educationDescription,
+		});
+	};
 
 	useEffect(() => {
 		form.setValue("invitationId", params.slug);
 	}, [params.slug]);
-	const onSubmit = async (data: FormValues) => {
-		setLoading(true);
-		setTimeout(() => setLoading(false), 1000);
-		router.push(`/p/invitation/${params.slug}`);
-	};
-	return (
+	useEffect(() => {
+		if (!access) {
+			router.push(`/p/invitation/${params.slug}/confirmation`);
+		}
+	}, [router, access]);
+	return !access ? (
+		<div className="flex justify-center items-center py-16">
+			<Spinner />
+		</div>
+	) : (
 		<div className="flex flex-col w-full max-h-[100dvh] p-6 overflow-y-auto ">
+			<ModalConfirm show={modal} onConfirm={onConfirm} />
 			<div className="flex flex-col gap-2">
-				<p className="text-2xl leading-tight font-bold">Profil Kamu</p>
+				<p className="text-2xl leading-tight font-bold">
+					Informasi Kamu
+				</p>
 				<span className="text-muted-foreground">
 					Periksa kembali pengisian informasi agar kami dapat menerima
 					informasi yang valid.
