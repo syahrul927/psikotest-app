@@ -2,7 +2,7 @@ import { type PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import _ from "underscore";
 import { z } from "zod";
-import { validateAnswer } from "~/lib/utils";
+import { plusKraepelin, validateAnswer } from "~/lib/utils";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 const FilterRow = [6, 7, 8, 9, 10, 21, 22, 23, 24, 25, 36, 37, 38, 39, 40];
 export const resultRouter = createTRPCRouter({
@@ -93,16 +93,6 @@ const generateResult = async (id: string, db: PrismaClient) => {
 		}),
 	});
 
-	// perlu di filter X 6-10, 21-25, 36-40
-	const summary = await db.kraepelinResultSummary.findMany({
-		where: {
-			x: {
-				in: FilterRow,
-			},
-			kraepelinResultId: id,
-		},
-	});
-
 	const highestJanker = Object.keys(groupedX).reduce((prev, aft) => {
 		const x = groupedX[aft];
 		if (x?.length && prev < x.length) {
@@ -111,17 +101,26 @@ const generateResult = async (id: string, db: PrismaClient) => {
 		return prev;
 	}, 0);
 
-	const lowestJanker = Object.keys(groupedX).reduce((prev, aft) => {
-		const x = groupedX[aft];
-		if (x?.length && prev > x.length) {
-			return x.length;
-		}
-		return prev;
-	}, 0);
+	const lowestJanker: number =
+		Object.keys(groupedX).reduce<number | undefined>((prev, aft) => {
+			const x = groupedX[aft];
+			if (!prev) return x?.length;
+			if (x?.length && prev > x.length) {
+				return x.length;
+			}
+			return prev;
+		}, undefined) ?? 0;
 	const janker = highestJanker - lowestJanker;
 	const panker = answers.length / 40;
 	const hanker = (panker + janker) / 2;
 	const deciel = (highestJanker + lowestJanker) / 2;
+	const totalIncorrect = answers
+		.filter((item) => FilterRow.includes(item.xA))
+		.reduce(
+			(prev, aft) =>
+				aft.value !== plusKraepelin(aft.a, aft.b) ? prev + 1 : prev,
+			0,
+		);
 	await db.kraepelinResult.update({
 		where: {
 			id: id,
@@ -129,15 +128,9 @@ const generateResult = async (id: string, db: PrismaClient) => {
 		data: {
 			generated: true,
 			totalAnswered: answers.length,
-			tianker: summary.reduce((prev, aft) => {
-				const wrong = aft.wrong;
-				if (wrong) {
-					return prev + wrong;
-				}
-				return prev;
-			}, 0),
+			tianker: totalIncorrect,
 			totalNotAnswered: 2440 - answers.length,
-			panker,
+			totalIncorrect,
 			lowestJanker,
 			highestJanker,
 			janker,

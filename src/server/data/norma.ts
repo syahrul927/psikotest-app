@@ -1,4 +1,4 @@
-interface NormaValidation {
+export interface NormaValidation {
 	value: number;
 	label: string;
 	operator: string;
@@ -11,6 +11,33 @@ export interface NormaType {
 	tianker: NormaValidation[];
 	hanker: NormaValidation[];
 }
+
+export const TiankerLabel: NormaValidation[] = [
+	{
+		label: "Kurang Teliti",
+		operator: ">=",
+		value: 8,
+	},
+
+	{
+		label: "Memiliki Konsentrasi yang Tinggi",
+		operator: ">=",
+		value: 0,
+	},
+];
+export const JankerLabel: NormaValidation[] = [
+	{
+		label: "Emosi Tidak Stabil",
+		operator: ">=",
+		value: 8,
+	},
+
+	{
+		label: "Emosi Stabil",
+		operator: ">=",
+		value: 0,
+	},
+];
 export const DataNorma: NormaType[] = [
 	{
 		id: "1",

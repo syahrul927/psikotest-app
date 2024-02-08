@@ -1,8 +1,8 @@
 import {
+	BarChartIcon,
 	EyeOpenIcon,
 	FaceIcon,
 	LightningBoltIcon,
-	BarChartIcon,
 } from "@radix-ui/react-icons";
 import {
 	Card,
@@ -11,7 +11,12 @@ import {
 	CardTitle,
 } from "~/app/_components/ui/card";
 import Text from "~/app/_components/ui/text";
-import { DataNorma, type NormaType } from "~/server/data/norma";
+import {
+	DataNorma,
+	JankerLabel,
+	type NormaValidation,
+	TiankerLabel,
+} from "~/server/data/norma";
 
 interface PointResultCartProps {
 	educationId: string;
@@ -30,10 +35,10 @@ export default function PointResultCart({
 	isLoading,
 }: PointResultCartProps) {
 	const data = educationSelector(educationId);
-	const labelPanker = getLabel(panker, data);
-	const labelJanker = getLabel(janker, data);
-	const labelTianker = getLabel(tianker, data);
-	const labelHanker = getLabel(hanker, data);
+	const labelPanker = getLabel(panker, data?.panker);
+	const labelJanker = getLabel(janker, data?.janker);
+	const labelTianker = getLabel(tianker, data?.tianker);
+	const labelHanker = getLabel(hanker, data?.hanker);
 	return (
 		<div className="col-span-2 grid grid-cols-4 gap-6">
 			<Card>
@@ -60,7 +65,7 @@ export default function PointResultCart({
 					<CardTitle className="text-sm font-medium">
 						Janker
 						<span className="inline italic text-muted-foreground ">
-							(Emosi)
+							({getLabelAdditional(janker, JankerLabel)})
 						</span>
 					</CardTitle>
 					<FaceIcon className="text-muted-foreground" />
@@ -79,7 +84,7 @@ export default function PointResultCart({
 					<CardTitle className="text-sm font-medium">
 						Tianker
 						<span className="inline italic text-muted-foreground ">
-							(Konsentrasi)
+							({getLabelAdditional(tianker, TiankerLabel)})
 						</span>
 					</CardTitle>
 					<EyeOpenIcon className="text-muted-foreground" />
@@ -118,22 +123,25 @@ export default function PointResultCart({
 const educationSelector = (id: string) => {
 	return DataNorma.find((data) => data.id === id);
 };
-const getLabel = (value: number, data?: NormaType) => {
+const getLabel = (value: number, data?: NormaValidation[]) => {
 	if (!data) {
 		return "-";
 	}
-	return data.panker.reduce((prev, aft) => {
-		if (operator(value, aft.value, aft.operator)) {
-			return aft.label;
-		}
-		return prev;
-	}, "-");
+	return (
+		data.find((item) => operator(value, item.value, item.operator))
+			?.label ?? "-"
+	);
+};
+const getLabelAdditional = (value: number, data: NormaValidation[]) => {
+	return (
+		data.find((item) => operator(value, item.value, item.operator))
+			?.label ?? "-"
+	);
 };
 const operator = (a: number, b: number, operator: string) => {
 	switch (operator) {
 		case ">=":
 			return a >= b;
-
 		case "<=":
 			return a <= b;
 		default:

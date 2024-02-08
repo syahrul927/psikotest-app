@@ -211,13 +211,17 @@ const ProfilePage = ({ params }: PageType) => {
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										<SelectItem value="SMA/SMK">
-											SMA / SMK
+										<SelectItem value="1">
+											SMA IPA
 										</SelectItem>
-										<SelectItem value="S1IPA">
+
+										<SelectItem value="2">
+											SMA IPS
+										</SelectItem>
+										<SelectItem value="3">
 											S1 IPA
 										</SelectItem>
-										<SelectItem value="S1IPS">
+										<SelectItem value="4">
 											S1 IPS
 										</SelectItem>
 									</SelectContent>
