@@ -2,6 +2,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
 import { testKrapelinRouter } from "./routers/testKraepelin";
 import { invitationRouter } from "./routers/invitation";
 import { pubInvitationRouter } from "./routers/pubInvitation";
+import { resultRouter } from "./routers/result";
 
 /**
  * This is the primary router for your server.
@@ -11,6 +12,7 @@ import { pubInvitationRouter } from "./routers/pubInvitation";
 export const appRouter = createTRPCRouter({
 	testKraepelin: testKrapelinRouter,
 	invitation: invitationRouter,
+	result: resultRouter,
 	publicInvitation: pubInvitationRouter,
 });
 

@@ -13,7 +13,7 @@ import {
 	EyeOffIcon,
 } from "lucide-react";
 import { cn } from "~/lib/utils";
-import { Button } from "../../../../_components/ui/button";
+import { Button } from "../ui/button";
 
 interface DataTableColumnHeaderProps<TData, TValue>
 	extends React.HTMLAttributes<HTMLDivElement> {

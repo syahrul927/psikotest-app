@@ -73,7 +73,6 @@ const InvitationPage = ({ params }: PageType) => {
 		}
 	}, [currentColumn]);
 	useEffect(() => {
-		console.log("active", active);
 		if (active.indexDown === 0 && active.indexUp === 0) return;
 		setQuetion({
 			a: currentColumn[active.indexUp]?.value ?? 0,

@@ -49,6 +49,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			children,
 			variant,
 			isLoading,
+			disabled,
 			size,
 			asChild = false,
 			...props
@@ -61,7 +62,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 				className={cn(buttonVariants({ variant, size, className }))}
 				ref={ref}
 				{...props}
-				disabled={isLoading}
+				disabled={isLoading ?? disabled}
 			>
 				{isLoading ? (
 					<Spinner className="fill-slate-200 h-4 w-4" />

@@ -5,14 +5,14 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "../../../../_components/ui/select";
+} from "../ui/select";
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
 	ChevronsLeftIcon,
 	ChevronsRightIcon,
 } from "lucide-react";
-import { Button } from "../../../../_components/ui/button";
+import { Button } from "../ui/button";
 
 interface DataTablePaginationProps<TData> {
 	table: Table<TData>;
@@ -96,7 +96,7 @@ export function DataTablePagination<TData>({
 						disabled={!table.getCanNextPage()}
 					>
 						<span className="sr-only">Go to last page</span>
-						<ChevronsRightIcon className="h-4 w-4" />
+						<ChevronsRightIcon className="h-4 w-4" />{" "}
 					</Button>
 				</div>
 			</div>

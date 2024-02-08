@@ -1,9 +1,6 @@
 "use client";
 
 import {
-	type ColumnFiltersState,
-	type SortingState,
-	type VisibilityState,
 	flexRender,
 	getCoreRowModel,
 	getFacetedRowModel,
@@ -13,10 +10,12 @@ import {
 	getSortedRowModel,
 	useReactTable,
 	type ColumnDef,
+	type ColumnFiltersState,
+	type SortingState,
+	type VisibilityState,
 } from "@tanstack/react-table";
-import { useState } from "react";
-import { DataTablePagination } from "~/app/(dashboard)/invitation/components/table/data-table-pagination";
-import { DataTableToolbar } from "~/app/(dashboard)/invitation/components/table/data-table-toolbar";
+import { useState, type ReactNode } from "react";
+import { DataTablePagination } from "~/app/_components/table/data-table-pagination";
 import {
 	Table,
 	TableBody,
@@ -25,16 +24,21 @@ import {
 	TableHeader,
 	TableRow,
 } from "../ui/table";
+import { type DataTableToolbarProps } from "./table-type";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	isLoading?: boolean;
+	pagination?: boolean;
+	toolbar?: (props: DataTableToolbarProps<TData>) => ReactNode;
 }
 
 export function DataTable<TData, TValue>({
 	columns,
 	data,
+	pagination = true,
+	toolbar: DataTableToolbar,
 }: DataTableProps<TData, TValue>) {
 	const [rowSelection, setRowSelection] = useState({});
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -66,7 +70,7 @@ export function DataTable<TData, TValue>({
 
 	return (
 		<div className="flex flex-col space-y-4">
-			<DataTableToolbar table={table} />
+			{DataTableToolbar ? <DataTableToolbar table={table} /> : null}
 			<div className="rounded-md border">
 				<Table>
 					<TableHeader>
@@ -121,7 +125,7 @@ export function DataTable<TData, TValue>({
 				</Table>
 			</div>
 
-			<DataTablePagination table={table} />
+			{pagination ? <DataTablePagination table={table} /> : null}
 		</div>
 	);
 }

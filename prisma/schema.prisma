@@ -73,13 +73,14 @@ model KraepelinTemplate {
 }
 
 model TesterProfile {
-    id                  String       @id @default(cuid())
-    name                String
-    phone               String
-    address             String
-    eductionId          String
-    eductionDescription String?
-    Invitation          Invitation[]
+    id                   String       @id @default(cuid())
+    name                 String
+    phone                String
+    address              String
+    educationId          String
+    educationName        String
+    educationDescription String?
+    Invitation           Invitation[]
 }
 
 model Invitation {
@@ -110,6 +111,7 @@ model KraepelinResult {
     deciel                 Float?
     KraepelinResultSummary KraepelinResultSummary[]
     KraepelinResultDetail  KraepelinResultDetail[]
+    generated              Boolean?
 
     @@index([invitationId])
 }
@@ -121,6 +123,8 @@ model KraepelinResultSummary {
     kraepelinResultId String
     x                 Int
     answered          Int
+    correct           Int?
+    wrong             Int?
 }
 
 model KraepelinResultDetail {

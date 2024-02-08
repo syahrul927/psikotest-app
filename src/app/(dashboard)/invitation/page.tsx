@@ -14,6 +14,7 @@ import {
 import { useToast } from "~/app/_components/ui/use-toast";
 import { api } from "~/trpc/react";
 import { columnsPost } from "./components/table/column-invitation";
+import { DataTableToolbar } from "./components/table/data-table-toolbar";
 
 export default function DashboardInvitationPage() {
 	const { data, refetch } = api.invitation.getAll.useQuery();
@@ -45,6 +46,7 @@ export default function DashboardInvitationPage() {
 				</CardHeader>
 				<CardContent>
 					<DataTable
+						toolbar={DataTableToolbar}
 						columns={columnsPost}
 						data={
 							data?.invitations?.map(

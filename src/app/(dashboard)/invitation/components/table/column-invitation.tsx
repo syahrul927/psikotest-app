@@ -27,6 +27,9 @@ import {
 import { statuses } from "../../data/data";
 import { type InvitationTableProps } from "../../data/schemas";
 import { localDate } from "~/lib/utils";
+import { env } from "~/env";
+import getUrl from "../get-url";
+import { useToast } from "~/app/_components/ui/use-toast";
 
 export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 	{
@@ -85,6 +88,7 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 		accessorKey: "action",
 		cell({ row }) {
 			const { name, id, onDelete, status } = row.original;
+			const { toast } = useToast();
 			return (
 				<DropdownMenu>
 					<AlertDialog>
@@ -130,9 +134,19 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 										<span>Update Invitation</span>
 									</DropdownMenuItem>
 								</Link>
-								<DropdownMenuItem>
+								<DropdownMenuItem
+									onClick={async () => {
+										const base = await getUrl();
+										toast({
+											title: "Berhasil copy link",
+										});
+										return navigator.clipboard.writeText(
+											`${base}/p/invitation/${row.original.id}/confirmation`,
+										);
+									}}
+								>
 									<CopyIcon size={16} className="mr-2 " />
-									<span>Copy</span>
+									<span>Share</span>
 								</DropdownMenuItem>
 								{status !== "DONE" ? (
 									<DropdownMenuItem className="text-red-600">
