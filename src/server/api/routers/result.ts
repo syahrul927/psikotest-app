@@ -133,6 +133,7 @@ const generateResult = async (id: string, db: PrismaClient) => {
 			totalIncorrect,
 			lowestJanker,
 			highestJanker,
+			panker,
 			janker,
 			hanker,
 			deciel,

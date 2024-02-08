@@ -86,7 +86,7 @@ const SummaryInvitation = ({
 	total = 0,
 }: SummaryInvitationProps) => {
 	return (
-		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 			<Card className="">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 					<CardTitle className="text-sm font-medium">
@@ -103,20 +103,7 @@ const SummaryInvitation = ({
 					</p>
 				</CardContent>
 			</Card>
-			{/* <Card className="">
-				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-					<CardTitle className="text-sm font-medium">
-						On Progress
-					</CardTitle>
-					<StopwatchIcon className="text-muted-foreground" />
-				</CardHeader>
-				<CardContent>
-					<div className="text-2xl font-bold">{onProgress}</div>
-					<p className="text-xs text-muted-foreground">
-						Sedang dikerjakan
-					</p>
-				</CardContent>
-			</Card> */}
+
 			<Card className="">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 					<CardTitle className="text-sm font-medium">Done</CardTitle>
