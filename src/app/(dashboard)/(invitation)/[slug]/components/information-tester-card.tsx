@@ -15,6 +15,7 @@ import {
 } from "~/app/_components/ui/table";
 import Text from "~/app/_components/ui/text";
 import { EducationLabel } from "../data/data";
+import { useToast } from "~/app/_components/ui/use-toast";
 
 interface InformationTesterCardProps {
 	name: string;
@@ -33,6 +34,7 @@ export default function InformationTesterCard({
 	phone,
 	isLoading,
 }: InformationTesterCardProps) {
+	const { toast } = useToast();
 	return (
 		<Card>
 			<CardHeader>
@@ -53,7 +55,18 @@ export default function InformationTesterCard({
 						<TableRow>
 							<TableHead>No Telepon</TableHead>
 							<TableCell className="text-right">
-								<Button variant={"link"} className="px-0">
+								<Button
+									variant={"link"}
+									onClick={async () => {
+										toast({
+											title: "Berhasil Copy Contact ke Clipboard",
+										});
+										return navigator.clipboard.writeText(
+											phone,
+										);
+									}}
+									className="px-0"
+								>
 									<CopyIcon size={16} />
 									<Text str={phone} isLoading={isLoading} />
 								</Button>

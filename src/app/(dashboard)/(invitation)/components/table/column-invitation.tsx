@@ -137,7 +137,7 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 										const base = await getUrl();
 										const text = `Undangan Psikotest:\n${base}/p/invitation/${row.original.id}/confirmation\n\nSecret Key:\n${row.original.secretKey}`;
 										toast({
-											title: "Berhasil copy link",
+											title: "Berhasil Copy Link ke Clipboard",
 											description: (
 												<pre className="mt-2 rounded-md bg-slate-950 text-white p-4">
 													{text}
