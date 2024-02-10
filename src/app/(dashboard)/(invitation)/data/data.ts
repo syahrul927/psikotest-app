@@ -17,10 +17,10 @@ export const statuses = [
 		icon: CheckCircledIcon,
 		style: "text-green-600 bg-green-200/30 rounded-lg py-0.5 px-2 font-semibold",
 	},
-	// {
-	// 	value: "ONPROGRESS",
-	// 	label: "On Progress",
-	// 	icon: StopwatchIcon,
-	// 	style: "text-violet-600 bg-violet-200/30 rounded-lg py-0.5 px-2 font-semibold",
-	// },
+	{
+		value: "ONPROGRESS",
+		label: "On Progress",
+		icon: StopwatchIcon,
+		style: "text-violet-600 bg-violet-200/30 rounded-lg py-0.5 px-2 font-semibold",
+	},
 ];

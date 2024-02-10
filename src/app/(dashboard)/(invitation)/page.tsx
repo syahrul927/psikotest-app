@@ -3,6 +3,7 @@ import {
 	CheckCircledIcon,
 	CircleIcon,
 	InfoCircledIcon,
+	StopwatchIcon,
 } from "@radix-ui/react-icons";
 import { DataTable } from "~/app/_components/table/data-table";
 import {
@@ -35,6 +36,7 @@ export default function DashboardInvitationPage() {
 					total={data?.total}
 					done={data?.done}
 					pending={data?.pending}
+					onprogress={data?.onprogress}
 				/>
 			</div>
 			<Card>
@@ -78,15 +80,17 @@ export default function DashboardInvitationPage() {
 interface SummaryInvitationProps {
 	pending?: number;
 	done?: number;
+	onprogress?: number;
 	total?: number;
 }
 const SummaryInvitation = ({
 	pending = 0,
 	done = 0,
+	onprogress = 0,
 	total = 0,
 }: SummaryInvitationProps) => {
 	return (
-		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+		<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 			<Card className="">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 					<CardTitle className="text-sm font-medium">
@@ -100,6 +104,22 @@ const SummaryInvitation = ({
 					</div>
 					<p className="text-xs text-muted-foreground">
 						Menunggu dikerjakan
+					</p>
+				</CardContent>
+			</Card>
+			<Card className="">
+				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+					<CardTitle className="text-sm font-medium">
+						On Progress
+					</CardTitle>
+					<StopwatchIcon className="text-muted-foreground" />
+				</CardHeader>
+				<CardContent>
+					<div className="text-2xl font-bold max-w-max text-ellipsis overflow-hidden">
+						{onprogress}
+					</div>
+					<p className="text-xs text-muted-foreground">
+						Sedang dikerjakan
 					</p>
 				</CardContent>
 			</Card>

@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import moment from "moment";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
-	type ResponseInvitationRouterSchema,
 	SaveInvitationRouterSchema,
+	type ResponseInvitationRouterSchema,
 } from "../schemas";
 
 export const invitationRouter = createTRPCRouter({
@@ -52,12 +53,22 @@ export const invitationRouter = createTRPCRouter({
 		});
 		let pending = 0;
 		let done = 0;
+		let onprogress = 0;
 		const invitations: ResponseInvitationRouterSchema[] = array.map(
 			(item) => {
 				let status = "PENDING";
 				if (item.startAt) {
-					status = "DONE";
-					done++;
+					const startTime = moment(item.startAt);
+					const now = moment(new Date());
+					const diff = moment.duration(now.diff(startTime));
+					const minutes = diff.asMinutes();
+					if (minutes >= 20) {
+						status = "DONE";
+						done++;
+					} else {
+						status = "ONPROGRESS";
+						onprogress++;
+					}
 				} else {
 					pending++;
 				}
@@ -70,6 +81,7 @@ export const invitationRouter = createTRPCRouter({
 		return {
 			invitations,
 			pending,
+			onprogress,
 			done,
 			total: invitations.length,
 		};

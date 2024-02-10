@@ -18,11 +18,16 @@ import StatisticCart from "./components/statistic-cart";
 import { SummaryResultCart } from "./components/summary-result-card";
 import TableSummaryRow from "./components/table-summary-row";
 import { plusKraepelin } from "~/lib/utils";
+import { useToast } from "~/app/_components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const ResultInvitationPage = ({ params }: PageType) => {
 	const { slug } = params;
+	const { toast } = useToast();
+	const router = useRouter();
 	const [details, setDetails] = useState<DetailAnswerCartItemProps[]>([]);
-	const { data, isLoading } = api.result.getResult.useQuery(slug);
+	const { data, isLoading, error, isError } =
+		api.result.getResult.useQuery(slug);
 	useEffect(() => {
 		const result = data?.kraepelinResult?.KraepelinResultDetail ?? [];
 		const grouped = _.groupBy(result, "xA");
@@ -48,6 +53,16 @@ const ResultInvitationPage = ({ params }: PageType) => {
 		);
 		setDetails(filtered);
 	}, [data?.kraepelinResult?.KraepelinResultDetail]);
+	useEffect(() => {
+		if (isError) {
+			toast({
+				title: "Invalid Invitation",
+				variant: "destructive",
+				description: error?.message,
+			});
+			void router.back();
+		}
+	}, [isError]);
 	return (
 		<div className="grid grid-cols-2 gap-6">
 			<Alert className="col-span-2 bg-primary text-primary-foreground ">

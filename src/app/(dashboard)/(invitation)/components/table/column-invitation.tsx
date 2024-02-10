@@ -98,25 +98,39 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
+							<DropdownMenuLabel>Information</DropdownMenuLabel>
+							<DropdownMenuSeparator />
 							{status === "DONE" ? (
-								<>
-									<DropdownMenuLabel>
-										Information
-									</DropdownMenuLabel>
-									<DropdownMenuSeparator />
-									<DropdownMenuGroup>
-										<Link href={`/${row.original.id}`}>
-											<DropdownMenuItem>
-												<EyeIcon
-													size={16}
-													className="mr-2 "
-												/>
-												<span>Hasil Test</span>
-											</DropdownMenuItem>
-										</Link>
-									</DropdownMenuGroup>
-								</>
+								<DropdownMenuGroup>
+									<Link href={`/${row.original.id}`}>
+										<DropdownMenuItem>
+											<EyeIcon
+												size={16}
+												className="mr-2 "
+											/>
+											<span>Hasil Test</span>
+										</DropdownMenuItem>
+									</Link>
+								</DropdownMenuGroup>
 							) : null}
+							<DropdownMenuItem
+								onClick={async () => {
+									const base = await getUrl();
+									const text = `Undangan Psikotest:\n${base}/p/invitation/${row.original.id}/confirmation\n\nSecret Key:\n${row.original.secretKey}`;
+									toast({
+										title: "Berhasil Copy Link ke Clipboard",
+										description: (
+											<pre className="mt-2 rounded-md bg-slate-950 text-white p-4">
+												<code>{text}</code>
+											</pre>
+										),
+									});
+									return navigator.clipboard.writeText(text);
+								}}
+							>
+								<CopyIcon size={16} className="mr-2 " />
+								<span>Share</span>
+							</DropdownMenuItem>
 							<DropdownMenuLabel>Action</DropdownMenuLabel>
 							<DropdownMenuSeparator />
 							<DropdownMenuGroup>
@@ -132,26 +146,7 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 										<span>Update Invitation</span>
 									</DropdownMenuItem>
 								</Link>
-								<DropdownMenuItem
-									onClick={async () => {
-										const base = await getUrl();
-										const text = `Undangan Psikotest:\n${base}/p/invitation/${row.original.id}/confirmation\n\nSecret Key:\n${row.original.secretKey}`;
-										toast({
-											title: "Berhasil Copy Link ke Clipboard",
-											description: (
-												<pre className="mt-2 rounded-md bg-slate-950 text-white p-4">
-													{text}
-												</pre>
-											),
-										});
-										return navigator.clipboard.writeText(
-											text,
-										);
-									}}
-								>
-									<CopyIcon size={16} className="mr-2 " />
-									<span>Share</span>
-								</DropdownMenuItem>
+
 								{status !== "DONE" ? (
 									<DropdownMenuItem className="text-red-600">
 										<AlertDialogTrigger className="flex w-full justify-start">

@@ -1,9 +1,10 @@
 import { type PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import _ from "underscore";
+import _, { min } from "underscore";
 import { z } from "zod";
 import { plusKraepelin, validateAnswer } from "~/lib/utils";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import moment from "moment";
 const FilterRow = [6, 7, 8, 9, 10, 21, 22, 23, 24, 25, 36, 37, 38, 39, 40];
 export const resultRouter = createTRPCRouter({
 	getResult: protectedProcedure
@@ -20,9 +21,6 @@ export const resultRouter = createTRPCRouter({
 					message: "Invalid invitation",
 				});
 			}
-			if (!result.generated) {
-				await generateResult(result.id, ctx.db);
-			}
 			const informationTester = await ctx.db.invitation.findFirst({
 				where: {
 					id: input,
@@ -31,6 +29,22 @@ export const resultRouter = createTRPCRouter({
 					testerProfile: true,
 				},
 			});
+
+			const startTime = moment(informationTester?.startAt);
+			const now = moment(new Date());
+			const diff = moment.duration(now.diff(startTime));
+			const minutes = diff.asMinutes();
+			if (minutes <= 20) {
+				throw new TRPCError({
+					code: "BAD_REQUEST",
+					message:
+						"Invitation is not ended yet, please wait until it's done",
+				});
+			}
+			if (!result.generated) {
+				await generateResult(result.id, ctx.db);
+			}
+
 			const kraepelinResult = await ctx.db.kraepelinResult.findFirst({
 				where: {
 					id: result.id,
