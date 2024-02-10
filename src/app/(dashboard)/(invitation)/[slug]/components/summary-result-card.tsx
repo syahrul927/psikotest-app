@@ -39,7 +39,10 @@ export function SummaryResultCart({
 					<TableBody>
 						<TableRow>
 							<TableHead>
-								Jumlah Hitungan (total terjawab)
+								Jumlah Hitungan&nbsp;
+								<span className="text-muted-foreground text-xs inline italic">
+									(total terjawab)
+								</span>
 							</TableHead>
 							<TableCell className="text-right">
 								<Text
@@ -74,7 +77,7 @@ export function SummaryResultCart({
 
 						<TableRow>
 							<TableHead>
-								Deciel{" "}
+								Deciel&nbsp;
 								<span className="text-muted-foreground text-xs inline italic">
 									((Puncak Tertinggi + Puncak Terendah )/ 2)
 								</span>

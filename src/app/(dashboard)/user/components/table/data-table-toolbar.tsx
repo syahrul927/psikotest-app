@@ -1,18 +1,15 @@
 "use client";
 
-import { type Table } from "@tanstack/react-table";
 import { XIcon } from "lucide-react";
 import Link from "next/link";
+import { type DataTableToolbarProps } from "~/app/_components/table/table-type";
 import { Button } from "~/app/_components/ui/button";
+import { DataTableFacetedFilter } from "../../../../_components/table/data-table-faceted-filter";
+import { DataTableViewOptions } from "../../../../_components/table/data-table-view-options";
 import { Input } from "../../../../_components/ui/input";
-import { statuses } from "../../data/data";
-import { DataTableFacetedFilter } from "~/app/_components/table/data-table-faceted-filter";
+import { roleUser } from "../../data/data";
 
-interface DataTableToolbarProps<TData> {
-	table: Table<TData>;
-}
-
-export function DataTableToolbar<TData>({
+export function DataTableToolbarUser<TData>({
 	table,
 }: DataTableToolbarProps<TData>) {
 	const isFiltered = table.getState().columnFilters.length > 0;
@@ -21,7 +18,7 @@ export function DataTableToolbar<TData>({
 		<div className="flex sm:items-center sm:justify-between space-y-2 sm:space-y-0 flex-col sm:flex-row">
 			<div className="flex flex-1 items-center space-x-2">
 				<Input
-					placeholder="Filter Invitation..."
+					placeholder="Filter tasks..."
 					value={
 						(table.getColumn("name")?.getFilterValue() as string) ??
 						""
@@ -33,11 +30,11 @@ export function DataTableToolbar<TData>({
 					}
 					className="h-8 w-[150px] lg:w-[250px]"
 				/>
-				{table.getColumn("status") && (
+				{table.getColumn("role") && (
 					<DataTableFacetedFilter
-						column={table.getColumn("status")}
-						title="Status"
-						options={statuses}
+						column={table.getColumn("role")}
+						title="Role User"
+						options={roleUser}
 					/>
 				)}
 				{isFiltered && (
@@ -51,9 +48,9 @@ export function DataTableToolbar<TData>({
 					</Button>
 				)}
 			</div>
-			{/* <DataTableViewOptions table={table} /> */}
-			<Link href="/invitation/add">
-				<Button className="h-8 sm:ml-3">Buat Baru</Button>
+			<DataTableViewOptions table={table} />
+			<Link href="/user/add">
+				<Button className="h-8 sm:ml-3">Add New</Button>
 			</Link>
 		</div>
 	);

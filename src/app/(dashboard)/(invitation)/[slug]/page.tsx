@@ -66,7 +66,7 @@ const ResultInvitationPage = ({ params }: PageType) => {
 				isLoading={isLoading}
 				address={data?.informationTester?.address ?? "-"}
 				name={data?.informationTester?.name ?? "-"}
-				educationName={data?.informationTester?.educationName ?? "-"}
+				educationId={data?.informationTester?.educationId ?? "-"}
 				phone={data?.informationTester?.phone ?? "-"}
 				educationDescription={
 					data?.informationTester?.educationDescription ?? "-"

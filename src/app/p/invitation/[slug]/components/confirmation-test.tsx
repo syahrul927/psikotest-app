@@ -31,8 +31,9 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 interface ConfirmationTestProps {
 	slug: string;
+	name: string;
 }
-const ConfirmationTest = ({ slug }: ConfirmationTestProps) => {
+const ConfirmationTest = ({ slug, name }: ConfirmationTestProps) => {
 	const router = useRouter();
 	const { toast } = useToast();
 	const { setAccess, resetAccess } = useAccessInvitation();
@@ -74,12 +75,20 @@ const ConfirmationTest = ({ slug }: ConfirmationTestProps) => {
 		mutate({ id: data.invitationId, secretKey: data.secretKey });
 	};
 	return (
-		<div className={cn("flex flex-col py-2 space-y-12 max-w-xl h-full")}>
+		<div
+			className={cn("flex flex-col py-2 space-y-20 max-w-xl h-[100dvh]")}
+		>
 			<header className="p-4 flex flex-col px-6">
-				<Label className="text-lg leading-tight">Halo Peserta,</Label>
+				<Label className="leading-tight ">Halo Peserta,</Label>
 				<Label className="text-xl font-bold leading-tight">
 					Selamat Datang
 				</Label>
+				{name ? (
+					<p className="leading-tight text-sm text-muted-foreground">
+						Undangan psikotest Kraepelin&nbsp;
+						<span className="font-bold">{name}</span>
+					</p>
+				) : null}
 			</header>
 			<div
 				className={cn(
@@ -96,7 +105,7 @@ const ConfirmationTest = ({ slug }: ConfirmationTestProps) => {
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="flex flex-col space-y-2 py-4 px-6"
+					className="flex flex-col py-4 px-6 flex-1 space-y-6"
 				>
 					<FormField
 						control={form.control}
@@ -120,22 +129,27 @@ const ConfirmationTest = ({ slug }: ConfirmationTestProps) => {
 							</FormItem>
 						)}
 					/>
+
 					<Button isLoading={loading} type="submit">
 						Lanjutkan
 					</Button>
-
-					<p className="text-muted-foreground text-center">
-						Silahkan mencoba terlebih dahulu sebelum melakukan{" "}
+					<div className="w-full flex flex-col">
 						<Link href={"/p/invitation/training"}>
 							<Button
-								variant={"link"}
-								size={"icon"}
-								className="px-0"
+								className="w-full"
+								isLoading={loading}
+								variant={"outline"}
+								type="button"
 							>
-								disini.
+								Coba Latihan
 							</Button>
 						</Link>
-					</p>
+						<p className="text-muted-foreground text-sm">
+							Disarankan untuk mencoba terlebih dahulu sebelum
+							memulai agar tau bagaimana cara kerja kraepelin
+							online.
+						</p>
+					</div>
 				</form>
 			</Form>
 		</div>

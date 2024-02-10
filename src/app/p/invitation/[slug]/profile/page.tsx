@@ -23,10 +23,10 @@ import {
 } from "~/app/_components/ui/select";
 import Spinner from "~/app/_components/ui/spinner";
 import { Textarea } from "~/app/_components/ui/textarea";
+import { useToast } from "~/app/_components/ui/use-toast";
 import { api } from "~/trpc/react";
 import { type PageType } from "~/types/page-type";
 import { useAccessInvitation } from "../../hooks/use-access";
-import { useToast } from "~/app/_components/ui/use-toast";
 import { ModalConfirm } from "./components/modal";
 
 const formSchema = z.object({
@@ -251,6 +251,7 @@ const ProfilePage = ({ params }: PageType) => {
 							</FormItem>
 						)}
 					/>
+
 					<Button isLoading={loading} type="submit">
 						Lanjutkan
 					</Button>

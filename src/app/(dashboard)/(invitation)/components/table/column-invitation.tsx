@@ -105,9 +105,7 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 									</DropdownMenuLabel>
 									<DropdownMenuSeparator />
 									<DropdownMenuGroup>
-										<Link
-											href={`/invitation/${row.original.id}`}
-										>
+										<Link href={`/${row.original.id}`}>
 											<DropdownMenuItem>
 												<EyeIcon
 													size={16}
@@ -124,7 +122,7 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 							<DropdownMenuGroup>
 								<Link
 									className="w-auto"
-									href={`/invitation/update/?id=${row.original.id}`}
+									href={`/update/?id=${row.original.id}`}
 								>
 									<DropdownMenuItem>
 										<Settings2

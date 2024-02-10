@@ -50,13 +50,13 @@ export const InvitationForm = (props: InvitationFormProps) => {
 	const { toast } = useToast();
 	const router = useRouter();
 
-	const mutate = api.invitation.save.useMutation({
+	const { mutate, isLoading } = api.invitation.save.useMutation({
 		onSuccess: () => {
 			toast({
 				title: "Berhasil",
 				description: "Undangan berhasil dibuat",
 			});
-			router.push("/invitation");
+			router.push("/");
 		},
 		onError: (err) => {
 			toast({
@@ -83,7 +83,7 @@ export const InvitationForm = (props: InvitationFormProps) => {
 	}, []);
 	async function onSubmit(data: InvitationFormValues) {
 		const { id, name, secretKey } = data;
-		mutate.mutate({
+		mutate({
 			id: id,
 			name: name,
 			secretKey,
@@ -142,7 +142,9 @@ export const InvitationForm = (props: InvitationFormProps) => {
 						)}
 					/>
 				</div>
-				<Button type="submit">Simpan</Button>
+				<Button type="submit" isLoading={isLoading}>
+					Simpan
+				</Button>
 			</form>
 		</Form>
 	);

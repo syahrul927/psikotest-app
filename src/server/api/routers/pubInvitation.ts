@@ -28,7 +28,9 @@ export const pubInvitationRouter = createTRPCRouter({
 					return undefined;
 				}
 			}
-			return invitation;
+			return {
+				invitationName: invitation?.name,
+			};
 		}),
 	confirmationSecretKey: publicProcedure
 		.input(

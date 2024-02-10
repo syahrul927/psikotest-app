@@ -29,7 +29,7 @@ const Roller = ({ display, answer, down, up }: RollerProps) => {
 	return display.length ? (
 		<>
 			<div className="relative max-w-sm space-y-6 h-full flex flex-col justify-center">
-				<div className="-translate-y-3 relative overflow-hidden self-center w-16 h-36 flex justify-center items-center">
+				<div className="-translate-y-3 question relative overflow-hidden self-center w-16 h-36 flex justify-center items-center">
 					{display.map((item, index) => {
 						return (
 							<div
@@ -51,13 +51,13 @@ const Roller = ({ display, answer, down, up }: RollerProps) => {
 				<div className="flex justify-center items-center">
 					<EqualIcon size={24} />
 				</div>
-				<div className="relative flex justify-center">
+				<div className="relative flex answer justify-center">
 					<Label
 						className={cn(
 							"text-5xl font-semibold absolute transition-all duration-150",
 							transition
 								? "translate-y-0 opacity-100"
-								: "-translate-y-16 opacity-30",
+								: "translate-y-12 opacity-30",
 						)}
 					>
 						{answer}

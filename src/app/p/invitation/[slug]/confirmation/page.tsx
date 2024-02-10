@@ -11,7 +11,10 @@ const StartInvitation = async ({ params }: PageType) => {
 	if (!data) notFound();
 	return (
 		<div className="flex justify-center bg-white/80 backdrop-blur-lg">
-			<ConfirmationTest slug={params.slug} />
+			<ConfirmationTest
+				slug={params.slug}
+				name={data.invitationName ?? ""}
+			/>
 		</div>
 	);
 };

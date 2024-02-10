@@ -14,11 +14,12 @@ import {
 	TableRow,
 } from "~/app/_components/ui/table";
 import Text from "~/app/_components/ui/text";
+import { EducationLabel } from "../data/data";
 
 interface InformationTesterCardProps {
 	name: string;
 	phone: string;
-	educationName: string;
+	educationId: string;
 	educationDescription: string;
 	address: string;
 	isLoading?: boolean;
@@ -28,7 +29,7 @@ export default function InformationTesterCard({
 	name,
 	address,
 	educationDescription,
-	educationName,
+	educationId,
 	phone,
 	isLoading,
 }: InformationTesterCardProps) {
@@ -62,7 +63,11 @@ export default function InformationTesterCard({
 							<TableHead>Pendidikan</TableHead>
 							<TableCell className="text-right ">
 								<Text
-									str={educationName}
+									str={
+										EducationLabel.find(
+											(item) => item.id === educationId,
+										)?.label ?? "Unknown"
+									}
 									isLoading={isLoading}
 								/>
 							</TableCell>

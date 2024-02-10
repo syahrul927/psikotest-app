@@ -10,10 +10,10 @@ const Header = ({ totalColumn, currentColumn, time }: HeaderProps) => {
 	return (
 		<header className="w-full px-4 py-3 gap-3 mb-3 flex flex-col sticky top-0 h-24 bg-background ">
 			<div className="flex justify-between">
-				<Label className="font-semibold leading-tight">
+				<Label className="font-semibold label-row leading-tight">
 					Kraepelin Baris {currentColumn}/{totalColumn}
 				</Label>
-				<span className="text-destructive font-semibold">
+				<span className="text-destructive time-per-row font-semibold">
 					Waktu&nbsp;
 					{`${Math.floor(time / 60)}`.padStart(2, "0")}:
 					{`${time % 60}`.padStart(2, "0")}

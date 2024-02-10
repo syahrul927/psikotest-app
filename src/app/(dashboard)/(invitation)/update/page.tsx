@@ -6,7 +6,7 @@ import { api } from "~/trpc/server";
 export default async function UpdateInvitationPage({ searchParams }: PageType) {
 	const id = searchParams.id;
 	if (!id || id instanceof Array) {
-		redirect("/invitation");
+		redirect("/");
 	}
 	const data = await api.invitation.getById.query(id);
 	return (
