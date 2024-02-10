@@ -38,26 +38,13 @@ export default function UserPage() {
 						toolbar={DataTableToolbarUser}
 						data={
 							data
-								? data.map(
-										({
-											id,
-											image,
-											name,
-											email,
-											phone,
-											referenceCode,
-											role,
-										}) => ({
-											id,
-											name: name,
-											email: email,
-											phone: phone,
-											referenceCode: referenceCode,
-											role,
-											onDelete,
-											image,
-										}),
-									)
+								? data.map(({ id, image, name, email }) => ({
+										id,
+										name: name,
+										email: email,
+										onDelete,
+										image,
+									}))
 								: []
 						}
 					/>
