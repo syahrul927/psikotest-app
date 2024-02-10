@@ -28,6 +28,7 @@ import { api } from "~/trpc/react";
 import { type PageType } from "~/types/page-type";
 import { useAccessInvitation } from "../../hooks/use-access";
 import { ModalConfirm } from "./components/modal";
+import Link from "next/link";
 
 const formSchema = z.object({
 	name: z.string(),
@@ -252,6 +253,16 @@ const ProfilePage = ({ params }: PageType) => {
 						)}
 					/>
 
+					<Link href="/p/invitation/training">
+						<Button
+							className="w-full"
+							isLoading={loading}
+							type="button"
+							variant={"outline"}
+						>
+							Coba Latihan
+						</Button>
+					</Link>
 					<Button isLoading={loading} type="submit">
 						Lanjutkan
 					</Button>
