@@ -135,11 +135,17 @@ export const columnsPost: ColumnDef<InvitationTableProps>[] = [
 								<DropdownMenuItem
 									onClick={async () => {
 										const base = await getUrl();
+										const text = `Undangan Psikotest:\n${base}/p/invitation/${row.original.id}/confirmation\n\nSecret Key:\n${row.original.secretKey}`;
 										toast({
 											title: "Berhasil copy link",
+											description: (
+												<pre className="mt-2 rounded-md bg-slate-950 text-white p-4">
+													{text}
+												</pre>
+											),
 										});
 										return navigator.clipboard.writeText(
-											`${base}/p/invitation/${row.original.id}/confirmation`,
+											text,
 										);
 									}}
 								>

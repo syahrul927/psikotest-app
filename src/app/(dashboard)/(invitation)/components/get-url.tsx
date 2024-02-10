@@ -2,5 +2,5 @@
 import { env } from "~/env";
 
 export default async function getUrl() {
-	return env.NEXTAUTH_URL;
+	return env.BASE_URL;
 }
