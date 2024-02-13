@@ -19,7 +19,6 @@ import Numpad from "../components/numpad";
 import { useDisplay } from "../hooks/use-display";
 
 import Joyride, { STATUS, type CallBackProps, type Step } from "react-joyride";
-
 const generate = () => {
 	return Math.floor(Math.random() * 9) + 1;
 };
@@ -191,9 +190,9 @@ const TrainingPage = ({ params }: PageType) => {
 		}
 	}, [finish]);
 	return (
-		<div className="flex flex-col h-[100dvh] relative items-center justify-between w-full">
-			<div className="w-full flex flex-col-reverse items-center justify-start px-3">
-				<Alert className="w-full bg-primary text-primary-foreground animate-pulse">
+		<div className="relative flex h-[100dvh] w-full flex-col items-center justify-between">
+			<div className="flex w-full flex-col-reverse items-center justify-start px-3">
+				<Alert className="bg-primary text-primary-foreground w-full animate-pulse">
 					<RocketIcon
 						className="h-4 w-4"
 						color="hsl(var(--primary-foreground))"
@@ -236,7 +235,7 @@ const TrainingPage = ({ params }: PageType) => {
 				currentColumn={indexColumn}
 			/>
 
-			<div className="w-full h-full question-wrapper flex relative justify-center items-center">
+			<div className="question-wrapper relative flex h-full w-full items-center justify-center">
 				<Roller
 					display={currentColumn}
 					down={active.indexDown}
@@ -244,7 +243,7 @@ const TrainingPage = ({ params }: PageType) => {
 					answer={answer}
 				/>
 				{active.indexUp === 0 && active.indexDown !== 0 ? (
-					<div className="absolute w-full text-destructive font-semibold text-center bottom-0">
+					<div className="text-destructive absolute bottom-0 w-full text-center font-semibold">
 						Kamu mencapai batas baris
 					</div>
 				) : null}
