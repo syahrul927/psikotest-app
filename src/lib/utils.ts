@@ -41,14 +41,16 @@ export function removeItemAtIndex(arr: string[], index: number): string[] {
 	return newArray;
 }
 export function fuzzyComparison(url: string, regexString: string) {
-	// Mengubah karakter '*' dalam regexString menjadi '.*' agar sesuai dengan pola regex
-	const regexPattern = regexString.replace(/\*/g, ".*");
+	const regexPattern = regexString.replace(/\*/g, ".*").replace(/\//g, "\\/");
 
-	// Membuat pola regex
-	const regex = new RegExp("^" + regexPattern + "$");
+	// Create the regex, without the start (^) and end ($) anchors
+	const regex = new RegExp(regexPattern);
 
-	// Memeriksa apakah string URL cocok dengan pola regex
-	return regex.test(url);
+	// Compare the URL with the regex
+	const result = regex.test(url);
+
+	console.log(`URL: ${url}, Pattern: ${regexPattern}`);
+	return result
 }
 
 export function validateAnswer(a: number, b: number, answer: number) {

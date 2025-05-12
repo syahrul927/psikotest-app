@@ -50,12 +50,6 @@ const DashboardWrapper = ({ children }: DashboardWrapperProps) => {
 							<UserProfileNav isCollapsed={isCollapsed} />
 							<Separator />
 							<Nav links={Menus} isCollapsed={isCollapsed} />
-							{/* <div className="mt-auto flex flex-col">
-								<Separator />
-								<div className="py-4 flex justify-center items-center ">
-									<ModeToggle />
-								</div>
-							</div> */}
 						</ResizablePanel>
 						<ResizableHandle withHandle />
 						<ResizablePanel>

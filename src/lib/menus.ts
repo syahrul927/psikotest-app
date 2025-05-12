@@ -1,10 +1,22 @@
-import { SendIcon, UsersIcon } from "lucide-react";
+import { BrainCog, CalculatorIcon, HomeIcon, UsersIcon } from "lucide-react";
 import { type NavLinkProps } from "~/app/(dashboard)/components/nav";
 
 const Menus: NavLinkProps[] = [
 	{
-		title: "Invitation",
-		icon: SendIcon,
+		title: "Home",
+		icon: HomeIcon,
+		url: "/",
+		variant: "ghost",
+	},
+	{
+		title: "Invitation Kraeplin",
+		icon: CalculatorIcon,
+		url: "/invitation-kraeplin",
+		variant: "ghost",
+	},
+	{
+		title: "Invitation IST",
+		icon: BrainCog,
 		url: "/",
 		variant: "ghost",
 	},
