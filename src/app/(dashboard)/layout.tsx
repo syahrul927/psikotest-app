@@ -1,13 +1,31 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { type Metadata } from "next";
-import DashboardWrapper from "./components/dashboard-wrapper";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { SiteHeader } from "@/components/sidebar/site-header";
+import { Separator } from "@/components/ui/separator";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import type { ReactNode } from "react";
 
-export const metadata: Metadata = {
-	title: "Dashboard",
-	description: "Welcome to dashboard, what can i help you today?",
-};
-export default function DashboardLayout({
-	children,
-}: Readonly<{ children: React.ReactNode }>) {
-	return <DashboardWrapper>{children}</DashboardWrapper>;
+export default async function LayoutDashboard({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+              {children}
+            </div>
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  );
 }

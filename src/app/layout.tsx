@@ -1,52 +1,49 @@
-import "~/styles/globals.css";
+import "@/styles/globals.css";
 
-import { type Viewport } from "next";
-import { cookies } from "next/headers";
-import { env } from "~/env";
-import { fontSans } from "~/lib/fonts";
-import { cn } from "~/lib/utils";
-import { TRPCReactProvider } from "~/trpc/react";
-import { TailwindIndicator } from "./_components/tailwind-indicator";
-import { Toaster } from "./_components/ui/toaster";
-import NextAuthProvider from "./context/NextAuthProvider";
+import { type Metadata, type Viewport } from "next";
 
-export const metadata = {
-	title: env.APP_NAME,
-	description: "App",
-	icons: [{ rel: "icon", url: "/favicon.ico" }],
+import { Toaster } from "@/components/ui/sonner";
+import { TRPCReactProvider } from "@/trpc/react";
+import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
+
+export const metadata: Metadata = {
+  title: "Selsafical",
+  description: "Capture your moments!",
+  icons: [{ rel: "icon", url: "/favicon.svg" }],
 };
 
 export const viewport: Viewport = {
-	width: "device-width",
-	initialScale: 1,
-	maximumScale: 1,
-	userScalable: false,
-	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "white" },
-		{ media: "(prefers-color-scheme: dark)", color: "black" },
-	],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
 };
-export default function RootLayout({
-	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) {
-	return (
-		<html lang="id">
-			<body
-				className={cn(
-					"relative font-sans antialiased max-h-[100dvh] overflow-hidden",
-					fontSans.className,
-				)}
-			>
-				<NextAuthProvider>
-					<TRPCReactProvider cookies={cookies().toString()}>
-						<div className="flex flex-col">{children}</div>
-					</TRPCReactProvider>
-				</NextAuthProvider>
-				<TailwindIndicator />
-				<Toaster />
-			</body>
-		</html>
-	);
+
+export default async function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SessionProvider>
+            <TRPCReactProvider>{children}</TRPCReactProvider>
+          </SessionProvider>
+          <Toaster />
+          <TailwindIndicator />
+        </ThemeProvider>
+      </body>
+    </html>
+  );
 }
