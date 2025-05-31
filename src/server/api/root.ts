@@ -1,10 +1,11 @@
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { userAccessRouter } from "./routers/user-access-router";
 import {
-  kraeplinInvitationRouter,
-  publicKraeplinInvitationRouter,
-} from "./routers/kraeplin-invitation-router";
-import { kraeplinTestRouter } from "./routers/kraeplin-test-router";
+  kraepelinInvitationRouter,
+  publicKraepelinInvitationRouter,
+} from "./routers/kraepelin-invitation-router";
+import { kraepelinTestRouter } from "./routers/kraepelin-test-router";
+import { istInvitationRouter } from "./routers/ist-invitation-router/protected";
 
 /**
  * This is the primary router for your server.
@@ -13,9 +14,10 @@ import { kraeplinTestRouter } from "./routers/kraeplin-test-router";
  */
 export const appRouter = createTRPCRouter({
   userAccess: userAccessRouter,
-  kraeplinInvitation: kraeplinInvitationRouter,
-  publicKraeplinInvitation: publicKraeplinInvitationRouter,
-  kraeplinTest: kraeplinTestRouter,
+  kraepelinInvitation: kraepelinInvitationRouter,
+  publicKraepelinInvitation: publicKraepelinInvitationRouter,
+  kraepelinTest: kraepelinTestRouter,
+  istInvitation: istInvitationRouter,
 });
 
 // export type definition of API

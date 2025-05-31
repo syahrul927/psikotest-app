@@ -14,8 +14,8 @@ export const NavigationMainConstant: NavigationType[] = [
     icon: HomeIcon,
   },
   {
-    title: "Psikotest Kraeplin",
-    url: PAGE_URLS.KRAEPLIN_INVITATION,
+    title: "Psikotest Kraepelin",
+    url: PAGE_URLS.KRAEPELIN_INVITATION,
     icon: CalculatorIcon,
   },
   {

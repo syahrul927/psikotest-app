@@ -1,4 +1,7 @@
+type Params = Promise<{ slug: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
 export type PageType = {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Params;
+  searchParams: SearchParams;
 };

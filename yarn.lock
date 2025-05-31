@@ -3646,10 +3646,10 @@ react-is@^18.3.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
-react-joyride@^2.9.3:
-  version "2.9.3"
-  resolved "https://registry.yarnpkg.com/react-joyride/-/react-joyride-2.9.3.tgz#97633aa78dfe70b16b45fafa59ce2ee06b14c78f"
-  integrity sha512-1+Mg34XK5zaqJ63eeBhqdbk7dlGCFp36FXwsEvgpjqrtyywX2C6h9vr3jgxP0bGHCw8Ilsp/nRDzNVq6HJ3rNw==
+react-joyride-react-19@^2.9.2:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/react-joyride-react-19/-/react-joyride-react-19-2.9.2.tgz#98e50d87eb293a01a9cb486b568559b8872aad8c"
+  integrity sha512-/ruorGnSPr9UUHMbXg47W+N/1Tm7T/mkMlHZ/d9DFYeP86OFJURoHK0Ij2PdtlZL4y6xFV+3n6dm7D+cSzQijw==
   dependencies:
     "@gilbarbara/deep-equal" "^0.3.1"
     deep-diff "^1.0.2"
@@ -3661,7 +3661,7 @@ react-joyride@^2.9.3:
     scroll "^3.0.1"
     scrollparent "^2.1.0"
     tree-changes "^0.11.2"
-    type-fest "^4.27.0"
+    type-fest "^4.26.1"
 
 react-phone-number-input@^3.4.12:
   version "3.4.12"
@@ -4221,7 +4221,7 @@ type-check@^0.4.0, type-check@~0.4.0:
   dependencies:
     prelude-ls "^1.2.1"
 
-type-fest@^4.27.0:
+type-fest@^4.26.1:
   version "4.41.0"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-4.41.0.tgz#6ae1c8e5731273c2bf1f58ad39cbae2c91a46c58"
   integrity sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==

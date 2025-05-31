@@ -54,6 +54,18 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+model TesterProfile {
+    id                   String          @id @default(cuid())
+    name                 String
+    phone                String
+    address              String
+    educationId          String
+    educationName        String
+    educationDescription String?
+    Invitation           Invitation[]
+    IstInvitation        IstInvitation[]
+}
+
 model KraepelinTemplate {
     id      String @id @default(cuid())
     version String
@@ -62,17 +74,6 @@ model KraepelinTemplate {
     value   Int
 
     @@index([version, x, y])
-}
-
-model TesterProfile {
-    id                   String       @id @default(cuid())
-    name                 String
-    phone                String
-    address              String
-    educationId          String
-    educationName        String
-    educationDescription String?
-    Invitation           Invitation[]
 }
 
 model Invitation {
@@ -133,3 +134,73 @@ model KraepelinResultDetail {
     createdAt         DateTime        @default(now()) @db.Timestamptz(3)
 }
 
+enum IstQuestionType {
+    TYPE1
+    TYPE2
+    TYPE3
+    TYPE4
+    TYPE5
+    TYPE6
+    TYPE7
+    TYPE8
+    TYPE9
+}
+
+model IstOption {
+    id         String      @id @default(cuid())
+    question   IstQuestion @relation(fields: [questionId], references: [id])
+    questionId String
+    label      String // A/B/C/D/E
+    text       String? // Nullable for image option
+    imageUrl   String? // Nullable for text option
+}
+
+model IstSubtest {
+    id          String        @id @default(cuid())
+    name        String
+    description String        @db.Text // markdown
+    timeLimit   Int // in seconds (or minutes — your choice)
+    questions   IstQuestion[]
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+}
+
+model IstQuestion {
+    id            String          @id @default(cuid())
+    subtest       IstSubtest      @relation(fields: [subtestId], references: [id])
+    subtestId     String
+    type          IstQuestionType
+    text          String? // Nullable for image-based questions
+    imageUrl      String? // For type 7/8
+    options       IstOption[] // ABCDE options (text or image URL)
+    correctAnswer String? // Only for template logic, not user input
+    order         Int // For sorting questions
+    createdAt     DateTime        @default(now())
+    updatedAt     DateTime        @updatedAt
+    UserAnswer    IstUserAnswer[]
+}
+
+model IstInvitation {
+    id              String         @id @default(cuid())
+    name            String?
+    secretKey       String
+    startAt         DateTime?      @db.Timestamptz(3)
+    testerProfileId String?
+    testerProfile   TesterProfile? @relation(fields: [testerProfileId], references: [id])
+    createdAt       DateTime       @db.Timestamptz(3)
+    updatedAt       DateTime       @updatedAt @db.Timestamptz(3)
+}
+
+model IstUserAnswer {
+    id                  String      @id @default(cuid())
+    userId              String
+    question            IstQuestion @relation(fields: [questionId], references: [id])
+    questionId          String
+    // If the answer is from ABCDE
+    selectedOptionLabel String? // A/B/C/D/E
+    // If the answer is free-text (for type 4, 5, 6)
+    answerText          String?
+    createdAt           DateTime    @default(now())
+
+    @@index([userId, questionId], name: "user_question_unique")
+}

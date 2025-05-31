@@ -3,7 +3,7 @@ import type { RouterOutputs } from "@/trpc/react";
 import { useEffect, useState } from "react";
 import _ from "underscore";
 
-type TemplateType = RouterOutputs["kraeplinTest"]["getTemplate"];
+type TemplateType = RouterOutputs["kraepelinTest"]["getTemplate"];
 export const useDisplay = () => {
   const [template, setTemplate] = useState<_.Dictionary<TemplateType>>({});
   const [indexColumn, setIndexColumn] = useState(1);

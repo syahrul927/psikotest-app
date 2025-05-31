@@ -69,9 +69,8 @@ export function UserForm({ currentUserId, onSuccessCallback }: UserFormProps) {
   const isEditMode = Boolean(selectedUserId);
 
   // Fetch user detail if editing
-  const { data: userDetail, isLoading: isLoadingUser } = useGetDetailUserAccess(
-    selectedUserId!,
-  );
+  const { data: userDetail, isLoading: isLoadingUser } =
+    useGetDetailUserAccess(selectedUserId);
 
   const [showPassword, setShowPassword] = useState(false);
   const { mutate, isPending } = useSaveUserAccess(() => {
@@ -103,7 +102,7 @@ export function UserForm({ currentUserId, onSuccessCallback }: UserFormProps) {
     if (!open) {
       form.reset(defaultValues);
     }
-  }, [open]);
+  }, [open, form]);
 
   async function onSubmit(data: UserFormType) {
     mutate({
@@ -115,7 +114,9 @@ export function UserForm({ currentUserId, onSuccessCallback }: UserFormProps) {
   const isEditingSelf = selectedUserId === currentUserId || !isEditMode;
 
   // Handler for reset password button
-  function onResetPassword() {}
+  function onResetPassword() {
+    console.log("Reset");
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

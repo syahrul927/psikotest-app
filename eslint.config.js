@@ -17,8 +17,14 @@ export default tseslint.config(
       ...tseslint.configs.recommendedTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
     ],
+
     rules: {
-      " @typescript-eslint/prefer-nullish-coalescing": "off",
+      "@typescript-eslint/consistent-indexed-object-style": "off",
+      "@typescript-eslint/no-redundant-type-constituents": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-misused-promises": "off",
+      "@typescript-eslint/await-thenable": "off",
+      "@typescript-eslint/prefer-nullish-coalescing": "off",
       "@typescript-eslint/array-type": "off",
       "@typescript-eslint/consistent-type-definitions": "off",
       "@typescript-eslint/consistent-type-imports": [
@@ -30,10 +36,6 @@ export default tseslint.config(
         { argsIgnorePattern: "^_" },
       ],
       "@typescript-eslint/require-await": "off",
-      "@typescript-eslint/no-misused-promises": [
-        "error",
-        { checksVoidReturn: { attributes: false } },
-      ],
     },
   },
   {

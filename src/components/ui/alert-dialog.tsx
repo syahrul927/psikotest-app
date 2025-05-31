@@ -130,6 +130,7 @@ const AlertDialogAction = React.forwardRef<
     {...props}
   />
 ));
+AlertDialogAction.displayName = "Alert Dialog Action";
 
 function AlertDialogCancel({
   className,
