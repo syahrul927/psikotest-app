@@ -1,16 +1,19 @@
-import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import { Logo } from "@/components/ui/logo";
-import type { PageType } from "@/types/page-type";
 import { notFound } from "next/navigation";
+import type { PageType } from "@/types/page-type";
+import { Logo } from "@/components/ui/logo";
+import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
+import { findKraepelinInvitation } from "@/hooks/api/kraepelin-invitation/use-find-kraepelin-invitation";
+import { KraepelinInvitationConfirmation } from "@/features/kraepelin-test";
+import { findIstInvitation } from "@/hooks/api/ist-invitation/user-find-ist-invitation";
+import { IstInvitationConfirmation } from "@/features/ist-subtest/ist-invitation-confirmation";
 
-const KraepelinConfirmationPage = async ({ params }: PageType) => {
-  // example validation invitation
+const IstConfirmationPage = async ({ params }: PageType) => {
   const { slug } = await params;
   if (!slug) {
     notFound();
   }
-  // const data = await findKraepelinInvitation(slug);
-  // if (!data) notFound();
+  const data = await findIstInvitation(slug);
+  if (!data) notFound();
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-3 md:p-10">
       <AnimatedWrapper>
@@ -18,8 +21,11 @@ const KraepelinConfirmationPage = async ({ params }: PageType) => {
           <Logo />
         </div>
       </AnimatedWrapper>
-      {/* Create form */}
+      <IstInvitationConfirmation
+        slug={slug}
+        name={data.invitationName ?? ""}
+      />
     </div>
   );
 };
-export default KraepelinConfirmationPage;
+export default IstConfirmationPage;

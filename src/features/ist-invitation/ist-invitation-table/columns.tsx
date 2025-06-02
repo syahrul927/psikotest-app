@@ -100,7 +100,7 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
           <DropdownMenuSeparator />
           {status === "DONE" ? (
             <DropdownMenuGroup>
-              <Link href={PAGE_URLS.KRAEPELIN_INVITATION_RESULT(id)}>
+              <Link href={PAGE_URLS.IST_INVITATION_RESULT(id)}>
                 <DropdownMenuItem>
                   <EyeIcon size={16} className="mr-2" />
                   <span>Hasil Test</span>
@@ -111,7 +111,7 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
           <DropdownMenuItem
             onClick={async () => {
               const base = process.env.NEXT_PUBLIC_BASE_URL;
-              const text = `Undangan Psikotest:\n${base}${PAGE_URLS.KRAEPELIN_TEST_CONFIRMATION(id)}\n\nSecret Key:\n${row.original.secretKey}`;
+              const text = `Undangan Psikotest:\n${base}${PAGE_URLS.IST_TEST_CONFIRMATION(id)}\n\nSecret Key:\n${row.original.secretKey}`;
               toast.success("Berhasil Copy Link ke Clipboard");
               return navigator.clipboard.writeText(text);
             }}

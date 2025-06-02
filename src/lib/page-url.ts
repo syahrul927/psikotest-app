@@ -13,6 +13,12 @@ export const PAGE_URLS = {
   IST_INVITATION_REVIEW: (id: string) => `/ist-invitation/review/${id}`,
   IST_INVITATION_RESULT: (id: string) => `/ist-invitation/${id}`,
 
+  //public IST
+  IST_TEST_PROFILE: (id: string) => `/guest/ist/${id}/profile`,
+  IST_SUBTEST: (id: string) => `/guest/ist/${id}/subtest`,
+  IST_TEST_CONFIRMATION: (id: string) =>
+    `/guest/ist/${id}/confirmation`,
+
   // Kraepelin
   KRAEPELIN_INVITATION: "/kraepelin-invitation",
   KRAEPELIN_INVITATION_RESULT: (id: string) => `/kraepelin-invitation/${id}`,
