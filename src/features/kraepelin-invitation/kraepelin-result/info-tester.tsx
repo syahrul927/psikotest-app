@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import { EducationLabel } from "@/types/kraepelin-invitation-constanta";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface KraepelinResultInfoTesterProps {
   name: string;
@@ -28,6 +29,7 @@ export function KraepelinResultInfoTester({
   phone,
   isLoading,
 }: KraepelinResultInfoTesterProps) {
+  if (isLoading) return <Skeleton className="aspect-[3/2]" />;
   return (
     <Card>
       <CardHeader>

@@ -11,6 +11,7 @@ import {
   type NormaValidation,
   TiankerLabel,
 } from "@/server/data/norma";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface KraepelinResultPointProps {
   educationId: string;
@@ -33,6 +34,17 @@ export function KraepelinResultPoint({
   const labelJanker = getLabel(janker, data?.janker);
   const labelTianker = getLabel(tianker, data?.tianker);
   const labelHanker = getLabel(hanker, data?.hanker);
+
+  if (isLoading)
+    return (
+      <div className="col-span-2 grid w-full grid-cols-4 gap-6">
+        {Array(4)
+          .fill("")
+          .map((_, index) => (
+            <Skeleton className="aspect-[2/1]" key={index} />
+          ))}
+      </div>
+    );
   return (
     <div className="col-span-2 grid grid-cols-4 gap-6">
       <Card>

@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export interface KraepelinResultDetailAnswerItemProps {
   x: string | number;
@@ -23,10 +24,13 @@ export interface KraepelinResultDetailAnswerItemProps {
 
 interface KraepelinResultAnswerProps {
   data: KraepelinResultDetailAnswerItemProps[];
+  isLoading?: boolean;
 }
 export function KraepelinResultDetailAnswer({
   data,
+  isLoading,
 }: KraepelinResultAnswerProps) {
+  if (isLoading) return <Skeleton className="col-span-2 aspect-square" />;
   return (
     <Card className="col-span-2">
       <CardHeader>

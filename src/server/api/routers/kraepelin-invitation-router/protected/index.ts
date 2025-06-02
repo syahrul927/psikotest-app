@@ -10,7 +10,12 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import type { PrismaClient } from "@prisma/client";
 import _ from "underscore";
 import { plusKraepelin, validateAnswer } from "@/lib/kraepelin-utils";
-import { STATUS_INVITATION } from "@/server/data/status-invitation";
+
+const STATUS_INVITATION = {
+  PENDING: "PENDING",
+  ONPROGRESS: "ONPROGRESS",
+  DONE: "DONE",
+} as const;
 
 const FilterRow = [6, 7, 8, 9, 10, 21, 22, 23, 24, 25, 36, 37, 38, 39, 40];
 export const kraepelinInvitationRouter = createTRPCRouter({

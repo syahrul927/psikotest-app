@@ -62,7 +62,7 @@ const ResultInvitationPage = () => {
   return (
     <div className="grid grid-cols-2 gap-6">
       <Alert className="bg-primary text-primary-foreground col-span-2">
-        <MessageCircleWarningIcon className="h-4 w-4" color="white" />
+        <MessageCircleWarningIcon className="h-4 w-4" />
         <AlertTitle>Perhatian</AlertTitle>
         <AlertDescription className="text-muted">
           Data yang disajikan merupakan data yang sudah di filter hanya beberapa
@@ -98,13 +98,14 @@ const ResultInvitationPage = () => {
       />
 
       <KraepelinResultStatistic
+        isLoading={isLoading}
         data={
           data?.kraepelinResult?.KraepelinResultSummary.map((item) => ({
             answered: item.answered,
             name: item.x.toString(),
           })) ?? []
         }
-        avarage={data?.kraepelinResult?.panker ?? 0}
+        average={data?.kraepelinResult?.panker ?? 0}
       />
       <KraepelinResultTableSummary
         isLoading={isLoading}
@@ -117,7 +118,7 @@ const ResultInvitationPage = () => {
           })) ?? []
         }
       />
-      <KraepelinResultDetailAnswer data={details} />
+      <KraepelinResultDetailAnswer data={details} isLoading={isLoading} />
     </div>
   );
 };

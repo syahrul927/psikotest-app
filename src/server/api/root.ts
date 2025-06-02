@@ -6,6 +6,7 @@ import {
 } from "./routers/kraepelin-invitation-router";
 import { kraepelinTestRouter } from "./routers/kraepelin-test-router";
 import { istInvitationRouter } from "./routers/ist-invitation-router/protected";
+import { publicIstInvitationRouter } from "./routers/ist-invitation-router/public";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   publicKraepelinInvitation: publicKraepelinInvitationRouter,
   kraepelinTest: kraepelinTestRouter,
   istInvitation: istInvitationRouter,
+  publicIstInvitation: publicIstInvitationRouter,
 });
 
 // export type definition of API

@@ -1,17 +1,9 @@
-import {
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Fragment } from "react";
 
 export const KraepelinInvitationFormSkeleton = () => {
   return (
-    <DialogContent className="sm:max-w-[425px]">
-      <DialogHeader>
-        <DialogTitle>Ubah Undangan Tes Kraepelin</DialogTitle>
-      </DialogHeader>
+    <Fragment>
       <div className="grid gap-4 py-4">
         <div className="flex flex-col space-y-8">
           <div>
@@ -26,9 +18,9 @@ export const KraepelinInvitationFormSkeleton = () => {
         </div>
       </div>
 
-      <DialogFooter>
+      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
         <Skeleton className="h-4 w-[60px]" />
-      </DialogFooter>
-    </DialogContent>
+      </div>
+    </Fragment>
   );
 };

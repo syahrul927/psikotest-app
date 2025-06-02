@@ -139,10 +139,10 @@ export const KraepelinProfileForm = ({ id }: { id: string }) => {
       </AlertDialog>
       <Card className="w-full max-w-lg border-0 shadow-xl">
         <CardHeader className="pb-6 text-center">
-          <CardTitle className="text-2xl font-bold text-gray-900">
+          <CardTitle className="text-2xl font-bold">
             Informasi Peserta
           </CardTitle>
-          <p className="text-gray-600">
+          <p className="">
             Silakan lengkapi data Anda di bawah ini untuk melanjutkan
           </p>
         </CardHeader>
@@ -155,7 +155,7 @@ export const KraepelinProfileForm = ({ id }: { id: string }) => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-sm font-semibold">
                       <User className="h-4 w-4" />
                       Nama Lengkap
                     </FormLabel>
@@ -166,7 +166,7 @@ export const KraepelinProfileForm = ({ id }: { id: string }) => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-red-500" />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -177,14 +177,14 @@ export const KraepelinProfileForm = ({ id }: { id: string }) => {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-sm font-semibold">
                       <Phone className="h-4 w-4" />
                       Nomor Telepon
                     </FormLabel>
                     <FormControl>
                       <PhoneInput {...field} defaultCountry="ID" />
                     </FormControl>
-                    <FormMessage className="text-xs text-red-500" />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -195,7 +195,7 @@ export const KraepelinProfileForm = ({ id }: { id: string }) => {
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-sm font-semibold">
                       <MapPin className="h-4 w-4" />
                       Alamat Lengkap
                     </FormLabel>
@@ -206,7 +206,7 @@ export const KraepelinProfileForm = ({ id }: { id: string }) => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-red-500" />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -217,7 +217,7 @@ export const KraepelinProfileForm = ({ id }: { id: string }) => {
                 name="education"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-sm font-semibold">
                       <GraduationCap className="h-4 w-4" />
                       Pendidikan
                     </FormLabel>
@@ -237,7 +237,7 @@ export const KraepelinProfileForm = ({ id }: { id: string }) => {
                         <SelectItem value="4">S1 IPS</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage className="text-xs text-red-500" />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />
@@ -248,12 +248,10 @@ export const KraepelinProfileForm = ({ id }: { id: string }) => {
                 name="educationDescription"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-sm font-semibold">
                       <FileText className="h-4 w-4" />
                       Deskripsi Pendidikan
-                      <span className="text-xs font-normal text-gray-500">
-                        (Optional)
-                      </span>
+                      <span className="text-xs font-normal">(Optional)</span>
                     </FormLabel>
                     <FormControl>
                       <Textarea
@@ -262,7 +260,7 @@ export const KraepelinProfileForm = ({ id }: { id: string }) => {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-red-500" />
+                    <FormMessage className="text-xs" />
                   </FormItem>
                 )}
               />

@@ -19,6 +19,7 @@ export const LoginSchema = z.object({
  */
 
 export const authConfig = {
+  trustHost: true,
   callbacks: {
     jwt: ({ token, user }) => {
       if (user) {

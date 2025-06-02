@@ -24,12 +24,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useKraepelinInvFormDialogController } from "../kraepelin-invitation-form";
 import {
   KraepelinInvitationStatus,
   type KraepelinInvitationTableProps,
 } from "./schema";
-import { useKraepelinInvFormDialogController } from "../kraepelin-invitation-form";
-import type { Cell } from "recharts";
 
 export const columnsInvitation: ColumnDef<KraepelinInvitationTableProps>[] = [
   {
@@ -131,8 +130,8 @@ const CellAction = ({ row }: { row: Row<KraepelinInvitationTableProps> }) => {
             ) : null}
             {status !== "DONE" ? (
               <AlertDialogTrigger asChild className="flex w-full justify-start">
-                <DropdownMenuItem className="text-red-600">
-                  <TrashIcon size={16} className="mr-2" />
+                <DropdownMenuItem className="text-destructive">
+                  <TrashIcon size={16} className="text-destructive mr-2" />
                   <span>Hapus</span>
                 </DropdownMenuItem>
               </AlertDialogTrigger>

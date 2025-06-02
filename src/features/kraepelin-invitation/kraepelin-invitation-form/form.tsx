@@ -89,60 +89,63 @@ export function KraepelinInvitationForm({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {isLoadingInvitation ? (
-        <KraepelinInvitationFormSkeleton />
-      ) : (
-        <DialogContent className="sm:max-w-[425px]">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <DialogHeader>
-                <DialogTitle>
-                  {isEditMode
-                    ? "Ubah Undangan Tes Kraepelin"
-                    : "Buat Undangan Tes Kraepelin"}
-                </DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="flex flex-col space-y-8">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nama Klien</FormLabel>
-                        <FormControl>
-                          <Input placeholder="John Doe" {...field} />
-                        </FormControl>
+      <DialogContent className="sm:max-w-[425px]">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <DialogHeader>
+              <DialogTitle>
+                {isEditMode
+                  ? "Ubah Undangan Tes Kraepelin"
+                  : "Buat Undangan Tes Kraepelin"}
+              </DialogTitle>
+            </DialogHeader>
 
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+            {isLoadingInvitation ? (
+              <KraepelinInvitationFormSkeleton />
+            ) : (
+              <>
+                <div className="grid gap-4 py-4">
+                  <div className="flex flex-col space-y-8">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nama Klien</FormLabel>
+                          <FormControl>
+                            <Input placeholder="John Doe" {...field} />
+                          </FormControl>
 
-                  <FormField
-                    control={form.control}
-                    name="secretKey"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Secret Key</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Secret Key" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="secretKey"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Secret Key</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Secret Key" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
-              </div>
-              <DialogFooter>
-                <Button type="submit" isLoading={isPending}>
-                  Simpan
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      )}
+                <DialogFooter>
+                  <Button type="submit" isLoading={isPending}>
+                    Simpan
+                  </Button>
+                </DialogFooter>
+              </>
+            )}
+          </form>
+        </Form>
+      </DialogContent>
     </Dialog>
   );
 }

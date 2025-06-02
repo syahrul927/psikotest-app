@@ -1,17 +1,16 @@
-import { notFound } from "next/navigation";
-import type { PageType } from "@/types/page-type";
-import { Logo } from "@/components/ui/logo";
 import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import { findKraepelinInvitation } from "@/hooks/api/kraepelin-invitation/use-find-kraepelin-invitation";
-import { KraepelinInvitationConfirmation } from "@/features/kraepelin-test";
+import { Logo } from "@/components/ui/logo";
+import type { PageType } from "@/types/page-type";
+import { notFound } from "next/navigation";
 
 const KraepelinConfirmationPage = async ({ params }: PageType) => {
+  // example validation invitation
   const { slug } = await params;
   if (!slug) {
     notFound();
   }
-  const data = await findKraepelinInvitation(slug);
-  if (!data) notFound();
+  // const data = await findKraepelinInvitation(slug);
+  // if (!data) notFound();
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-3 md:p-10">
       <AnimatedWrapper>
@@ -19,10 +18,7 @@ const KraepelinConfirmationPage = async ({ params }: PageType) => {
           <Logo />
         </div>
       </AnimatedWrapper>
-      <KraepelinInvitationConfirmation
-        slug={slug}
-        name={data.invitationName ?? ""}
-      />
+      {/* Create form */}
     </div>
   );
 };

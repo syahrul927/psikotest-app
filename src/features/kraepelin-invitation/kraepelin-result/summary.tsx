@@ -1,4 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   TableBody,
   TableRow,
@@ -23,6 +24,7 @@ export function KraepelinResultSummary({
   totalAnswered,
   wrongAnswered,
 }: KraepelinResultSummaryProps) {
+  if (isLoading) return <Skeleton className="aspect-[3/2]" />;
   return (
     <Card>
       <CardHeader>

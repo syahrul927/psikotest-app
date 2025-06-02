@@ -1,12 +1,8 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import {
-  SaveIstInvitationRouterSchema,
-  type ResponseIstInvitationRouterSchema,
-} from "./type";
+import _ from "underscore";
 import { z } from "zod";
-import { STATUS_INVITATION } from "@/server/data/status-invitation";
-import moment from "moment";
+import { SaveIstInvitationRouterSchema } from "./type";
 
 export const istInvitationRouter = createTRPCRouter({
   save: protectedProcedure
@@ -36,6 +32,7 @@ export const istInvitationRouter = createTRPCRouter({
       await ctx.db.istInvitation.create({
         data: {
           name,
+          status: "PENDING",
           secretKey,
           createdAt: new Date(),
         },
@@ -49,45 +46,14 @@ export const istInvitationRouter = createTRPCRouter({
       orderBy: { createdAt: "desc" },
       include: { testerProfile: true },
     });
-
-    const counts = {
-      [STATUS_INVITATION.PENDING]: 0,
-      [STATUS_INVITATION.ONPROGRESS]: 0,
-      [STATUS_INVITATION.DONE]: 0,
-    };
-
-    const now = moment();
-
-    const istInvitation: ResponseIstInvitationRouterSchema[] =
-      istInvitationRaw.map((invitation) => {
-        let status: keyof typeof STATUS_INVITATION = STATUS_INVITATION.PENDING;
-
-        if (invitation.startAt) {
-          const duration = moment.duration(
-            now.diff(moment(invitation.startAt)),
-          );
-          const minutes = duration.asMinutes();
-
-          status =
-            minutes >= 20
-              ? STATUS_INVITATION.DONE
-              : STATUS_INVITATION.ONPROGRESS;
-        }
-
-        counts[status]++;
-
-        return {
-          status,
-          ...invitation,
-        };
-      });
+    const istInvitation = _.groupBy(istInvitationRaw, (item) => item.status);
 
     return {
-      invitations: istInvitation,
-      pending: counts.PENDING,
-      onprogress: counts.ONPROGRESS,
-      done: counts.DONE,
-      total: istInvitation.length,
+      invitations: istInvitationRaw,
+      pending: istInvitation["PENDING"]?.length,
+      onprogress: istInvitation["ONPROGRESS"]?.length,
+      done: istInvitation["AWAITING_REVIEW"]?.length,
+      total: istInvitationRaw.length,
     };
   }),
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { KraepelinScreen } from "../kraepelin-screen/kraepelin-screen";
+import { useDebugAutoAnswer } from "./use-debug-auto-answer";
 import { useKraepelinTestLogic } from "./use-kraepelin-screen-test-logic";
 
 export const KraepelinScreenWrapper = ({ slug }: { slug: string }) => {
@@ -17,7 +18,7 @@ export const KraepelinScreenWrapper = ({ slug }: { slug: string }) => {
   } = useKraepelinTestLogic(slug);
 
   // enable this only for debug mode
-  // useDebugAutoAnswer(true, question, onClickNumpad);
+  useDebugAutoAnswer(true, question, onClickNumpad);
 
   return (
     <div className="relative flex h-[100dvh] w-full flex-col items-center justify-between">
