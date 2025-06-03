@@ -9,7 +9,7 @@ interface TimerProps {
   isActive: boolean
 }
 
-export default function Timer({ seconds: initialSeconds, onTimeUp, isActive }: TimerProps) {
+export function Timer({ seconds: initialSeconds, onTimeUp, isActive }: TimerProps) {
   const [seconds, setSeconds] = useState(initialSeconds)
 
   useEffect(() => {

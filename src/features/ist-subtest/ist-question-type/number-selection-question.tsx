@@ -15,7 +15,7 @@ interface QuestionProps {
   totalQuestions?: number
 }
 
-export default function NumberSelectionQuestion({
+export function NumberSelectionQuestion({
   question,
   value,
   onChange,

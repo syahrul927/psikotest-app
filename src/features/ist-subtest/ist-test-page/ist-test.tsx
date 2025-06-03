@@ -7,16 +7,14 @@ import { Card, CardContent } from "@/components/ui/card"
 
 import { testData } from "@/lib/test-data"
 import { AlertCircle, ArrowLeft, Brain } from "lucide-react"
-import RadioQuestion from "../ist-question-type/radio-question"
-import TextQuestion from "../ist-question-type/text-question"
-import NumberSelectionQuestion from "../ist-question-type/number-selection-question"
-import Timer from "@/components/timer"
+import { Timer } from "@/components/timer"
+import { NumberSelectionQuestion, RadioQuestion, TextQuestion } from "../ist-question-type"
 
-export default function TestPage() {
+
+export function IstSelectedTestPage() {
   const params = useParams()
   const router = useRouter()
   const subtestId = Number.parseInt(params.type as string)
-
   const [answers, setAnswers] = useState<Record<string, any>>({})
   const [timerActive, setTimerActive] = useState(true)
   const [timeExpired, setTimeExpired] = useState(false)
@@ -171,7 +169,7 @@ export default function TestPage() {
                     <NumberSelectionQuestion
                       question={questionData}
                       value={answers[`${subtestId}-${index}`] || []}
-                      onChange={(value) => handleAnswer(index, value)}
+                      onChange={(value: any) => handleAnswer(index, value)}
                       questionNumber={index + 1}
                       totalQuestions={totalQuestions}
                     />

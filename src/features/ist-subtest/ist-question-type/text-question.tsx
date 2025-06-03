@@ -11,7 +11,7 @@ interface QuestionProps {
   onChange: (value: string) => void
 }
 
-export default function TextQuestion({ question, value, onChange }: QuestionProps) {
+export function TextQuestion({ question, value, onChange }: QuestionProps) {
   return (
     <div className="space-y-2">
       <Textarea

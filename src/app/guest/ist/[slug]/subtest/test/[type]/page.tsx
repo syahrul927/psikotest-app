@@ -1,13 +1,12 @@
-import { IstProfileForm } from "@/features/ist-subtest/ist-profile-form/form";
-import IstSubtestsPage from "@/features/ist-subtest/ist-subtest-choice/choice";
-import TestPage from "@/features/ist-subtest/ist-test-page/ist-test";
+import { IstSelectedTestPage } from "@/features/ist-subtest/ist-test-page";
 import { type PageType } from "@/types/page-type";
 import { notFound } from "next/navigation";
 
-export default async function KraepelinProfilePage({ params }: PageType) {
-  const { slug } = await params;
-  if (!slug) {
+export default async function IstTestPage({ params }: PageType) {
+  const { slug, type } = await params;
+  if (!slug || !type) {
     return notFound();
   }
-  return <TestPage/>;
+  console.log(await params)
+  return <IstSelectedTestPage/>;
 }

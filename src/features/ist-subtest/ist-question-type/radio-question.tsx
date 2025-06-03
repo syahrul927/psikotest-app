@@ -18,7 +18,7 @@ interface QuestionProps {
   onChange: (value: string) => void
 }
 
-export default function RadioQuestion({ question, value, onChange }: QuestionProps) {
+export function RadioQuestion({ question, value, onChange }: QuestionProps) {
   return (
     <RadioGroup value={value} onValueChange={onChange} className="space-y-2 sm:space-y-3">
       {question.options.map((option) => (

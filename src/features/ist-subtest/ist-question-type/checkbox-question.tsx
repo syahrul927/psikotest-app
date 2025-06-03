@@ -18,7 +18,7 @@ interface QuestionProps {
   onChange: (value: string[]) => void
 }
 
-export default function CheckboxQuestion({ question, value, onChange }: QuestionProps) {
+export function CheckboxQuestion({ question, value, onChange }: QuestionProps) {
   const handleCheckboxChange = (optionId: string, checked: boolean) => {
     if (checked) {
       onChange([...value, optionId])
