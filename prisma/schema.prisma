@@ -139,6 +139,8 @@ model IstTesterProfile {
     phone                String
     address              String
     educationId          String
+    placeOfBirth         String
+    dateOfBirth          DateTime
     educationName        String
     educationDescription String?
     IstInvitation        IstInvitation[]
