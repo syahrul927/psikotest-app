@@ -75,25 +75,37 @@ export const publicIstInvitationRouter = createTRPCRouter({
         name: z.string(),
         phone: z.string(),
         address: z.string(),
+        dob: z.date(),
+        pob: z.string(),
         education: z.string(),
         educationDescription: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, name, phone, address, education, educationDescription } =
+      const { id, name, phone, address, dob, pob, education, educationDescription } =
         input;
-      const invitation = await ctx.db.invitation.findFirst({
+      const invitation = await ctx.db.istInvitation.findFirst({
         where: {
           id,
         },
       });
-      if (!invitation || invitation.startAt !== null) {
+      // if (!invitation || invitation.startAt !== null) {
+      //   throw new TRPCError({
+      //     code: "BAD_REQUEST",
+      //     message: "Invalid invitation!",
+      //   });
+      // }
+      if (!invitation) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Invalid invitation!",
+          message: "Invalid invitation status!",
         });
       }
-      await ctx.db.invitation.update({
+      await ctx.db.istInvitation.update({
+        where: { id },
+        data: { status: "ONPROGRESS" },
+      });
+      await ctx.db.istInvitation.update({
         where: {
           id,
         },
@@ -103,6 +115,8 @@ export const publicIstInvitationRouter = createTRPCRouter({
               address,
               phone,
               name,
+              dateOfBirth: dob,
+              placeOfBirth: pob,
               educationId: education,
               educationDescription: educationDescription,
               educationName: "",

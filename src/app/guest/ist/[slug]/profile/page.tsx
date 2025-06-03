@@ -1,3 +1,4 @@
+import { IstProfileForm } from "@/features/ist-subtest/ist-profile-form/form";
 import { type PageType } from "@/types/page-type";
 import { notFound } from "next/navigation";
 
@@ -6,5 +7,5 @@ export default async function KraepelinProfilePage({ params }: PageType) {
   if (!slug) {
     return notFound();
   }
-  return <h1>Hello Profile Form</h1>;
+  return <IstProfileForm id={slug} />;
 }
