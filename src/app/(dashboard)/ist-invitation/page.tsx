@@ -31,10 +31,9 @@ export default function IstInvitationPage() {
         isLoading={isLoading}
         data={
           data?.invitations?.map(
-            ({ id, name, status, secretKey, testerProfile, startAt }) => ({
+            ({ id, name, status, secretKey, testerProfile }) => ({
               id,
               name,
-              startAt,
               status,
               profileName: testerProfile?.name,
               secretKey,
