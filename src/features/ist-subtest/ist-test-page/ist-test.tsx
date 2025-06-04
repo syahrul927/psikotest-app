@@ -11,7 +11,7 @@ import { Timer } from "@/components/timer"
 import { NumberSelectionQuestion, RadioQuestion, TextQuestion } from "../ist-question-type"
 
 
-export function IstSelectedTestPage() {
+export function IstSelectedTest() {
   const params = useParams()
   const router = useRouter()
   const subtestId = Number.parseInt(params.type as string)

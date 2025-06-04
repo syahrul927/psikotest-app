@@ -1,4 +1,4 @@
-import { IstSubtestsPage } from "@/features/ist-subtest";
+import { IstSubtests } from "@/features/ist-subtest";
 import { type PageType } from "@/types/page-type";
 import { notFound } from "next/navigation";
 
@@ -7,5 +7,5 @@ export default async function IstProfilePage({ params }: PageType) {
   if (!slug) {
     return notFound();
   }
-  return <IstSubtestsPage id={slug} />;
+  return <IstSubtests id={slug} />;
 }

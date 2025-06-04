@@ -8,7 +8,7 @@ import { Clock, CheckCircle2, Brain, MessageSquare, Target, ArrowLeft, BookOpen 
 import { testData } from "@/lib/test-data"
 
 
-export function IstSubtestsPage({id}: {id: string} ) {
+export function IstSubtests({id}: {id: string} ) {
   const [completedSubtests, setCompletedSubtests] = useState<string[]>([])
 
   // Map subtest types to more user-friendly descriptions and icons
