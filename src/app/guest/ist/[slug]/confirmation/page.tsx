@@ -2,8 +2,6 @@ import { notFound } from "next/navigation";
 import type { PageType } from "@/types/page-type";
 import { Logo } from "@/components/ui/logo";
 import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import { findKraepelinInvitation } from "@/hooks/api/kraepelin-invitation/use-find-kraepelin-invitation";
-import { KraepelinInvitationConfirmation } from "@/features/kraepelin-test";
 import { findIstInvitation } from "@/hooks/api/ist-invitation/user-find-ist-invitation";
 import { IstInvitationConfirmation } from "@/features/ist-subtest/ist-invitation-confirmation";
 
