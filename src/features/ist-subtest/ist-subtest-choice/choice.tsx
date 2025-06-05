@@ -50,13 +50,13 @@ export function IstSubtests({id}: {id: string} ) {
   const getSubtestDescription = (type: string) => {
     switch (type) {
       case "number-selection":
-        return "Uji kemampuan logika dan analisis Anda dengan menyelesaikan pola angka yang menantang."
+        return "Pilihlah kombinasi angka untuk menjawab pertanyaan yang ada."
       case "radio":
-        return "Eksplorasi kepribadian dan karakteristik unik Anda melalui pertanyaan yang mendalam."
+        return "Pilihlah jawaban yang menurut anda paling benar."
       case "checkbox":
         return "Temukan preferensi dan gaya kerja yang paling sesuai dengan diri Anda."
       case "text":
-        return "Refleksikan perjalanan dan aspirasi Anda melalui pertanyaan pengembangan diri."
+        return "Isilah jawaban didalam kolom yang telah disediakan."
       default:
         return "Selesaikan subtes ini untuk melengkapi penilaian psikologis Anda."
     }
