@@ -9,6 +9,7 @@ import { testData } from "@/lib/test-data"
 import { AlertCircle, ArrowLeft, Brain } from "lucide-react"
 import { Timer } from "@/components/timer"
 import { NumberSelectionQuestion, RadioQuestion, TextQuestion } from "../ist-question-type"
+import Image from "next/image"
 
 
 export function IstSelectedTest() {
@@ -127,6 +128,15 @@ export function IstSelectedTest() {
         <Card className="shadow-md border">
           <CardContent className="p-4 sm:p-6 md:p-8">
             <div className="space-y-8 sm:space-y-10 mb-6 sm:mb-8">
+            {currentSubtestData?.contoh && (
+              <Image 
+                src={currentSubtestData.contoh}
+                alt="Contoh Soal"
+                width={500}
+                height={300}
+                className="w-full h-auto mb-6 rounded-lg"
+              />
+            )}
               {currentSubtestData?.questions.map((questionData: any, index) => (
                 <div key={questionData.id} className="pb-6 sm:pb-8 border-b last:border-b-0 last:pb-0">
                   {/* Question Number - Only show for non-number-selection types */}

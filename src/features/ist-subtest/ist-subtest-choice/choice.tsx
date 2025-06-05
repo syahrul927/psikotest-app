@@ -111,7 +111,7 @@ export function IstSubtests({id}: {id: string} ) {
         )}
 
         {/* Subtests Grid */}
-        <div className="flex items-center justify-center grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+        <div className="grid items-center justify-center grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
           {testData.map((subtest, type) => {
             const isCompleted = completedSubtests.includes(subtest.id)
             const subtestInfo = getSubtestInfo(subtest.type)
