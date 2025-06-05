@@ -1,6 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { SectionCards } from "@/features/dashboard";
+import { ChartActivity } from "@/features/dashboard/chart-activity";
 import { toast } from "sonner";
 
 export default function HomePage() {
@@ -10,10 +11,14 @@ export default function HomePage() {
     });
   };
   return (
-    <div className="flex min-h-screen w-full items-center justify-center">
-      <div className="w-fit space-x-3">
-        <Button onClick={showToast}>Sonner</Button>
-        <ModeToggle />
+    <div className="flex flex-1 flex-col">
+      <div className="@container/main flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          <SectionCards />
+          <div className="px-4 lg:px-6">
+            <ChartActivity />
+          </div>
+        </div>
       </div>
     </div>
   );
