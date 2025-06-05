@@ -1,20 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
 
 datasource db {
     provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
 }
 
-// Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
     userId            String
@@ -62,16 +54,6 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-model KraepelinTemplate {
-    id      String @id @default(cuid())
-    version String
-    x       Int
-    y       Int
-    value   Int
-
-    @@index([version, x, y])
-}
-
 model TesterProfile {
     id                   String       @id @default(cuid())
     name                 String
@@ -81,6 +63,16 @@ model TesterProfile {
     educationName        String
     educationDescription String?
     Invitation           Invitation[]
+}
+
+model KraepelinTemplate {
+    id      String @id @default(cuid())
+    version String
+    x       Int
+    y       Int
+    value   Int
+
+    @@index([version, x, y])
 }
 
 model Invitation {
@@ -139,4 +131,106 @@ model KraepelinResultDetail {
     b                 Int
     value             Int
     createdAt         DateTime        @default(now()) @db.Timestamptz(3)
+}
+
+model IstTesterProfile {
+    id                   String              @id @default(cuid())
+    name                 String
+    phone                String
+    address              String
+    educationId          String
+    placeOfBirth         String
+    dateOfBirth          DateTime
+    educationName        String
+    educationDescription String?
+    IstInvitation        IstInvitation[]
+    IstSubtestSession    IstSubtestSession[]
+}
+
+model IstInvitation {
+    id              String              @id @default(cuid())
+    name            String?
+    secretKey       String
+    status          StatusIstInvitation @default(PENDING)
+    testerProfileId String?
+    testerProfile   IstTesterProfile?   @relation(fields: [testerProfileId], references: [id])
+    createdAt       DateTime            @db.Timestamptz(3)
+    updatedAt       DateTime            @updatedAt @db.Timestamptz(3)
+}
+
+model IstSubtestSession {
+    id                 String              @id @default(cuid())
+    testerProfileId    String
+    IstTesterProfile   IstTesterProfile    @relation(fields: [testerProfileId], references: [id])
+    startedAt          DateTime            @default(now())
+    submittedAt        DateTime?
+    questionOrder      String[] // Array of Question IDs (ordered as shown to user)
+    IstSubtestTemplate IstSubtestTemplate? @relation(fields: [subtestTemplateId], references: [id])
+    subtestTemplateId  String?
+}
+
+model IstUserAnswer {
+    id              String              @id @default(cuid())
+    testerProfileId String
+    question        IstQuestionTemplate @relation(fields: [questionId], references: [id])
+    questionId      String
+    answer          String
+    createdAt       DateTime            @default(now())
+
+    @@index([questionId], name: "user_question_unique")
+}
+
+// Template
+model IstSubtestTemplate {
+    id                String                @id @default(cuid())
+    name              String
+    description       String                @db.Text // markdown
+    timeLimit         Int // in seconds (or minutes — your choice)
+    questions         IstQuestionTemplate[]
+    createdAt         DateTime              @default(now())
+    updatedAt         DateTime              @updatedAt
+    IstSubtestSession IstSubtestSession[]
+}
+
+model IstQuestionTemplate {
+    id                 String              @id @default(cuid())
+    IstSubtestTemplate IstSubtestTemplate  @relation(fields: [subtestTemplateId], references: [id])
+    subtestTemplateId  String
+    type               IstSubtestType
+    text               String? // Nullable for image-based questions
+    imageUrl           String? // For type 7/8
+    options            IstOptionTemplate[] // ABCDE options (text or image URL)
+    correctAnswer      String? // Only for template logic, not user input
+    order              Int // For sorting questions
+    createdAt          DateTime            @default(now())
+    updatedAt          DateTime            @updatedAt
+    UserAnswer         IstUserAnswer[]
+}
+
+model IstOptionTemplate {
+    id          String              @id @default(cuid())
+    IstQuestion IstQuestionTemplate @relation(fields: [questionId], references: [id])
+    questionId  String
+    label       String // A/B/C/D/E
+    text        String? // Nullable for image option
+    imageUrl    String? // Nullable for text option
+}
+
+enum IstSubtestType {
+    TYPE1
+    TYPE2
+    TYPE3
+    TYPE4
+    TYPE5
+    TYPE6
+    TYPE7
+    TYPE8
+    TYPE9
+}
+
+enum StatusIstInvitation {
+    PENDING
+    ONPROGRESS
+    AWAITING_REVIEW
+    DONE
 }
