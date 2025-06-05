@@ -18,7 +18,7 @@ export const KraepelinScreenWrapper = ({ slug }: { slug: string }) => {
   } = useKraepelinTestLogic(slug);
 
   // enable this only for debug mode
-  useDebugAutoAnswer(true, question, onClickNumpad);
+  //useDebugAutoAnswer(true, question, onClickNumpad);
 
   return (
     <div className="relative flex h-[100dvh] w-full flex-col items-center justify-between">
