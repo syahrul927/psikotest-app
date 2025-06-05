@@ -18,7 +18,7 @@ export const DevelopmentFlag = () => {
           </div>
           <CardTitle className="text-2xl">Under Development</CardTitle>
           <CardDescription>
-            We're working hard to bring you something amazing. Our site is
+            We&apos;re working hard to bring you something amazing. Our site is
             currently under construction.
           </CardDescription>
         </CardHeader>
