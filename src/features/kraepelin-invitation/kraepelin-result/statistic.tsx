@@ -12,7 +12,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis } from "recharts";
 
 interface KraepelinResultStatisticProps {
   average: number;
@@ -26,11 +26,11 @@ interface KraepelinResultStatisticProps {
 const chartConfig = {
   answered: {
     label: "Terjawab",
-    color: "hsl(var(--primary))",
+    color: "var(--chart-2)",
   },
   average: {
     label: "Rata-Rata",
-    color: "hsl(var(--primary))",
+    color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
 export function KraepelinResultStatistic({
@@ -65,26 +65,34 @@ export function KraepelinResultStatistic({
             })}
             accessibilityLayer
             margin={{
-              left: 12,
-              right: 12,
+              left: 15,
+              right: 15,
+              top: 15,
+              bottom: 15,
             }}
           >
-            <XAxis dataKey="name" tickLine={false} tickMargin={8} />
-            <YAxis tickLine={false} tickMargin={8} />
+            <XAxis dataKey="name" tickLine={true} tickMargin={8} />
+            <YAxis tickLine={true} tickMargin={8} />
+
+            <CartesianGrid
+              strokeDasharray={3}
+              strokeWidth={2}
+              stroke="var(--foreground)"
+              strokeOpacity={0.1}
+            />
             <Line
               type="monotone"
               strokeWidth={2}
               dataKey="average"
-              stroke="var(--foreground)"
-              strokeOpacity={0.2}
+              stroke="var(--color-average)"
               dot={false}
             />
             <Line
-              type="monotone"
+              type="natural"
               dataKey="answered"
               dot={false}
               strokeWidth={2}
-              stroke="var(--primary)"
+              stroke="var(--color-answered)"
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
           </LineChart>
