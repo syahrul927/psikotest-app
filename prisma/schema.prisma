@@ -134,7 +134,7 @@ model KraepelinResultDetail {
 }
 
 model IstTesterProfile {
-    id                   String              @id @default(cuid())
+    id                   String          @id @default(cuid())
     name                 String
     phone                String
     address              String
@@ -144,7 +144,6 @@ model IstTesterProfile {
     educationName        String
     educationDescription String?
     IstInvitation        IstInvitation[]
-    IstSubtestSession    IstSubtestSession[]
 }
 
 model IstInvitation {
@@ -161,8 +160,6 @@ model IstInvitation {
 
 model IstSubtestSession {
     id                 String              @id @default(cuid())
-    testerProfileId    String
-    IstTesterProfile   IstTesterProfile    @relation(fields: [testerProfileId], references: [id])
     startedAt          DateTime?
     submittedAt        DateTime?
     questionOrder      String[] // Array of Question IDs (ordered as shown to user)
