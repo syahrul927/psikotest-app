@@ -1,4 +1,5 @@
 "use client";
+import { DevelopmentFlag } from "@/components/layout/development-flag";
 import {
   IstInvFormDialogProvider,
   IstInvitationForm,
@@ -19,30 +20,33 @@ export default function IstInvitationPage() {
     return notFound();
   }
   return (
-    <IstInvFormDialogProvider>
-      <IstInvitationSummary
-        isLoading={isLoading}
-        total={data?.total}
-        done={data?.done}
-        pending={data?.pending}
-        onprogress={data?.onprogress}
-      />
-      <IstInvitationTable
-        isLoading={isLoading}
-        data={
-          data?.invitations?.map(
-            ({ id, name, status, secretKey, testerProfile }) => ({
-              id,
-              name,
-              status,
-              profileName: testerProfile?.name,
-              secretKey,
-              onDelete,
-            }),
-          ) ?? []
-        }
-      />
-      <IstInvitationForm onSuccessCallback={refetch} />
-    </IstInvFormDialogProvider>
+    <>
+      <DevelopmentFlag />
+      <IstInvFormDialogProvider>
+        <IstInvitationSummary
+          isLoading={isLoading}
+          total={data?.total}
+          done={data?.done}
+          pending={data?.pending}
+          onprogress={data?.onprogress}
+        />
+        <IstInvitationTable
+          isLoading={isLoading}
+          data={
+            data?.invitations?.map(
+              ({ id, name, status, secretKey, testerProfile }) => ({
+                id,
+                name,
+                status,
+                profileName: testerProfile?.name,
+                secretKey,
+                onDelete,
+              }),
+            ) ?? []
+          }
+        />
+        <IstInvitationForm onSuccessCallback={refetch} />
+      </IstInvFormDialogProvider>
+    </>
   );
 }

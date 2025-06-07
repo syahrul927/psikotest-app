@@ -157,9 +157,11 @@ const TrainingPage = () => {
     }
   };
 
-  useEffect(() => {
-    setRun(true);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setRun(true);
+  //   }, 1000);
+  // }, []);
 
   useEffect(() => {
     if (finish) {
@@ -169,7 +171,7 @@ const TrainingPage = () => {
 
   return (
     <div className="relative flex h-[100dvh] w-full flex-col items-center justify-between">
-      {run && (
+      {run ? (
         <Joyride
           callback={handleJoyrideCallback}
           continuous
@@ -220,7 +222,7 @@ const TrainingPage = () => {
             },
           }}
         />
-      )}
+      ) : null}
 
       <KraepelinScreen
         header={{

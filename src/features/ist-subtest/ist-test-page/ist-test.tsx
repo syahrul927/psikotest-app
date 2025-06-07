@@ -1,4 +1,8 @@
 "use client"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
@@ -11,121 +15,138 @@ import { Timer } from "@/components/timer"
 import { NumberSelectionQuestion, RadioQuestion, TextQuestion } from "../ist-question-type"
 import Image from "next/image"
 
-
 export function IstSelectedTest() {
-  const params = useParams()
-  const router = useRouter()
-  const subtestId = Number.parseInt(params.type as string)
-  const [answers, setAnswers] = useState<Record<string, any>>({})
-  const [timerActive, setTimerActive] = useState(true)
-  const [timeExpired, setTimeExpired] = useState(false)
+  const params = useParams();
+  const router = useRouter();
+  const subtestId = Number.parseInt(params.type as string);
+  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [timerActive, setTimerActive] = useState(true);
+  const [timeExpired, setTimeExpired] = useState(false);
 
-  const SUBTEST_TIME = 300 // 5 minutes in seconds
+  const SUBTEST_TIME = 300; // 5 minutes in seconds
 
   // Validate subtest ID
   if (isNaN(subtestId) || subtestId < 0 || subtestId >= testData.length) {
-    router.push("/subtests")
-    return null
+    router.push("/subtests");
+    return null;
   }
 
-  const currentSubtestData = testData[subtestId]
-  const totalQuestions = currentSubtestData?.questions.length ?? 0
+  const currentSubtestData = testData[subtestId];
+  const totalQuestions = currentSubtestData?.questions.length ?? 0;
 
   const handleAnswer = (questionIndex: number, answer: any) => {
     setAnswers({
       ...answers,
       [`${subtestId}-${questionIndex}`]: answer,
-    })
-  }
+    });
+  };
 
   const handleBackToSelection = () => {
-    router.back()
-  }
+    router.back();
+  };
 
   const handleCompleteSubtest = () => {
     // Here you would typically save the answers to a database or state management
-    console.log("Subtest completed:", answers)
-    router.push("/subtests")
-  }
+    console.log("Subtest completed:", answers);
+    router.push("/subtests");
+  };
 
   const handleTimeUp = () => {
-    setTimeExpired(true)
-    setTimerActive(false)
-  }
+    setTimeExpired(true);
+    setTimerActive(false);
+  };
 
   const handleContinueAfterTimeUp = () => {
-    router.push("/subtests")
-  }
+    router.push("/subtests");
+  };
 
   const isSubtestCompleted = () => {
     // Check if all questions in the current subtest have been answered
     for (let i = 0; i < totalQuestions; i++) {
-      const currentAnswer = answers[`${subtestId}-${i}`]
+      const currentAnswer = answers[`${subtestId}-${i}`];
 
       if (currentSubtestData?.type === "radio") {
-        if (currentAnswer === undefined) return false
+        if (currentAnswer === undefined) return false;
       } else if (currentSubtestData?.type === "text") {
-        if (!currentAnswer || currentAnswer.trim() === "") return false
+        if (!currentAnswer || currentAnswer.trim() === "") return false;
       } else if (currentSubtestData?.type === "number-selection") {
-        if (!currentAnswer || currentAnswer.length === 0) return false
+        if (!currentAnswer || currentAnswer.length === 0) return false;
       }
     }
-    return true
-  }
+    return true;
+  };
 
   if (timeExpired) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="max-w-md mx-auto shadow-md border w-full">
-          <CardContent className="p-6 sm:p-8 text-center">
-            <div className="flex justify-center mb-6">
-              <div className="p-4 bg-gray-100 rounded-full">
-                <AlertCircle className="h-10 w-10 sm:h-12 sm:w-12 text-gray-700" />
+      <div className="bg-background flex min-h-screen items-center justify-center p-4">
+        <Card className="mx-auto w-full max-w-md border shadow-md">
+          <CardContent className="p-6 text-center sm:p-8">
+            <div className="mb-6 flex justify-center">
+              <div className="rounded-full bg-gray-100 p-4">
+                <AlertCircle className="h-10 w-10 text-gray-700 sm:h-12 sm:w-12" />
               </div>
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold mb-4">Waktu Habis!</h2>
-            <p className="text-gray-600 mb-6">
-              Waktu untuk <span className="font-semibold">{currentSubtestData?.title}</span> telah habis.
+            <h2 className="mb-4 text-xl font-bold sm:text-2xl">Waktu Habis!</h2>
+            <p className="mb-6 text-gray-600">
+              Waktu untuk{" "}
+              <span className="font-semibold">{currentSubtestData?.title}</span>{" "}
+              telah habis.
             </p>
-            <Button onClick={handleContinueAfterTimeUp} className="w-full bg-white dark:bg-black hover:bg-gray-800 dark:hover:bg-gray-100 text-white dark:text-white">
+            <Button
+              onClick={handleContinueAfterTimeUp}
+              className="w-full bg-white text-white hover:bg-gray-800 dark:bg-black dark:text-white dark:hover:bg-gray-100"
+            >
               Kembali ke Pilihan Subtes
             </Button>
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="min-h-screen dark:bg-black bg-white">
+    <div className="min-h-screen bg-white dark:bg-black">
       {/* Sticky Header with Timer */}
-      <div className="sticky top-0 z-50 dark:bg-black bg-white border-b shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-3 sm:py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+      <div className="sticky top-0 z-50 border-b bg-white shadow-sm dark:bg-black">
+        <div className="mx-auto max-w-4xl px-4 py-3 sm:py-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={handleBackToSelection} className="hover:bg-gray-100">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleBackToSelection}
+                className="hover:bg-gray-100"
+              >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <div className="flex items-center gap-2">
-                <div className="p-1.5 sm:p-2 bg-black rounded-lg">
-                  <Brain className="h-4 w-4 sm:h-5 sm:w-5 text-black dark:text-white" />
+                <div className="rounded-lg bg-black p-1.5 sm:p-2">
+                  <Brain className="h-4 w-4 text-black sm:h-5 sm:w-5 dark:text-white" />
                 </div>
                 <div>
-                  <h1 className="text-lg sm:text-xl font-bold leading-tight">{currentSubtestData?.title}</h1>
-                  <p className="text-xs sm:text-sm text-gray-600">{totalQuestions} Pertanyaan</p>
+                  <h1 className="text-lg leading-tight font-bold sm:text-xl">
+                    {currentSubtestData?.title}
+                  </h1>
+                  <p className="text-xs text-gray-600 sm:text-sm">
+                    {totalQuestions} Pertanyaan
+                  </p>
                 </div>
               </div>
             </div>
-            <div className="self-end sm:self-auto sm:ml-auto">
-              <Timer seconds={SUBTEST_TIME} onTimeUp={handleTimeUp} isActive={timerActive} />
+            <div className="self-end sm:ml-auto sm:self-auto">
+              <Timer
+                seconds={SUBTEST_TIME}
+                onTimeUp={handleTimeUp}
+                isActive={timerActive}
+              />
             </div>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6">
-        <Card className="shadow-md border">
+      <div className="mx-auto max-w-4xl px-4 py-4 sm:py-6">
+        <Card className="border shadow-md">
           <CardContent className="p-4 sm:p-6 md:p-8">
             <div className="space-y-8 sm:space-y-10 mb-6 sm:mb-8">
             {currentSubtestData?.contoh && (
@@ -138,14 +159,17 @@ export function IstSelectedTest() {
               />
             )}
               {currentSubtestData?.questions.map((questionData: any, index) => (
-                <div key={questionData.id} className="pb-6 sm:pb-8 border-b last:border-b-0 last:pb-0">
+                <div
+                  key={questionData.id}
+                  className="border-b pb-6 last:border-b-0 last:pb-0 sm:pb-8"
+                >
                   {/* Question Number - Only show for non-number-selection types */}
                   {currentSubtestData?.type !== "number-selection" && (
-                    <div className="flex items-center gap-3 mb-3 sm:mb-4">
-                      <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 bg-white dark:bg-black text-black dark:text-white rounded-full text-sm font-bold">
+                    <div className="mb-3 flex items-center gap-3 sm:mb-4">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-bold text-black sm:h-8 sm:w-8 dark:bg-black dark:text-white">
                         {index + 1}
                       </div>
-                      <h3 className="text-base sm:text-lg font-semibold text-gray-700">
+                      <h3 className="text-base font-semibold text-gray-700 sm:text-lg">
                         Pertanyaan {index + 1} dari {totalQuestions}
                       </h3>
                     </div>
@@ -153,7 +177,7 @@ export function IstSelectedTest() {
 
                   {/* Question Text - Hide for number-selection type */}
                   {currentSubtestData?.type !== "number-selection" && (
-                    <p className="text-lg sm:text-xl font-medium mb-4 sm:mb-6 leading-relaxed">
+                    <p className="mb-4 text-lg leading-relaxed font-medium sm:mb-6 sm:text-xl">
                       {questionData.question}
                     </p>
                   )}
@@ -188,18 +212,18 @@ export function IstSelectedTest() {
               ))}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between pt-4 sm:pt-6 border-t">
+            <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:justify-between sm:gap-0 sm:pt-6">
               <Button
                 variant="outline"
                 onClick={handleBackToSelection}
-                className="order-2 sm:order-1 w-full sm:w-auto px-4 sm:px-8"
+                className="order-2 w-full px-4 sm:order-1 sm:w-auto sm:px-8"
               >
                 Kembali ke Pilihan Subtes
               </Button>
               <Button
                 onClick={handleCompleteSubtest}
                 disabled={!isSubtestCompleted()}
-                className="order-1 sm:order-2 w-full sm:w-auto px-4 sm:px-8 bg-black hover:bg-gray-800 text-white"
+                className="order-1 w-full bg-black px-4 text-white hover:bg-gray-800 sm:order-2 sm:w-auto sm:px-8"
               >
                 Selesaikan Subtes
               </Button>
@@ -208,5 +232,5 @@ export function IstSelectedTest() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

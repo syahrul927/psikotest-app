@@ -23,11 +23,11 @@ export const publicIstInvitationRouter = createTRPCRouter({
           id: input,
         },
       });
-    //   if (invitation?.startAt) {
-    //     if (!compareDates(new Date(), invitation.startAt)) {
-    //       return undefined;
-    //     }
-    //   }
+      //   if (invitation?.startAt) {
+      //     if (!compareDates(new Date(), invitation.startAt)) {
+      //       return undefined;
+      //     }
+      //   }
       return {
         invitationName: invitation?.name,
       };
@@ -52,17 +52,17 @@ export const publicIstInvitationRouter = createTRPCRouter({
           message: "Undangan tidak valid!",
         });
       }
-      let step = 0;
-      let resultId = "";
-    //   if (invitation.startAt) {
-    //     step = 1;
-    //     const result = await ctx.db.kraepelinResult.findFirst({
-    //       where: {
-    //         invitationId: id,
-    //       },
-    //     });
-    //     resultId = result?.id ?? "";
-    //   }
+      const step = 0;
+      const resultId = "";
+      //   if (invitation.startAt) {
+      //     step = 1;
+      //     const result = await ctx.db.kraepelinResult.findFirst({
+      //       where: {
+      //         invitationId: id,
+      //       },
+      //     });
+      //     resultId = result?.id ?? "";
+      //   }
       return {
         step,
         resultId,
@@ -82,8 +82,16 @@ export const publicIstInvitationRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, name, phone, address, dob, pob, education, educationDescription } =
-        input;
+      const {
+        id,
+        name,
+        phone,
+        address,
+        dob,
+        pob,
+        education,
+        educationDescription,
+      } = input;
       const invitation = await ctx.db.istInvitation.findFirst({
         where: {
           id,
