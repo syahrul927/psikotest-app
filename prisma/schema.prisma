@@ -196,7 +196,6 @@ model IstQuestionTemplate {
     id                 String              @id @default(cuid())
     IstSubtestTemplate IstSubtestTemplate  @relation(fields: [subtestTemplateId], references: [id])
     subtestTemplateId  String
-    type               IstSubtestType
     text               String? // Nullable for image-based questions
     imageUrl           String? // For type 7/8
     options            IstOptionTemplate[] // ABCDE options (text or image URL)
@@ -214,18 +213,6 @@ model IstOptionTemplate {
     label       String // A/B/C/D/E
     text        String? // Nullable for image option
     imageUrl    String? // Nullable for text option
-}
-
-enum IstSubtestType {
-    TYPE1
-    TYPE2
-    TYPE3
-    TYPE4
-    TYPE5
-    TYPE6
-    TYPE7
-    TYPE8
-    TYPE9
 }
 
 enum StatusIstInvitation {
