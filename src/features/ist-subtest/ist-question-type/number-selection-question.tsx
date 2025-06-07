@@ -23,7 +23,7 @@ export function NumberSelectionQuestion({
   questionNumber,
   totalQuestions,
 }: QuestionProps) {
-  const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 
   const toggleNumber = (num: number) => {
     if (value.includes(num)) {
@@ -32,9 +32,6 @@ export function NumberSelectionQuestion({
       onChange([...value, num]);
     }
   };
-
-  // Display the pattern with a question mark at the end
-  const patternArray = question.pattern.split(",");
 
   return (
     <div className="space-y-6">
@@ -51,23 +48,12 @@ export function NumberSelectionQuestion({
       )}
 
       {/* Pattern display */}
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-        {patternArray.map((num, index) => (
+      <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
           <div
-            key={index}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border-2 bg-gray-50 text-lg font-medium sm:h-12 sm:w-12 sm:text-xl dark:bg-gray-950"
+            className="flex items-center justify-center w-full rounded-lg text-lg sm:text-xl font-medium p-4 dark:bg-gray-950 bg-gray-50"
           >
-            {index === patternArray.length - 1 ? (
-              <span className="text-xl font-bold text-gray-900 sm:text-2xl dark:text-gray-100">
-                ?
-              </span>
-            ) : (
-              <span className="text-xl font-bold text-gray-900 sm:text-2xl dark:text-gray-100">
-                {num}
-              </span>
-            )}
+            <div>{question?.question}</div>
           </div>
-        ))}
       </div>
 
       <div className="pt-4">

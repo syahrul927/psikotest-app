@@ -20,11 +20,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useConfirmationIstInvitation, type ConfirmationIstInvitationResponseType } from "@/hooks/api/ist-invitation/use-confirmation-ist-invitation";
-import {
-  useConfirmationKraepelinInvitation,
-  type ConfirmationKraepelinInvitationResponseType,
-} from "@/hooks/api/kraepelin-invitation/use-confirmation-kraepelin-invitation";
-import { useAccessInvitation } from "@/hooks/use-access-invitation-kraepelin";
 import { useAccessIstInvitation } from "@/hooks/use-access-ist-test";
 import { PAGE_URLS } from "@/lib/page-url";
 import { cn } from "@/lib/utils";
