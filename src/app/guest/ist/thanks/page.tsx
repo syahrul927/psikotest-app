@@ -3,7 +3,7 @@
 import { CheckCircle, Clock, Mail, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function KraepelinThanksPage() {
+export default function IstThanksPage() {
   return (
     <div className="bg-background flex min-h-screen items-center justify-center p-4">
       <div className="mx-auto w-full max-w-lg">

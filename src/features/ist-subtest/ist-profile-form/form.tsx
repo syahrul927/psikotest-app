@@ -1,7 +1,5 @@
 "use client";
 
-import AlertConfirm from "@/components/ui/alert-confirm";
-import { AlertDialog } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -26,18 +24,12 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useStartInvitation, type StartIstInvitationResponseType } from "@/hooks/api/ist-invitation/use-start-invitation";
 import { useUpdateProfileIstInvitation } from "@/hooks/api/ist-invitation/use-update-profile-ist-invitation";
-import {
-  type StartKraepelinInvitationResponseType,
-} from "@/hooks/api/kraepelin-invitation/use-start-invitation";
-import { useUpdateProfileKraepelinInvitation } from "@/hooks/api/kraepelin-invitation/use-update-profile-kraepelin-invitation";
-import { useAccessInvitation } from "@/hooks/use-access-invitation-kraepelin";
 import { useAccessIstInvitation } from "@/hooks/use-access-ist-test";
 import { PAGE_URLS } from "@/lib/page-url";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowRight,
-  BookOpen,
   Calendar as CalendarIcon,
   FileText,
   GraduationCap,
@@ -45,7 +37,6 @@ import {
   Phone,
   User,
 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

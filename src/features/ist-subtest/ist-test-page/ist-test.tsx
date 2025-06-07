@@ -1,23 +1,19 @@
-"use client";
-
+"use client"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 
-import { testData } from "@/lib/test-data";
-import { AlertCircle, ArrowLeft, Brain } from "lucide-react";
-import { Timer } from "@/components/timer";
-import {
-  NumberSelectionQuestion,
-  RadioQuestion,
-  TextQuestion,
-} from "../ist-question-type";
+import { testData } from "@/lib/test-data"
+import { AlertCircle, ArrowLeft, Brain } from "lucide-react"
+import { Timer } from "@/components/timer"
+import { NumberSelectionQuestion, RadioQuestion, TextQuestion } from "../ist-question-type"
+import Image from "next/image"
 
 export function IstSelectedTest() {
   const params = useParams();
@@ -152,7 +148,16 @@ export function IstSelectedTest() {
       <div className="mx-auto max-w-4xl px-4 py-4 sm:py-6">
         <Card className="border shadow-md">
           <CardContent className="p-4 sm:p-6 md:p-8">
-            <div className="mb-6 space-y-8 sm:mb-8 sm:space-y-10">
+            <div className="space-y-8 sm:space-y-10 mb-6 sm:mb-8">
+            {currentSubtestData?.contoh && (
+              <Image 
+                src={currentSubtestData.contoh}
+                alt="Contoh Soal"
+                width={500}
+                height={300}
+                className="w-full h-auto mb-6 rounded-lg"
+              />
+            )}
               {currentSubtestData?.questions.map((questionData: any, index) => (
                 <div
                   key={questionData.id}
