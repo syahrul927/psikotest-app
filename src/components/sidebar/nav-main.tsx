@@ -8,7 +8,9 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {
+  SidebarContent,
   SidebarGroup,
+  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuAction,
@@ -31,63 +33,71 @@ export function NavMain({
 }) {
   if (isLoading) {
     return (
-      <>
-        <SidebarMenuItem>
-          <div className="flex items-center gap-2 p-2">
-            <Skeleton className="h-4 w-4" />
-            <Skeleton className="h-4 w-16" />
-          </div>
-        </SidebarMenuItem>
-        <SidebarMenuItem>
-          <div className="flex items-center gap-2 p-2">
-            <Skeleton className="h-4 w-4" />
-            <Skeleton className="h-4 w-16" />
-          </div>
-        </SidebarMenuItem>
-      </>
+      <SidebarGroup>
+        <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <div className="flex items-center gap-2 p-2">
+                <Skeleton className="h-4 w-4" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <div className="flex items-center gap-2 p-2">
+                <Skeleton className="h-4 w-4" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+      </SidebarGroup>
     );
   }
   return (
     <SidebarGroup>
-      <SidebarMenu>
-        {items.map((item) => (
-          <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={item.title}>
-                <Link href={item.url}>
-                  {item.icon ? <item.icon /> : null}
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-              {item.items?.filter(({ hide }) => !hide).length ? (
-                <>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuAction className="data-[state=open]:rotate-90">
-                      <ChevronRight />
-                      <span className="sr-only">Toggle</span>
-                    </SidebarMenuAction>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {item.items
-                        ?.filter((item) => !item.hide)
-                        .map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton asChild>
-                              <Link href={subItem.url}>
-                                <span>{subItem.title}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </>
-              ) : null}
-            </SidebarMenuItem>
-          </Collapsible>
-        ))}
-      </SidebarMenu>
+      <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {items.map((item) => (
+            <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip={item.title}>
+                  <Link href={item.url}>
+                    {item.icon ? <item.icon /> : null}
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+                {item.items?.filter(({ hide }) => !hide).length ? (
+                  <>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuAction className="data-[state=open]:rotate-90">
+                        <ChevronRight />
+                        <span className="sr-only">Toggle</span>
+                      </SidebarMenuAction>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.items
+                          ?.filter((item) => !item.hide)
+                          .map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton asChild>
+                                <Link href={subItem.url}>
+                                  <span>{subItem.title}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </>
+                ) : null}
+              </SidebarMenuItem>
+            </Collapsible>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
     </SidebarGroup>
   );
 }

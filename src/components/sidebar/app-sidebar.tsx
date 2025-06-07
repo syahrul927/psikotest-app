@@ -14,10 +14,14 @@ import {
 import { useSession } from "next-auth/react";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
-import { NavigationMainConstant } from "./navigation-menu";
+import {
+  NavigationMainConstant,
+  NavigationSecondaryConstant,
+} from "./navigation-menu";
 import { Logo } from "@/components/ui/logo";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon } from "lucide-react";
+import { NavSecondary } from "./nav-secondary";
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -56,6 +60,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={NavigationMainConstant} isLoading={isLoading} />
+        <NavSecondary
+          items={NavigationSecondaryConstant}
+          isLoading={isLoading}
+        />
       </SidebarContent>
       <SidebarFooter>
         <ThemeToggle />
