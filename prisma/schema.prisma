@@ -148,25 +148,28 @@ model IstTesterProfile {
 }
 
 model IstInvitation {
-    id              String              @id @default(cuid())
-    name            String?
-    secretKey       String
-    status          StatusIstInvitation @default(PENDING)
-    testerProfileId String?
-    testerProfile   IstTesterProfile?   @relation(fields: [testerProfileId], references: [id])
-    createdAt       DateTime            @db.Timestamptz(3)
-    updatedAt       DateTime            @updatedAt @db.Timestamptz(3)
+    id                String              @id @default(cuid())
+    name              String?
+    secretKey         String
+    status            StatusIstInvitation @default(PENDING)
+    testerProfileId   String?
+    testerProfile     IstTesterProfile?   @relation(fields: [testerProfileId], references: [id])
+    createdAt         DateTime            @db.Timestamptz(3)
+    updatedAt         DateTime            @updatedAt @db.Timestamptz(3)
+    IstSubtestSession IstSubtestSession[]
 }
 
 model IstSubtestSession {
     id                 String              @id @default(cuid())
     testerProfileId    String
     IstTesterProfile   IstTesterProfile    @relation(fields: [testerProfileId], references: [id])
-    startedAt          DateTime            @default(now())
+    startedAt          DateTime?
     submittedAt        DateTime?
     questionOrder      String[] // Array of Question IDs (ordered as shown to user)
     IstSubtestTemplate IstSubtestTemplate? @relation(fields: [subtestTemplateId], references: [id])
     subtestTemplateId  String?
+    istInvitationId    String
+    IstInvitation      IstInvitation       @relation(fields: [istInvitationId], references: [id])
 }
 
 model IstUserAnswer {
