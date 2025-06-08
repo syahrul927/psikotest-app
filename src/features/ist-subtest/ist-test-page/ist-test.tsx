@@ -14,6 +14,8 @@ import { AlertCircle, ArrowLeft, Brain } from "lucide-react"
 import { Timer } from "@/components/timer"
 import { NumberSelectionQuestion, RadioQuestion, TextQuestion } from "../ist-question-type"
 import Image from "next/image"
+import { useGetQuestionAndOptions } from "@/hooks/api/ist-test/use-ist-test"
+import { LoaderSpinner } from "@/components/ui/loading-spinner"
 
 export function IstSelectedTest() {
   const params = useParams();
@@ -23,16 +25,20 @@ export function IstSelectedTest() {
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
 
-  const SUBTEST_TIME = 300; // 5 minutes in seconds
+  const { data: question } = useGetQuestionAndOptions(params.type as string)
+
+  console.log("ini pertanyaan: ",question)
+
+  const SUBTEST_TIME = question?.timeLimit ? question.timeLimit * 60 : 300; // Convert minutes to seconds, default to 5 minutes (300 seconds)
 
   // Validate subtest ID
-  if (isNaN(subtestId) || subtestId < 0 || subtestId >= testData.length) {
+  if (isNaN(subtestId) || subtestId < 0 || subtestId > 9) {
     router.push("/subtests");
     return null;
   }
 
   const currentSubtestData = testData[subtestId];
-  const totalQuestions = currentSubtestData?.questions.length ?? 0;
+  const totalQuestions = question?.questions.length ?? 0;
 
   const handleAnswer = (questionIndex: number, answer: any) => {
     setAnswers({
@@ -106,6 +112,8 @@ export function IstSelectedTest() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-black">
+      {question ? (
+        <>
       {/* Sticky Header with Timer */}
       <div className="sticky top-0 z-50 border-b bg-white shadow-sm dark:bg-black">
         <div className="mx-auto max-w-4xl px-4 py-3 sm:py-4">
@@ -125,10 +133,10 @@ export function IstSelectedTest() {
                 </div>
                 <div>
                   <h1 className="text-lg leading-tight font-bold sm:text-xl">
-                    {currentSubtestData?.title}
+                    {question?.description}
                   </h1>
                   <p className="text-xs text-gray-600 sm:text-sm">
-                    {totalQuestions} Pertanyaan
+                    {question?.questions?.length} Pertanyaan
                   </p>
                 </div>
               </div>
@@ -158,48 +166,44 @@ export function IstSelectedTest() {
                 className="w-full h-auto mb-6 rounded-lg"
               />
             )}
-              {currentSubtestData?.questions.map((questionData: any, index) => (
+              {question?.questions.map((questionData: any, index) => (
                 <div
                   key={questionData.id}
                   className="border-b pb-6 last:border-b-0 last:pb-0 sm:pb-8"
                 >
-                  {/* Question Number - Only show for non-number-selection types */}
-                  {currentSubtestData?.type !== "number-selection" && (
+                  {/* Question Number - Only show for non-number-selection types and not for subtest 5 & 6 */}
+                  {subtestId !== 5 && subtestId !== 6 && (
                     <div className="mb-3 flex items-center gap-3 sm:mb-4">
                       <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-bold text-black sm:h-8 sm:w-8 dark:bg-black dark:text-white">
                         {index + 1}
                       </div>
                       <h3 className="text-base font-semibold text-gray-700 sm:text-lg">
-                        Pertanyaan {index + 1} dari {totalQuestions}
+                        Pertanyaan {index + 1} dari {question?.questions.length}
                       </h3>
                     </div>
                   )}
 
                   {/* Question Text - Hide for number-selection type */}
-                  {currentSubtestData?.type !== "number-selection" && (
+                  {subtestId !== 5 && subtestId !== 6 && (
                     <p className="mb-4 text-lg leading-relaxed font-medium sm:mb-6 sm:text-xl">
-                      {questionData.question}
+                      {questionData?.text}
                     </p>
                   )}
 
                   {/* Question Components */}
-                  {currentSubtestData?.type === "radio" && (
+                  {(subtestId >= 1 && subtestId <= 3) || subtestId === 9 ? (
                     <RadioQuestion
                       question={questionData}
                       value={answers[`${subtestId}-${index}`]}
                       onChange={(value) => handleAnswer(index, value)}
                     />
-                  )}
-
-                  {currentSubtestData?.type === "text" && (
+                  ) : subtestId === 4 ? (
                     <TextQuestion
                       question={questionData}
                       value={answers[`${subtestId}-${index}`] || ""}
                       onChange={(value) => handleAnswer(index, value)}
                     />
-                  )}
-
-                  {currentSubtestData?.type === "number-selection" && (
+                  ) : (subtestId === 5 || subtestId === 6) ? (
                     <NumberSelectionQuestion
                       question={questionData}
                       value={answers[`${subtestId}-${index}`] || []}
@@ -207,7 +211,7 @@ export function IstSelectedTest() {
                       questionNumber={index + 1}
                       totalQuestions={totalQuestions}
                     />
-                  )}
+                  ) : null}
                 </div>
               ))}
             </div>
@@ -231,6 +235,8 @@ export function IstSelectedTest() {
           </CardContent>
         </Card>
       </div>
+      </>
+      ) : <div className="flex w-screen h-screen items-center justify-center flex-row gap-x-4 text-xl"><LoaderSpinner/> <div>Preparing Question...</div></div>}
     </div>
   );
 }

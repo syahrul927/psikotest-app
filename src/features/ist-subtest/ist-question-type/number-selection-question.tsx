@@ -4,17 +4,17 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
-interface QuestionProps {
-  question: {
-    id: string;
-    question: string;
-    pattern: string;
-  };
-  value: number[];
-  onChange: (value: number[]) => void;
-  questionNumber?: number;
-  totalQuestions?: number;
-}
+// interface QuestionProps {
+//   question: {
+//     id: string;
+//     question: string;
+//     pattern: string;
+//   };
+//   value: number[];
+//   onChange: (value: number[]) => void;
+//   questionNumber?: number;
+//   totalQuestions?: number;
+// }
 
 export function NumberSelectionQuestion({
   question,
@@ -22,12 +22,12 @@ export function NumberSelectionQuestion({
   onChange,
   questionNumber,
   totalQuestions,
-}: QuestionProps) {
+}: any) {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 
   const toggleNumber = (num: number) => {
     if (value.includes(num)) {
-      onChange(value.filter((n) => n !== num));
+      onChange(value.filter((n: any) => n !== num));
     } else {
       onChange([...value, num]);
     }
@@ -52,7 +52,7 @@ export function NumberSelectionQuestion({
           <div
             className="flex items-center justify-center w-full rounded-lg text-lg sm:text-xl font-medium p-4 dark:bg-gray-950 bg-gray-50"
           >
-            <div>{question?.question}</div>
+            <div>{question?.text}</div>
           </div>
       </div>
 
@@ -170,7 +170,7 @@ export function NumberSelectionQuestion({
         <div className="mt-6 flex items-center justify-center">
           <div className="rounded-lg bg-gray-100 px-6 py-3 dark:bg-gray-900">
             <p className="text-lg font-medium">
-              Angka yang dipilih: {value.sort((a, b) => a - b).join(", ")}
+              Angka yang dipilih: {value.sort((a: any, b: any) => a - b).join(", ")}
             </p>
           </div>
         </div>
