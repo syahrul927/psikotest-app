@@ -15,7 +15,7 @@ export async function GET(
     return NextResponse.json({ error: "Image not found" }, { status: 404 });
   }
 
-  const filePath = path.join("./public/images/questions/", filename);
+  const filePath = path.join("./public", filename);
 
   try {
     const imageBuffer = await fs.readFile(filePath);
