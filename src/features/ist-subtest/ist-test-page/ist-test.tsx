@@ -95,7 +95,7 @@ export function IstSelectedTest() {
             <h2 className="mb-4 text-xl font-bold sm:text-2xl">Waktu Habis!</h2>
             <p className="mb-6 text-gray-600">
               Waktu untuk{" "}
-              <span className="font-semibold">{currentSubtestData?.title}</span>{" "}
+              <span className="font-semibold">{question?.name}</span>{" "}
               telah habis.
             </p>
             <Button
@@ -157,15 +157,13 @@ export function IstSelectedTest() {
         <Card className="border shadow-md">
           <CardContent className="p-4 sm:p-6 md:p-8">
             <div className="space-y-8 sm:space-y-10 mb-6 sm:mb-8">
-            {currentSubtestData?.contoh && (
               <Image 
-                src={currentSubtestData.contoh}
+                src={`/contoh_soal/${params.type as string}.webp`}
                 alt="Contoh Soal"
                 width={500}
                 height={300}
                 className="w-full h-auto mb-6 rounded-lg"
               />
-            )}
               {question?.questions.map((questionData: any, index) => (
                 <div
                   key={questionData.id}
