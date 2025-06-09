@@ -21,7 +21,7 @@ export default function IstInvitationPage() {
   }
   return (
     <>
-      {/*<DevelopmentFlag />*/}
+      {/* <DevelopmentFlag /> */}
       <IstInvFormDialogProvider>
         <IstInvitationSummary
           isLoading={isLoading}
