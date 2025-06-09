@@ -30,7 +30,7 @@ export function RadioQuestion({ question, value, onChange }: QuestionProps) {
       {question.options.map((option) => (
         <div key={option.id} className={cn(
           "rounded-md border p-3",
-          isImage && "w-48 h-48 flex-col justify-center bg-black",
+          isImage && "w-48 h-48 flex-col justify-center dark:bg-black",
           "cursor-pointer"
         )}>
           <Label 
