@@ -86,7 +86,7 @@ export function IstSubtests({id}: {id: string} ) {
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Link href="/">
-            <Button variant="ghost" size="icon" className="hover:bg-gray-100">
+            <Button variant="ghost" size="icon" className="">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
@@ -98,15 +98,15 @@ export function IstSubtests({id}: {id: string} ) {
 
         {/* Progress Overview */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
-          <div className="flex items-center gap-3 px-6 py-3 bg-white rounded-full shadow-sm border">
-            <Target className="h-5 w-5 text-black" />
-            <span className="font-medium text-black">3 Subtes Tersedia</span>
+          <div className="flex items-center gap-3 px-6 py-3 bg-background rounded-full shadow-sm border">
+            <Target className="h-5 w-5" />
+            <span className="font-medium">3 Subtes Tersedia</span>
           </div>
 
           {completedSubtests.length > 0 && (
             <div className="flex items-center gap-3 px-6 py-3 bg-gray-50 rounded-full border">
-              <CheckCircle2 className="h-5 w-5 text-black" />
-              <span className="font-medium text-black">
+              <CheckCircle2 className="h-5 w-5" />
+              <span className="font-medium">
                 {completedSubtests.length} Diselesaikan ({completionPercentage}%)
               </span>
             </div>
@@ -138,13 +138,13 @@ export function IstSubtests({id}: {id: string} ) {
                 key={subtest.id}
                 className={`
                   group relative overflow-hidden border shadow-md hover:shadow-lg transition-all duration-300
-                  ${isCompleted ? "ring-1 ring-gray-400 bg-gray-50" : ""}
+                  ${isCompleted ? "ring-1 ring-gray-400 bg-background" : ""}
                 `}
               >
                 {/* Completion Badge */}
                 {isCompleted && (
                   <div className="absolute top-4 right-4 z-10">
-                    <div className="bg-black text-white p-1.5 rounded-full">
+                    <div className="bg-background p-1.5 rounded-full">
                       <CheckCircle2 className="h-4 w-4" />
                     </div>
                   </div>
@@ -152,8 +152,8 @@ export function IstSubtests({id}: {id: string} ) {
 
                 <CardHeader className="pb-4 relative">
                   <div className="flex items-start gap-4 mb-3">
-                    <div className="p-3 bg-gray-100 rounded-xl">
-                      <IconComponent className="h-6 w-6 text-black" />
+                    <div className="p-3 bg-background rounded-xl">
+                      <IconComponent className="h-6 w-6" />
                     </div>
                     <div className="flex-1">
                       <CardTitle className="text-lg font-bold leading-tight mb-1">{subtest.name}</CardTitle>
@@ -188,7 +188,6 @@ export function IstSubtests({id}: {id: string} ) {
                       variant={isCompleted ? "outline" : "default"}
                       className={`
                         w-full font-medium transition-all duration-200
-                        ${isCompleted ? "hover:bg-gray-100" : "bg-black hover:bg-gray-800 text-white"}
                       `}
                     >
                       {isCompleted ? "Kerjakan Ulang" : "Mulai Subtes"}
@@ -203,7 +202,7 @@ export function IstSubtests({id}: {id: string} ) {
         {/* Completion Message */}
         {completedSubtests.length === testData.length && (
           <div className="text-center">
-            <div className="inline-flex items-center gap-3 px-8 py-4 bg-black text-white rounded-xl shadow-md">
+            <div className="inline-flex items-center gap-3 px-8 py-4 bg-background rounded-xl shadow-md">
               <CheckCircle2 className="h-6 w-6" />
               <span className="text-lg font-bold">Selamat! Anda telah menyelesaikan semua subtes!</span>
             </div>

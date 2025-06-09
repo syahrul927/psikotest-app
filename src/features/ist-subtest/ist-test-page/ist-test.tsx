@@ -174,7 +174,7 @@ export function IstSelectedTest() {
                   {/* Question Number - Only show for non-number-selection types and not for subtest 5 & 6 */}
                   {subtestId !== 5 && subtestId !== 6 && (
                     <div className="mb-3 flex items-center gap-3 sm:mb-4">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-background text-sm font-bold sm:h-8 sm:w-8">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold sm:h-8 sm:w-8">
                         {index + 1}
                       </div>
                       <h3 className="text-base font-semibold sm:text-lg">
