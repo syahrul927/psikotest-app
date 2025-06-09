@@ -42,7 +42,8 @@ export const IMAGE_MAP: Record<string, string> = {
   k7l8m: "/images/questions/155.jpeg",
   n9o0p: "/images/questions/156.jpeg",
 };
-export function getImageKeyByValue(value: string): string | undefined {
+export function getImageKeyByValue(value: string | null): string | undefined {
+  if(!value) return undefined
   for (const [key, val] of Object.entries(IMAGE_MAP)) {
     if (val === value) {
       return key;

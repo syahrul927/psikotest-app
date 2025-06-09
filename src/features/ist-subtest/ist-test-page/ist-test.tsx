@@ -29,7 +29,7 @@ export function IstSelectedTest() {
 
   const { data: question } = useGetQuestionAndOptions(params.type as string)
 
-  console.log("ini pertanyaan: ",question)
+  console.log("ini pertanyaan: ",question?.questions)
 
   const SUBTEST_TIME = question?.timeLimit ? question.timeLimit * 60 : 300; // Convert minutes to seconds, default to 5 minutes (300 seconds)
 
@@ -90,19 +90,19 @@ export function IstSelectedTest() {
         <Card className="mx-auto w-full max-w-md border shadow-md">
           <CardContent className="p-6 text-center sm:p-8">
             <div className="mb-6 flex justify-center">
-              <div className="rounded-full bg-gray-100 p-4">
-                <AlertCircle className="h-10 w-10 text-gray-700 sm:h-12 sm:w-12" />
+              <div className="rounded-full  p-4">
+                <AlertCircle className="h-10 w-10 sm:h-12 sm:w-12" />
               </div>
             </div>
             <h2 className="mb-4 text-xl font-bold sm:text-2xl">Waktu Habis!</h2>
-            <p className="mb-6 text-gray-600">
+            <p className="mb-6 ">
               Waktu untuk{" "}
               <span className="font-semibold">{question?.name}</span>{" "}
               telah habis.
             </p>
             <Button
               onClick={handleContinueAfterTimeUp}
-              className="w-full bg-white text-white hover:bg-gray-800 dark:bg-black dark:text-white dark:hover:bg-gray-100"
+              className="w-full"
             >
               Kembali ke Pilihan Subtes
             </Button>
@@ -113,11 +113,11 @@ export function IstSelectedTest() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div className="min-h-screen ">
       {question ? (
         <>
       {/* Sticky Header with Timer */}
-      <div className="sticky top-0 z-50 border-b bg-white shadow-sm dark:bg-black">
+      <div className="sticky top-0 z-50 border-b shadow-sm bg-background/80 backdrop-blur-lg">
         <div className="mx-auto max-w-4xl px-4 py-3 sm:py-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
             <div className="flex items-center gap-2">
@@ -125,19 +125,19 @@ export function IstSelectedTest() {
                 variant="ghost"
                 size="icon"
                 onClick={handleBackToSelection}
-                className="hover:bg-gray-100"
+                className=""
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <div className="flex items-center gap-2">
-                <div className="rounded-lg bg-black p-1.5 sm:p-2">
-                  <Brain className="h-4 w-4 text-black sm:h-5 sm:w-5 dark:text-white" />
+                <div className="rounded-lg p-1.5 sm:p-2">
+                  <Brain className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div>
                   <h1 className="text-lg leading-tight font-bold sm:text-xl">
                     {question?.description}
                   </h1>
-                  <p className="text-xs text-gray-600 sm:text-sm">
+                  <p className="text-xs sm:text-sm">
                     {question?.questions?.length} Pertanyaan
                   </p>
                 </div>
@@ -174,10 +174,10 @@ export function IstSelectedTest() {
                   {/* Question Number - Only show for non-number-selection types and not for subtest 5 & 6 */}
                   {subtestId !== 5 && subtestId !== 6 && (
                     <div className="mb-3 flex items-center gap-3 sm:mb-4">
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-sm font-bold text-black sm:h-8 sm:w-8 dark:bg-black dark:text-white">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-background text-sm font-bold sm:h-8 sm:w-8">
                         {index + 1}
                       </div>
-                      <h3 className="text-base font-semibold text-gray-700 sm:text-lg">
+                      <h3 className="text-base font-semibold sm:text-lg">
                         Pertanyaan {index + 1} dari {question?.questions.length}
                       </h3>
                     </div>
@@ -190,8 +190,21 @@ export function IstSelectedTest() {
                     </p>
                   )}
 
+                  {questionData?.text === "" && questionData?.imageUrl  && (
+                  <div className="flex w-full justify-center">
+                      <Image 
+                      src={`/api/images/${questionData?.imageUrl}`}
+                      alt={`Question ${index + 1}`}
+                      width={250}
+                      height={250}
+                      className="mb-6 rounded-lg border-2 dark:invert"
+                    />
+                    </div>
+                  )}
+
+
                   {/* Question Components */}
-                  {(subtestId >= 1 && subtestId <= 3) || subtestId === 9 ? (
+                  {(subtestId >= 1 && subtestId <= 3) || subtestId === 9 || subtestId === 7 || subtestId === 8 ? (
                     <RadioQuestion
                       question={questionData}
                       value={answers[`${subtestId}-${index}`]}
@@ -227,7 +240,7 @@ export function IstSelectedTest() {
               <Button
                 onClick={handleCompleteSubtest}
                 disabled={!isSubtestCompleted()}
-                className="order-1 w-full bg-black px-4 text-white hover:bg-gray-800 sm:order-2 sm:w-auto sm:px-8"
+                className="order-1 w-full px-4 sm:order-2 sm:w-auto sm:px-8"
               >
                 Selesaikan Subtes
               </Button>

@@ -317,7 +317,7 @@ export const IstProfileForm = ({ id }: { id: string }) => {
               />
 
               {/* Education Description Field */}
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="educationDescription"
                 render={({ field }) => (
@@ -337,7 +337,7 @@ export const IstProfileForm = ({ id }: { id: string }) => {
                     <FormMessage className="text-xs" />
                   </FormItem>
                 )}
-              />
+              /> */}
 
               {/* Submit Button */}
               <div className="flex w-full flex-col space-y-3">

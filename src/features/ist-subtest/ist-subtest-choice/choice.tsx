@@ -92,21 +92,21 @@ export function IstSubtests({id}: {id: string} ) {
           </Link>
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Pilih Subtes</h1>
-            <p className="text-gray-600">Pilih subtes yang ingin Anda kerjakan</p>
+            <p>Pilih subtes yang ingin Anda kerjakan</p>
           </div>
         </div>
 
         {/* Progress Overview */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-12">
           <div className="flex items-center gap-3 px-6 py-3 bg-white rounded-full shadow-sm border">
-            <Target className="h-5 w-5 text-gray-700" />
-            <span className="font-medium text-gray-700">3 Subtes Tersedia</span>
+            <Target className="h-5 w-5 text-black" />
+            <span className="font-medium text-black">3 Subtes Tersedia</span>
           </div>
 
           {completedSubtests.length > 0 && (
             <div className="flex items-center gap-3 px-6 py-3 bg-gray-50 rounded-full border">
-              <CheckCircle2 className="h-5 w-5 text-gray-700" />
-              <span className="font-medium text-gray-700">
+              <CheckCircle2 className="h-5 w-5 text-black" />
+              <span className="font-medium text-black">
                 {completedSubtests.length} Diselesaikan ({completionPercentage}%)
               </span>
             </div>
@@ -122,7 +122,7 @@ export function IstSubtests({id}: {id: string} ) {
                 style={{ width: `${completionPercentage}%` }}
               />
             </div>
-            <p className="text-sm text-gray-600 text-center">Progress Keseluruhan: {completionPercentage}%</p>
+            <p className="text-sm text-black text-center">Progress Keseluruhan: {completionPercentage}%</p>
           </div>
         )}
 
@@ -153,23 +153,23 @@ export function IstSubtests({id}: {id: string} ) {
                 <CardHeader className="pb-4 relative">
                   <div className="flex items-start gap-4 mb-3">
                     <div className="p-3 bg-gray-100 rounded-xl">
-                      <IconComponent className="h-6 w-6 text-gray-700" />
+                      <IconComponent className="h-6 w-6 text-black" />
                     </div>
                     <div className="flex-1">
                       <CardTitle className="text-lg font-bold leading-tight mb-1">{subtest.name}</CardTitle>
-                      <div className="text-sm font-medium text-gray-600">{subtest.description}</div>
+                      <div className="text-sm font-medium">{subtest.description}</div>
                     </div>
                   </div>
                 </CardHeader>
 
                 <CardContent className="pb-4 relative">
                   <div className="flex items-center gap-2 mb-4">
-                    <Clock className="h-4 w-4 text-gray-600" />
-                    <span className="text-sm font-medium text-gray-600">{subtest.timeLimit} menit</span>
-                    <span className="text-gray-400">•</span>
-                    <span className="text-sm font-medium text-gray-600">{subtest.questions.length} pertanyaan</span>
+                    <Clock className="h-4 w-4" />
+                    <span className="text-sm font-medium">{subtest.timeLimit} menit</span>
+                    <span className="">•</span>
+                    <span className="text-sm font-medium">{subtest.questions.length} pertanyaan</span>
                   </div>
-                  <p className="text-sm text-gray-600 leading-relaxed">{getSubtestInfo(subtest.id).description}</p>
+                  <p className="text-sm leading-relaxed">{getSubtestInfo(subtest.id).description}</p>
                 </CardContent>
 
                 <CardFooter className="pt-0 relative flex flex-col gap-2">

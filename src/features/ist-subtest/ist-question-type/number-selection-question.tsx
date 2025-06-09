@@ -37,10 +37,10 @@ export function NumberSelectionQuestion({
       {/* Question Number Header */}
       {questionNumber && totalQuestions && (
         <div className="mb-4 flex items-center gap-3">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-black text-sm font-bold text-white sm:h-8 sm:w-8">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-background text-sm font-bold sm:h-8 sm:w-8">
             {questionNumber}
           </div>
-          <h3 className="text-base font-semibold text-gray-700 sm:text-lg">
+          <h3 className="text-base font-semibold sm:text-lg">
             Pertanyaan {questionNumber} dari {totalQuestions}
           </h3>
         </div>
@@ -49,7 +49,7 @@ export function NumberSelectionQuestion({
       {/* Pattern display */}
       <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
           <div
-            className="flex items-center justify-center w-full rounded-lg text-lg sm:text-xl font-medium p-4 dark:bg-gray-950 bg-gray-50"
+            className="flex items-center justify-center w-full rounded-lg text-lg sm:text-xl font-medium p-4"
           >
             <div>{question?.text}</div>
           </div>
@@ -66,10 +66,10 @@ export function NumberSelectionQuestion({
                 onClick={() => toggleNumber(num)}
                 className={cn(
                   "relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-lg border-2 text-xl font-bold transition-all select-none",
-                  "hover:bg-gray-50 active:scale-95 dark:hover:bg-gray-950",
+                  "active:scale-95",
                   isSelected
-                    ? "dark:textgray-100 border-gray-800 bg-gray-100 text-gray-900 dark:border-gray-200 dark:bg-gray-900"
-                    : "border-gray-200 bg-white text-gray-800 hover:border-gray-300 dark:border-gray-800 dark:bg-black dark:text-gray-200 dark:hover:border-gray-700",
+                    ? "border-gray-800 dark:border-gray-200 bg-background"
+                    : "border-2 bg-background",
                 )}
                 whileTap={{ scale: 0.95 }}
                 initial={{ scale: 1 }}
@@ -89,7 +89,7 @@ export function NumberSelectionQuestion({
 
                 {isSelected && (
                   <motion.div
-                    className="absolute inset-0 flex items-center justify-center text-gray-800 dark:text-gray-200"
+                    className="absolute inset-0 flex items-center justify-center"
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
@@ -120,10 +120,10 @@ export function NumberSelectionQuestion({
                 onClick={() => toggleNumber(num)}
                 className={cn(
                   "relative flex h-14 w-14 cursor-pointer items-center justify-center rounded-lg border-2 text-2xl font-bold transition-all select-none",
-                  "hover:bg-gray-50 active:scale-95 dark:hover:bg-gray-950",
+                  "active:scale-95",
                   isSelected
-                    ? "dark:bordergray-200 dark:textgray-100 border-gray-800 bg-gray-100 text-gray-900 dark:bg-gray-900"
-                    : "border-gray-200 bg-white text-gray-800 hover:border-gray-300 dark:border-gray-800 dark:bg-black dark:text-gray-200 dark:hover:border-gray-700",
+                    ? "dark:border-gray-200 border-gray-800 bg-background"
+                    : "border-2 bg-background",
                 )}
                 whileTap={{ scale: 0.95 }}
                 initial={{ scale: 1 }}
@@ -143,7 +143,7 @@ export function NumberSelectionQuestion({
 
                 {isSelected && (
                   <motion.div
-                    className="absolute inset-0 flex items-center justify-center text-gray-800 dark:text-gray-200"
+                    className="absolute inset-0 flex items-center justify-center"
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
@@ -167,7 +167,7 @@ export function NumberSelectionQuestion({
 
       {value.length > 0 && (
         <div className="mt-6 flex items-center justify-center">
-          <div className="rounded-lg bg-gray-100 px-6 py-3 dark:bg-gray-900">
+          <div className="rounded-lg bg-background px-6 py-3 border-2">
             <p className="text-lg font-medium">
               Angka yang dipilih: {value.sort((a: number, b: number) => a - b).join(", ")}
             </p>

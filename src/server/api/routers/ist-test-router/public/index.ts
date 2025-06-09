@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { getImageKeyByValue } from "@/lib/image-map";
 
 export const IstSubtestRouter = createTRPCRouter({
     getAllSubtest: publicProcedure
@@ -75,6 +76,6 @@ export const IstSubtestRouter = createTRPCRouter({
                 });
             }
 
-            return template;
+            return {...template, questions: template.questions.map(temp => ({...temp, imageUrl: getImageKeyByValue(temp.imageUrl)}))};
         }),
 })
