@@ -26,11 +26,11 @@ interface KraepelinResultStatisticProps {
 const chartConfig = {
   answered: {
     label: "Terjawab",
-    color: "var(--chart-2)",
+    color: "var(--primary)",
   },
   average: {
     label: "Rata-Rata",
-    color: "var(--chart-1)",
+    color: "var(--muted-foreground)",
   },
 } satisfies ChartConfig;
 export function KraepelinResultStatistic({
@@ -73,24 +73,26 @@ export function KraepelinResultStatistic({
           >
             <XAxis dataKey="name" tickLine={true} tickMargin={8} />
             <YAxis tickLine={true} tickMargin={8} />
-
+            <Legend />
             <CartesianGrid
               strokeDasharray={3}
-              strokeWidth={2}
+              strokeWidth={1.5}
               stroke="var(--foreground)"
               strokeOpacity={0.1}
             />
             <Line
               type="monotone"
-              strokeWidth={2}
+              name="Rata-Rata"
+              strokeWidth={1}
               dataKey="average"
               stroke="var(--color-average)"
-              dot={false}
+              dot={true}
             />
             <Line
               type="natural"
+              name="Terjawab"
               dataKey="answered"
-              dot={false}
+              dot={true}
               strokeWidth={2}
               stroke="var(--color-answered)"
             />
