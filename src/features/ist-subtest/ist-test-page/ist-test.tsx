@@ -19,7 +19,7 @@ import { LoaderSpinner } from "@/components/ui/loading-spinner"
 
 
 
-export function IstSelectedTest() {
+export function IstSelectedTest({slug}:{slug: string}) {
   const params = useParams();
   const router = useRouter();
   const subtestId = Number.parseInt(params.type as string);
@@ -94,7 +94,7 @@ export function IstSelectedTest() {
     localStorage.removeItem(`ist-answers-${subtestId}`);
     localStorage.removeItem(`ist-time-${subtestId}`);
     console.log("Subtest completed:", answers);
-    router.push("/subtests");
+    router.push(`/guest/ist/${slug}/subtest`);
   };
 
   const handleTimeUp = () => {
