@@ -7,9 +7,10 @@ interface TimerProps {
   seconds: number
   onTimeUp: () => void
   isActive: boolean
+  onTimeUpdate?: (timeLeft: number) => void
 }
 
-export function Timer({ seconds: initialSeconds, onTimeUp, isActive }: TimerProps) {
+export function Timer({ seconds: initialSeconds, onTimeUp, isActive, onTimeUpdate }: TimerProps) {
   const [seconds, setSeconds] = useState(initialSeconds)
 
   useEffect(() => {
@@ -27,7 +28,9 @@ export function Timer({ seconds: initialSeconds, onTimeUp, isActive }: TimerProp
             onTimeUp()
             return 0
           }
-          return prevSeconds - 1
+          const newSeconds = prevSeconds - 1
+          onTimeUpdate?.(newSeconds)
+          return newSeconds
         })
       }, 1000)
     } else if (interval) {
@@ -37,7 +40,7 @@ export function Timer({ seconds: initialSeconds, onTimeUp, isActive }: TimerProp
     return () => {
       if (interval) clearInterval(interval)
     }
-  }, [isActive, onTimeUp])
+  }, [isActive, onTimeUp, onTimeUpdate])
 
   // Format seconds to MM:SS
   const minutes = Math.floor(seconds / 60)
