@@ -140,7 +140,7 @@ model IstTesterProfile {
     address              String
     educationId          String
     placeOfBirth         String
-    dateOfBirth          DateTime
+    dateOfBirth          DateTime        @db.Timestamptz(3)
     educationName        String
     educationDescription String?
     IstInvitation        IstInvitation[]
