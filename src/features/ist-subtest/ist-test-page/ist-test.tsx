@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -19,19 +19,56 @@ import { LoaderSpinner } from "@/components/ui/loading-spinner"
 
 
 
-export function IstSelectedTest() {
+export function IstSelectedTest({slug}:{slug: string}) {
   const params = useParams();
   const router = useRouter();
   const subtestId = Number.parseInt(params.type as string);
-  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [answers, setAnswers] = useState<Record<string, any>>(() => {
+    // Initialize answers from localStorage if available
+    if (typeof window !== 'undefined') {
+      const savedAnswers = localStorage.getItem(`ist-answers-${subtestId}`);
+      return savedAnswers ? JSON.parse(savedAnswers) : {};
+    }
+    return {};
+  });
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(() => {
+    // Initialize remaining time from localStorage if available
+    if (typeof window !== 'undefined') {
+      const savedTime = localStorage.getItem(`ist-time-${subtestId}`);
+      return savedTime ? parseInt(savedTime) : null;
+    }
+    return null;
+  });
 
   const { data: question } = useGetQuestionAndOptions(params.type as string)
 
   console.log("ini pertanyaan: ",question?.questions)
 
   const SUBTEST_TIME = question?.timeLimit ? question.timeLimit * 60 : 300; // Convert minutes to seconds, default to 5 minutes (300 seconds)
+
+  // Save answers to localStorage whenever they change
+  useEffect(() => {
+    if (Object.keys(answers).length > 0) {
+      localStorage.setItem(`ist-answers-${subtestId}`, JSON.stringify(answers));
+    }
+  }, [answers, subtestId]);
+
+  // Save remaining time when component unmounts or page unloads
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (remainingTime !== null) {
+        localStorage.setItem(`ist-time-${subtestId}`, remainingTime.toString());
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      handleBeforeUnload(); // Save one last time when component unmounts
+    };
+  }, [remainingTime, subtestId]);
 
   // Validate subtest ID
   if (isNaN(subtestId) || subtestId < 0 || subtestId > 9) {
@@ -54,9 +91,10 @@ export function IstSelectedTest() {
   };
 
   const handleCompleteSubtest = () => {
-    // Here you would typically save the answers to a database or state management
+    localStorage.removeItem(`ist-answers-${subtestId}`);
+    localStorage.removeItem(`ist-time-${subtestId}`);
     console.log("Subtest completed:", answers);
-    router.push("/subtests");
+    router.push(`/guest/ist/${slug}/subtest`);
   };
 
   const handleTimeUp = () => {
@@ -66,6 +104,10 @@ export function IstSelectedTest() {
 
   const handleContinueAfterTimeUp = () => {
     router.push("/subtests");
+  };
+
+  const handleTimeUpdate = (timeLeft: number) => {
+    setRemainingTime(timeLeft);
   };
 
   const isSubtestCompleted = () => {
@@ -145,9 +187,10 @@ export function IstSelectedTest() {
             </div>
             <div className="self-end sm:ml-auto sm:self-auto">
               <Timer
-                seconds={SUBTEST_TIME}
+                seconds={remainingTime ?? SUBTEST_TIME}
                 onTimeUp={handleTimeUp}
                 isActive={timerActive}
+                onTimeUpdate={handleTimeUpdate}
               />
             </div>
           </div>

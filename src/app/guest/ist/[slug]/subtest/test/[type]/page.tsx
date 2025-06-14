@@ -8,5 +8,5 @@ export default async function IstTestPage({ params }: PageType) {
     return notFound();
   }
   console.log(await params)
-  return <IstSelectedTest/>;
+  return <IstSelectedTest slug={slug}/>;
 }
