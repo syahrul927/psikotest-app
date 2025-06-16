@@ -30,7 +30,7 @@ export function CheckboxQuestion({ question, value, onChange }: QuestionProps) {
   return (
     <div className="space-y-2 sm:space-y-3">
       {question.options.map((option) => (
-        <div key={option.id} className="flex items-center space-x-2 rounded-md border p-3 hover:bg-gray-50">
+        <div key={option.id} className="flex items-center space-x-2 rounded-md border p-3">
           <Checkbox
             id={option.id}
             checked={value.includes(option.id)}

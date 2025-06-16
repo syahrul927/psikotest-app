@@ -52,20 +52,9 @@ export const publicIstInvitationRouter = createTRPCRouter({
           message: "Undangan tidak valid!",
         });
       }
-      const step = 0;
-      const resultId = "";
-      //   if (invitation.startAt) {
-      //     step = 1;
-      //     const result = await ctx.db.kraepelinResult.findFirst({
-      //       where: {
-      //         invitationId: id,
-      //       },
-      //     });
-      //     resultId = result?.id ?? "";
-      //   }
+      const step = invitation.testerProfileId ? 1 : 0;
       return {
         step,
-        resultId,
       };
     }),
   profileUpdate: publicProcedure

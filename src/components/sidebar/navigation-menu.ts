@@ -4,6 +4,7 @@ import {
   BrainCogIcon,
   CalculatorIcon,
   HomeIcon,
+  Settings,
   UsersIcon,
 } from "lucide-react";
 
@@ -22,6 +23,13 @@ export const NavigationMainConstant: NavigationType[] = [
     title: "Psikotest IST",
     url: PAGE_URLS.IST_INVITATION,
     icon: BrainCogIcon,
+  },
+];
+export const NavigationSecondaryConstant: NavigationType[] = [
+  {
+    title: "IST Settings",
+    url: PAGE_URLS.IST_SETTINGS,
+    icon: Settings,
   },
   {
     title: "User Akses",

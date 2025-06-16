@@ -134,48 +134,66 @@ model KraepelinResultDetail {
 }
 
 model IstTesterProfile {
-    id                   String              @id @default(cuid())
+    id                   String          @id @default(cuid())
     name                 String
     phone                String
     address              String
     educationId          String
     placeOfBirth         String
-    dateOfBirth          DateTime
+    dateOfBirth          DateTime        @db.Timestamptz(3)
     educationName        String
     educationDescription String?
     IstInvitation        IstInvitation[]
-    IstSubtestSession    IstSubtestSession[]
 }
 
 model IstInvitation {
-    id              String              @id @default(cuid())
-    name            String?
-    secretKey       String
-    status          StatusIstInvitation @default(PENDING)
-    testerProfileId String?
-    testerProfile   IstTesterProfile?   @relation(fields: [testerProfileId], references: [id])
-    createdAt       DateTime            @db.Timestamptz(3)
-    updatedAt       DateTime            @updatedAt @db.Timestamptz(3)
+    id                String              @id @default(cuid())
+    name              String?
+    secretKey         String
+    status            StatusIstInvitation @default(PENDING)
+    testerProfileId   String?
+    testerProfile     IstTesterProfile?   @relation(fields: [testerProfileId], references: [id])
+    createdAt         DateTime            @db.Timestamptz(3)
+    updatedAt         DateTime            @updatedAt @db.Timestamptz(3)
+    IstSubtestSession IstSubtestSession[]
+    IstResult         IstResult[]
 }
 
 model IstSubtestSession {
     id                 String              @id @default(cuid())
-    testerProfileId    String
-    IstTesterProfile   IstTesterProfile    @relation(fields: [testerProfileId], references: [id])
-    startedAt          DateTime            @default(now())
-    submittedAt        DateTime?
+    startedAt          DateTime?           @db.Timestamptz(3)
+    submittedAt        DateTime?           @db.Timestamptz(3)
     questionOrder      String[] // Array of Question IDs (ordered as shown to user)
     IstSubtestTemplate IstSubtestTemplate? @relation(fields: [subtestTemplateId], references: [id])
-    subtestTemplateId  String?
+    subtestTemplateId  String
+    istInvitationId    String
+    IstInvitation      IstInvitation       @relation(fields: [istInvitationId], references: [id])
 }
 
-model IstUserAnswer {
-    id              String              @id @default(cuid())
-    testerProfileId String
-    question        IstQuestionTemplate @relation(fields: [questionId], references: [id])
-    questionId      String
-    answer          String
-    createdAt       DateTime            @default(now())
+model IstResult {
+    id                 String             @id @default(cuid())
+    istInvitationId    String
+    IstInvitation      IstInvitation      @relation(fields: [istInvitationId], references: [id])
+    IstSubtestTemplate IstSubtestTemplate @relation(fields: [subtestTemplateId], references: [id])
+    subtestTemplateId  String
+    answered           Int
+    missed             Int
+    answeredCorrectly  Int // RW (raw score)
+    answeredWrong      Int
+    standarizedScore   Int // SW
+    IstResultDetail    IstResultDetail[]
+    createdAt          DateTime           @default(now()) @db.Timestamptz(3)
+    updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
+}
+
+model IstResultDetail {
+    id          String              @id @default(cuid())
+    istResultId String
+    IstResult   IstResult           @relation(fields: [istResultId], references: [id])
+    question    IstQuestionTemplate @relation(fields: [questionId], references: [id])
+    questionId  String
+    answer      String
+    createdAt   DateTime            @default(now()) @db.Timestamptz(3)
 
     @@index([questionId], name: "user_question_unique")
 }
@@ -187,24 +205,25 @@ model IstSubtestTemplate {
     description       String                @db.Text // markdown
     timeLimit         Int // in seconds (or minutes — your choice)
     questions         IstQuestionTemplate[]
-    createdAt         DateTime              @default(now())
-    updatedAt         DateTime              @updatedAt
+    createdAt         DateTime              @default(now()) @db.Timestamptz(3)
+    updatedAt         DateTime              @updatedAt @db.Timestamptz(3)
     IstSubtestSession IstSubtestSession[]
+    IstResult         IstResult[]
+    IstStandardScore  IstStandardScore[]
 }
 
 model IstQuestionTemplate {
     id                 String              @id @default(cuid())
     IstSubtestTemplate IstSubtestTemplate  @relation(fields: [subtestTemplateId], references: [id])
     subtestTemplateId  String
-    type               IstSubtestType
     text               String? // Nullable for image-based questions
     imageUrl           String? // For type 7/8
     options            IstOptionTemplate[] // ABCDE options (text or image URL)
     correctAnswer      String? // Only for template logic, not user input
     order              Int // For sorting questions
-    createdAt          DateTime            @default(now())
-    updatedAt          DateTime            @updatedAt
-    UserAnswer         IstUserAnswer[]
+    createdAt          DateTime            @default(now()) @db.Timestamptz(3)
+    updatedAt          DateTime            @updatedAt @db.Timestamptz(3)
+    UserAnswer         IstResultDetail[]
 }
 
 model IstOptionTemplate {
@@ -216,16 +235,16 @@ model IstOptionTemplate {
     imageUrl    String? // Nullable for text option
 }
 
-enum IstSubtestType {
-    TYPE1
-    TYPE2
-    TYPE3
-    TYPE4
-    TYPE5
-    TYPE6
-    TYPE7
-    TYPE8
-    TYPE9
+model IstStandardScore {
+    id                 String             @id @default(cuid())
+    age                Int
+    IstSubtestTemplate IstSubtestTemplate @relation(fields: [subtestTemplateId], references: [id])
+    subtestTemplateId  String
+    rawScore           Int
+    standarizedScore   Int
+    description        String
+    createdAt          DateTime           @default(now()) @db.Timestamptz(3)
+    updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
 }
 
 enum StatusIstInvitation {

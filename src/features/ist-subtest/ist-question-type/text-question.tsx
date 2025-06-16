@@ -21,7 +21,7 @@ export function TextQuestion({ question, value, onChange }: QuestionProps) {
         onChange={(e) => onChange(e.target.value)}
         className="min-h-[100px] sm:min-h-[120px]"
       />
-      <p className="text-xs sm:text-sm text-gray-500">Silakan berikan jawaban yang detail untuk pertanyaan di atas.</p>
+      <p className="text-xs sm:text-sm">Silakan berikan jawaban yang detail untuk pertanyaan di atas.</p>
     </div>
   )
 }

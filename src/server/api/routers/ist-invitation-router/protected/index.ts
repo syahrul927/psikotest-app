@@ -9,6 +9,7 @@ export const istInvitationRouter = createTRPCRouter({
     .input(SaveIstInvitationRouterSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, name, secretKey } = input;
+      // if pass id, then edit
       if (id) {
         const existing = await ctx.db.istInvitation.findUnique({
           where: { id },
@@ -29,12 +30,26 @@ export const istInvitationRouter = createTRPCRouter({
         return { success: true, message: "Undangan berhasil diperbarui." };
       }
 
+      const istTypes = await ctx.db.istSubtestTemplate.findMany({
+        include: {
+          questions: true,
+        },
+      });
+      // create invitation
       await ctx.db.istInvitation.create({
         data: {
           name,
           status: "PENDING",
           secretKey,
           createdAt: new Date(),
+          IstSubtestSession: {
+            createMany: {
+              data: istTypes.map((type) => ({
+                subtestTemplateId: type.id,
+                questionOrder: _.shuffle(type.questions.map((q) => q.id)),
+              })),
+            },
+          },
         },
       });
 

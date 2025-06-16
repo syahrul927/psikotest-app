@@ -19,7 +19,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useConfirmationIstInvitation, type ConfirmationIstInvitationResponseType } from "@/hooks/api/ist-invitation/use-confirmation-ist-invitation";
+import {
+  useConfirmationIstInvitation,
+  type ConfirmationIstInvitationResponseType,
+} from "@/hooks/api/ist-invitation/use-confirmation-ist-invitation";
 import { useAccessIstInvitation } from "@/hooks/use-access-ist-test";
 import { PAGE_URLS } from "@/lib/page-url";
 import { cn } from "@/lib/utils";
@@ -44,7 +47,7 @@ export const IstInvitationConfirmation = ({
   name,
 }: IstInvitationConfirmationProps) => {
   const router = useRouter();
-  const { setAccess, resetAccess } = useAccessIstInvitation();
+  const { grantAccess, resetAccess } = useAccessIstInvitation();
   const form = useForm<FormType>({
     defaultValues: {
       secretKey: "",
@@ -52,15 +55,12 @@ export const IstInvitationConfirmation = ({
     resolver: zodResolver(formSchema),
     mode: "onSubmit",
   });
-  const onSuccessConfirmed = (
-    data: ConfirmationIstInvitationResponseType,
-  ) => {
+  const onSuccessConfirmed = (data: ConfirmationIstInvitationResponseType) => {
+    grantAccess();
     if (data.step === 0) {
-      setAccess(slug, true);
       return router.push(PAGE_URLS.IST_TEST_PROFILE(slug));
     }
     if (data.step === 1) {
-      setAccess(data.resultId, true);
       return router.push(PAGE_URLS.IST_SUBTEST(slug));
     }
   };
