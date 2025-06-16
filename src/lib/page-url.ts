@@ -17,6 +17,10 @@ export const PAGE_URLS = {
   //public IST
   IST_TEST_PROFILE: (id: string) => `/guest/ist/${id}/profile`,
   IST_SUBTEST: (id: string) => `/guest/ist/${id}/subtest`,
+  IST_SUBTEST_TEST: (id: string, type: string) =>
+    `/guest/ist/${id}/subtest/test/${type}`,
+  IST_SUBTEST_TEST_TRAINING: (id: string, type: string) =>
+    `/guest/ist/${id}/subtest/test/${type}/training`,
   IST_TEST_CONFIRMATION: (id: string) => `/guest/ist/${id}/confirmation`,
 
   // Kraepelin

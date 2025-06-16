@@ -110,6 +110,14 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
+export const guestProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(({ ctx, next }) => {
+    // TODO validate the data token guest
+    return next({
+      ctx,
+    });
+  });
 /**
  * Protected (authenticated) procedure
  *

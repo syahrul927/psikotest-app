@@ -165,7 +165,7 @@ model IstSubtestSession {
     submittedAt        DateTime?           @db.Timestamptz(3)
     questionOrder      String[] // Array of Question IDs (ordered as shown to user)
     IstSubtestTemplate IstSubtestTemplate? @relation(fields: [subtestTemplateId], references: [id])
-    subtestTemplateId  String?
+    subtestTemplateId  String
     istInvitationId    String
     IstInvitation      IstInvitation       @relation(fields: [istInvitationId], references: [id])
 }

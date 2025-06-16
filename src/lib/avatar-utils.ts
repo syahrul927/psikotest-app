@@ -5,7 +5,7 @@ export const getAvatarName = (name?: string | null) => {
   return name
     .toUpperCase()
     .split(" ")
-    .map((n) => n[0])
+    .map((n) => n.slice(0, 2))
     .join("")
     .slice(0, 2);
 };

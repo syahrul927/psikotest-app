@@ -33,9 +33,19 @@ export async function GET(
         "Cache-Control": "public, max-age=3600",
       },
     });
-  } catch (e) {
+  } catch (e: unknown) {
+    let errorMessage = "Unknown error occurred";
+
+    if (e instanceof Error) {
+      errorMessage = e.message;
+    } else if (typeof e === "string") {
+      errorMessage = e;
+    } else if (typeof e === "object" && e !== null) {
+      errorMessage = JSON.stringify(e);
+    }
+
     return NextResponse.json(
-      { error: `Error loading image ${e}` },
+      { error: `Error loading image: ${errorMessage}` },
       { status: 500 },
     );
   }
