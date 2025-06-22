@@ -8,6 +8,7 @@ import { kraepelinTestRouter } from "./routers/kraepelin-test-router";
 import { istInvitationRouter } from "./routers/ist-invitation-router/protected";
 import { publicIstInvitationRouter } from "./routers/ist-invitation-router/public";
 import { IstSubtestRouter } from "./routers/ist-test-router";
+import { istReviewRouter } from "./routers/ist-review-router";
 
 /**
  * This is the primary router for your server.
@@ -20,7 +21,8 @@ export const appRouter = createTRPCRouter({
   publicKraepelinInvitation: publicKraepelinInvitationRouter,
   kraepelinTest: kraepelinTestRouter,
   istInvitation: istInvitationRouter,
-  istSubtest: IstSubtestRouter, 
+  istReview: istReviewRouter,
+  istSubtest: IstSubtestRouter,
   publicIstInvitation: publicIstInvitationRouter,
 });
 

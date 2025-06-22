@@ -176,11 +176,11 @@ model IstResult {
     IstInvitation      IstInvitation      @relation(fields: [istInvitationId], references: [id])
     IstSubtestTemplate IstSubtestTemplate @relation(fields: [subtestTemplateId], references: [id])
     subtestTemplateId  String
-    answered           Int
-    missed             Int
-    answeredCorrectly  Int // RW (raw score)
-    answeredWrong      Int
-    standarizedScore   Int // SW
+    answered           Int?
+    missed             Int?
+    answeredCorrectly  Int? // RW (raw score)
+    answeredWrong      Int?
+    standarizedScore   Int? // SW
     IstResultDetail    IstResultDetail[]
     createdAt          DateTime           @default(now()) @db.Timestamptz(3)
     updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
