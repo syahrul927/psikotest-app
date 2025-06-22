@@ -1,4 +1,4 @@
-import { IstSubtests } from "@/features/ist-subtest";
+import { IstSubtests, IstWrapper } from "@/features/ist-subtest";
 import { type PageType } from "@/types/page-type";
 import { notFound } from "next/navigation";
 
@@ -7,5 +7,9 @@ export default async function IstSubtestSelectionPage({ params }: PageType) {
   if (!slug) {
     return notFound();
   }
-  return <IstSubtests id={slug} />;
+  return (
+    <IstWrapper>
+      <IstSubtests id={slug} />
+    </IstWrapper>
+  );
 }

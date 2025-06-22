@@ -66,16 +66,20 @@ export const IstSubtestRouter = createTRPCRouter({
 
       return { success: true };
     }),
+
+    //Add invitationId
+    //Select subtest session where invitationId === invitationId && subtestTemplateId === subtest
   getIstQuestionTemplateById: publicProcedure
     .input(
       z.object({
-        subtest: z.string(),
+        subtestId: z.string(),
+        invitationId: z.string()
       }),
     )
     .query(async ({ ctx, input }) => {
       const template = await ctx.db.istSubtestTemplate.findUnique({
         where: {
-          id: input.subtest,
+          id: input.subtestId,
         },
         include: {
           questions: {
@@ -93,12 +97,33 @@ export const IstSubtestRouter = createTRPCRouter({
         });
       }
 
-      return {
+      const session = await ctx.db.istSubtestSession.findFirst({
+        where: {
+          istInvitationId: input.invitationId,
+          subtestTemplateId: input.subtestId
+        }
+      })
+
+      if(!session) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No subtest template found with the provided ID",
+        });
+      }
+
+      const result =  {
         ...template,
         questions: template.questions.map((temp) => ({
           ...temp,
           imageUrl: getImageKeyByValue(temp.imageUrl),
         })),
       };
+
+      return {
+        ...result,
+        questions: session.questionOrder.map((question) => (
+          result.questions.find((item) => item.id === question)
+        ))
+      }
     }),
 });

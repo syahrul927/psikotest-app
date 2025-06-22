@@ -21,57 +21,26 @@ import {
 import Image from "next/image";
 import { useGetQuestionAndOptions } from "@/hooks/api/ist-test/use-ist-test";
 import { LoaderSpinner } from "@/components/ui/loading-spinner";
+import Header from "./header";
+import Footer from "./footer";
 
-export function IstSelectedTest({ slug }: { slug: string; type: string }) {
-  const params = useParams();
+export function IstSelectedTest({
+  slug,
+  type,
+}: {
+  slug: string;
+  type: string;
+}) {
   const router = useRouter();
-  const subtestId = Number.parseInt(params.type as string);
-  const [answers, setAnswers] = useState<Record<string, any>>(() => {
-    // Initialize answers from localStorage if available
-    if (typeof window !== "undefined") {
-      const savedAnswers = localStorage.getItem(`ist-answers-${subtestId}`);
-      return savedAnswers ? JSON.parse(savedAnswers) : {};
-    }
-    return {};
-  });
+  const subtestId = Number.parseInt(type);
+  const { data: question } = useGetQuestionAndOptions(slug, type);
+  const SUBTEST_TIME = question?.timeLimit ? question.timeLimit * 60 : 300; // Convert minutes to seconds, default to 5 minutes (300 seconds)
+  const [answers, setAnswers] = useState<Record<string, any>>({});
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(() => {
-    // Initialize remaining time from localStorage if available
-    if (typeof window !== "undefined") {
-      const savedTime = localStorage.getItem(`ist-time-${subtestId}`);
-      return savedTime ? parseInt(savedTime) : null;
-    }
-    return null;
-  });
-
-  const { data: question } = useGetQuestionAndOptions(params.type as string);
+  const [remainingTime, setRemainingTime] = useState(SUBTEST_TIME);
 
   console.log("ini pertanyaan: ", question?.questions);
-
-  const SUBTEST_TIME = question?.timeLimit ? question.timeLimit * 60 : 300; // Convert minutes to seconds, default to 5 minutes (300 seconds)
-
-  // Save answers to localStorage whenever they change
-  useEffect(() => {
-    if (Object.keys(answers).length > 0) {
-      localStorage.setItem(`ist-answers-${subtestId}`, JSON.stringify(answers));
-    }
-  }, [answers, subtestId]);
-
-  // Save remaining time when component unmounts or page unloads
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (remainingTime !== null) {
-        localStorage.setItem(`ist-time-${subtestId}`, remainingTime.toString());
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      handleBeforeUnload(); // Save one last time when component unmounts
-    };
-  }, [remainingTime, subtestId]);
 
   // Validate subtest ID
   if (isNaN(subtestId) || subtestId < 0 || subtestId > 9) {
@@ -94,8 +63,6 @@ export function IstSelectedTest({ slug }: { slug: string; type: string }) {
   };
 
   const handleCompleteSubtest = () => {
-    localStorage.removeItem(`ist-answers-${subtestId}`);
-    localStorage.removeItem(`ist-time-${subtestId}`);
     console.log("Subtest completed:", answers);
     router.push(`/guest/ist/${slug}/subtest`);
   };
@@ -159,56 +126,32 @@ export function IstSelectedTest({ slug }: { slug: string; type: string }) {
       {question ? (
         <>
           {/* Sticky Header with Timer */}
-          <div className="bg-background/80 sticky top-0 z-50 border-b shadow-sm backdrop-blur-lg">
-            <div className="mx-auto max-w-4xl px-4 py-3 sm:py-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={handleBackToSelection}
-                    className=""
-                  >
-                    <ArrowLeft className="h-5 w-5" />
-                  </Button>
-                  <div className="flex items-center gap-2">
-                    <div className="rounded-lg p-1.5 sm:p-2">
-                      <Brain className="h-4 w-4 sm:h-5 sm:w-5" />
-                    </div>
-                    <div>
-                      <h1 className="text-lg leading-tight font-bold sm:text-xl">
-                        {question?.description}
-                      </h1>
-                      <p className="text-xs sm:text-sm">
-                        {question?.questions?.length} Pertanyaan
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="self-end sm:ml-auto sm:self-auto">
-                  <Timer
-                    seconds={remainingTime ?? SUBTEST_TIME}
-                    onTimeUp={handleTimeUp}
-                    isActive={timerActive}
-                    onTimeUpdate={handleTimeUpdate}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          <Header
+            question={question}
+            remainingTime={remainingTime}
+            SUBTEST_TIME={SUBTEST_TIME}
+            timerActive={timerActive}
+            handleBackToSelection={handleBackToSelection}
+            handleTimeUp={handleTimeUp}
+            handleTimeUpdate={handleTimeUpdate}
+          />
 
           {/* Main Content */}
           <div className="mx-auto max-w-4xl px-4 py-4 sm:py-6">
             <Card className="border shadow-md">
               <CardContent className="p-4 sm:p-6 md:p-8">
                 <div className="mb-6 space-y-8 sm:mb-8 sm:space-y-10">
-                  <Image
-                    src={`/contoh_soal/${params.type as string}.webp`}
+                  <div className="text-lg leading-tight font-bold sm:text-xl">
+                    {question?.name}
+                  </div>
+                  <div>{question?.description}</div>
+                  {/* <Image
+                    src={`/contoh_soal/${type}.webp`}
                     alt="Contoh Soal"
                     width={500}
                     height={300}
                     className="mb-6 h-auto w-full rounded-lg"
-                  />
+                  /> */}
                   {question?.questions.map((questionData: any, index) => (
                     <div
                       key={questionData.id}
@@ -274,23 +217,12 @@ export function IstSelectedTest({ slug }: { slug: string; type: string }) {
                     </div>
                   ))}
                 </div>
-
-                <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:justify-between sm:gap-0 sm:pt-6">
-                  <Button
-                    variant="outline"
-                    onClick={handleBackToSelection}
-                    className="order-2 w-full px-4 sm:order-1 sm:w-auto sm:px-8"
-                  >
-                    Kembali ke Pilihan Subtes
-                  </Button>
-                  <Button
-                    onClick={handleCompleteSubtest}
-                    disabled={!isSubtestCompleted()}
-                    className="order-1 w-full px-4 sm:order-2 sm:w-auto sm:px-8"
-                  >
-                    Selesaikan Subtes
-                  </Button>
-                </div>
+                {/* Footer Content */}
+                <Footer
+                  handleBackToSelection={handleBackToSelection}
+                  handleCompleteSubtest={handleCompleteSubtest}
+                  isSubtestCompleted={isSubtestCompleted}
+                />
               </CardContent>
             </Card>
           </div>
