@@ -1,5 +1,18 @@
 "use client";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetAnswerReviewIst } from "@/hooks/api/ist-review/use-get-answer-review-ist";
 import { IstReviewFormWrapper } from "./review-form-wrapper";
@@ -16,9 +29,28 @@ export const IstReviewFormParent = ({ slug }: { slug: string }) => {
       </div>
     );
   }
+
   return (
-    <div className="flex flex-col gap-3">
-      {data?.map((item) => <IstReviewFormWrapper key={item.id} {...item} />)}
-    </div>
+    <Accordion type="multiple" className="flex flex-col gap-3">
+      {data?.map((item) => {
+        return (
+          <AccordionItem key={item.id} value={item.id}>
+            <Card>
+              <CardHeader className="relative">
+                <AccordionTrigger className="cursor-pointer py-0 [&>svg]:hidden">
+                  <CardTitle>{item.title}</CardTitle>
+                </AccordionTrigger>
+                <CardDescription>{item.description}</CardDescription>
+              </CardHeader>
+              <AccordionContent>
+                <CardContent>
+                  <IstReviewFormWrapper {...item} />
+                </CardContent>
+              </AccordionContent>
+            </Card>
+          </AccordionItem>
+        );
+      })}
+    </Accordion>
   );
 };

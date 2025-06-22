@@ -3,7 +3,8 @@ import type { IstReviewFormWrapperDataProps } from "./types";
 import { Badge } from "@/components/ui/badge";
 
 export const ReviewFormNumber = (props: IstReviewFormWrapperDataProps) => {
-  const isCorrect = props.userAnswer == props.correctAnswer;
+  const sortedCorrectAnswer = props.correctAnswer?.split("").sort().join("");
+  const isCorrect = props.userAnswer == sortedCorrectAnswer;
   return (
     <div key={props.id} className="bg-muted rounded-lg border p-3">
       <div className="mb-2 flex items-start justify-between">
@@ -23,6 +24,10 @@ export const ReviewFormNumber = (props: IstReviewFormWrapperDataProps) => {
         </div>
         <div className="flex items-center gap-1">
           <span className="text-muted-foreground">Benar:</span>
+          <div className="flex gap-1">{sortedCorrectAnswer}</div>
+        </div>
+        <div className="flex items-center gap-1">
+          <span className="text-muted-foreground">Benar (terurut):</span>
           <div className="flex gap-1">{props.correctAnswer}</div>
         </div>
         {isCorrect ? (

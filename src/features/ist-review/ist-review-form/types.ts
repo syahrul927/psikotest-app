@@ -9,6 +9,7 @@ export interface IstReviewFormWrapperDataProps {
 export interface IstReviewFormWrapperProps {
   title: string;
   type: string;
+  totalCorrect: number;
   description?: string;
   data: IstReviewFormWrapperDataProps[];
 }

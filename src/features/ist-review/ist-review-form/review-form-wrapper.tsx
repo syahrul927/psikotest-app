@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { ReviewFormNumber } from "./review-form-number";
 import { ReviewFormRadio } from "./review-form-radio";
 import { ReviewFormText } from "./review-form-text";
@@ -34,17 +28,18 @@ export const getComponentByType = (
 };
 export const IstReviewFormWrapper = (props: IstReviewFormWrapperProps) => {
   const ReviewItem = getComponentByType(props.type);
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{props.title}</CardTitle>
-        <CardDescription>{props.description}</CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2">
-        {props.data.map((item) => (
-          <ReviewItem {...item} key={item.id} />
-        ))}
-      </CardContent>
-    </Card>
+    <div className="flex flex-col gap-3">
+      <div className="gap-2">
+        <span className="text-muted-foreground">Jawaban: </span>
+        <Badge variant={"outline"}>
+          {props.totalCorrect}/{props.data.length}
+        </Badge>
+      </div>
+      {props.data.map((item) => (
+        <ReviewItem {...item} key={item.id} />
+      ))}
+    </div>
   );
 };
