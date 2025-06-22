@@ -18,6 +18,7 @@ import { type ColumnDef, type Row } from "@tanstack/react-table";
 import {
   CopyIcon,
   EyeIcon,
+  ListCheck,
   MoreHorizontalIcon,
   Settings2,
   TrashIcon,
@@ -120,6 +121,12 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
             <span>Share</span>
           </DropdownMenuItem>
           <DropdownMenuLabel>Action</DropdownMenuLabel>
+          <DropdownMenuItem asChild>
+            <Link href={PAGE_URLS.IST_INVITATION_REVIEW(row.original.id)}>
+              <ListCheck size={16} className="mr-2" />
+              <span>Review</span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             {status === "PENDING" ? (
