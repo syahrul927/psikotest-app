@@ -24,6 +24,7 @@ import { LoaderSpinner } from "@/components/ui/loading-spinner";
 import Header from "./header";
 import Footer from "./footer";
 import { useSubmitIstAnswers } from "@/hooks/api/ist-test/use-submit-answer-ist";
+import { IstTestQuestionWrapper } from "./ist-test-question-wrapper";
 
 export function IstSelectedTest({
   slug,
@@ -176,75 +177,13 @@ export function IstSelectedTest({
                     height={300}
                     className="mb-6 h-auto w-full rounded-lg"
                   /> */}
-                  {question?.questions.map((questionData: any, index: number) => {
-                    const questionId = String(questionData.id);
-                    const answerObj = answers.find((a) => a.questionId === questionId);
-                    const value = answerObj?.answer ?? "";
-                    return (
-                      <div
-                        key={questionData.id}
-                        className="border-b pb-6 last:border-b-0 last:pb-0 sm:pb-8"
-                      >
-                        {/* Question Number - Only show for non-number-selection types and not for subtest 5 & 6 */}
-                        {subtestId !== 5 && subtestId !== 6 && (
-                          <div className="mb-3 flex items-center gap-3 sm:mb-4">
-                            <div className="flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold sm:h-8 sm:w-8">
-                              {index + 1}
-                            </div>
-                            <h3 className="text-base font-semibold sm:text-lg">
-                              Pertanyaan {index + 1} dari{" "}
-                              {question?.questions.length}
-                            </h3>
-                          </div>
-                        )}
-
-                        {/* Question Text - Hide for number-selection type */}
-                        {subtestId !== 5 && subtestId !== 6 && (
-                          <p className="mb-4 text-lg leading-relaxed font-medium sm:mb-6 sm:text-xl">
-                            {questionData?.text}
-                          </p>
-                        )}
-
-                        {questionData?.text === "" && questionData?.imageUrl && (
-                          <div className="flex w-full justify-center">
-                            <Image
-                              src={`/api/images/${questionData?.imageUrl}`}
-                              alt={`Question ${index + 1}`}
-                              width={250}
-                              height={250}
-                              className="mb-6 rounded-lg border-2 dark:invert"
-                            />
-                          </div>
-                        )}
-
-                        {/* Question Components */}
-                        {(subtestId >= 1 && subtestId <= 3) ||
-                        subtestId === 9 ||
-                        subtestId === 7 ||
-                        subtestId === 8 ? (
-                          <RadioQuestion
-                            question={questionData}
-                            value={value}
-                            onChange={(value) => handleAnswer(questionId, value)}
-                          />
-                        ) : subtestId === 4 ? (
-                          <TextQuestion
-                            question={questionData}
-                            value={value}
-                            onChange={(value) => handleAnswer(questionId, value)}
-                          />
-                        ) : subtestId === 5 || subtestId === 6 ? (
-                          <NumberSelectionQuestion
-                            question={questionData}
-                            value={value || []}
-                            onChange={(value: any) => handleAnswer(questionId, value)}
-                            questionNumber={index + 1}
-                            totalQuestions={totalQuestions}
-                          />
-                        ) : null}
-                      </div>
-                    );
-                  })}
+                  <IstTestQuestionWrapper
+                    type={type}
+                    questions={question?.questions ?? []}
+                    answers={answers}
+                    handleAnswer={handleAnswer}
+                    totalQuestions={totalQuestions}
+                  />
                 </div>
                 {/* Footer Content */}
                 <Footer
