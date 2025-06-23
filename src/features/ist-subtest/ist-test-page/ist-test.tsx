@@ -25,6 +25,7 @@ import Header from "./header";
 import Footer from "./footer";
 import { useSubmitIstAnswers } from "@/hooks/api/ist-test/use-submit-answer-ist";
 import { IstTestQuestionWrapper } from "./ist-test-question-wrapper";
+import { PAGE_URLS } from "@/lib/page-url";
 
 export function IstSelectedTest({
   slug,
@@ -47,7 +48,7 @@ export function IstSelectedTest({
 
   // Validate subtest ID
   if (isNaN(subtestId) || subtestId < 0 || subtestId > 9) {
-    router.push("/subtests");
+    router.push(PAGE_URLS.IST_SUBTEST(slug));
     return null;
   }
 
@@ -83,7 +84,7 @@ export function IstSelectedTest({
           answer: typeof a.answer === 'string' ? a.answer : JSON.stringify(a.answer),
         })),
       });
-      router.push(`/guest/ist/${slug}/subtest`);
+      router.push(PAGE_URLS.IST_SUBTEST(slug));
     } catch (e) {
       // Optionally handle error (e.g., show toast)
       console.error('Failed to submit answers', e);
@@ -96,7 +97,7 @@ export function IstSelectedTest({
   };
 
   const handleContinueAfterTimeUp = () => {
-    router.push("/subtests");
+    router.push(PAGE_URLS.IST_SUBTEST(slug));
   };
 
   const handleTimeUpdate = (timeLeft: number) => {
