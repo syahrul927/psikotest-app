@@ -23,6 +23,7 @@ import { useGetQuestionAndOptions } from "@/hooks/api/ist-test/use-ist-test";
 import { LoaderSpinner } from "@/components/ui/loading-spinner";
 import Header from "./header";
 import Footer from "./footer";
+import { useSubmitIstAnswers } from "@/hooks/api/ist-test/use-submit-answer-ist";
 
 export function IstSelectedTest({
   slug,
@@ -35,12 +36,13 @@ export function IstSelectedTest({
   const subtestId = Number.parseInt(type);
   const { data: question } = useGetQuestionAndOptions(slug, type);
   const SUBTEST_TIME = question?.timeLimit ? question.timeLimit * 60 : 300; // Convert minutes to seconds, default to 5 minutes (300 seconds)
-  const [answers, setAnswers] = useState<Record<string, any>>({});
+  const [answers, setAnswers] = useState<{ questionId: string; answer: any }[]>([]);
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
   const [remainingTime, setRemainingTime] = useState(SUBTEST_TIME);
+  const submitIstAnswers = useSubmitIstAnswers();
 
-  console.log("ini pertanyaan: ", question?.questions);
+  console.log("ini jawaban: ", answers);
 
   // Validate subtest ID
   if (isNaN(subtestId) || subtestId < 0 || subtestId > 9) {
@@ -51,10 +53,18 @@ export function IstSelectedTest({
   const currentSubtestData = testData[subtestId];
   const totalQuestions = question?.questions.length ?? 0;
 
-  const handleAnswer = (questionIndex: number, answer: any) => {
-    setAnswers({
-      ...answers,
-      [`${subtestId}-${questionIndex}`]: answer,
+  const handleAnswer = (questionId: string, answer: any) => {
+    setAnswers((prev) => {
+      const existingIndex = prev.findIndex((a) => a.questionId === questionId);
+      if (existingIndex !== -1) {
+        // Update existing answer
+        const updated = [...prev];
+        updated[existingIndex] = { questionId, answer };
+        return updated;
+      } else {
+        // Add new answer
+        return [...prev, { questionId, answer }];
+      }
     });
   };
 
@@ -62,9 +72,21 @@ export function IstSelectedTest({
     router.back();
   };
 
-  const handleCompleteSubtest = () => {
-    console.log("Subtest completed:", answers);
-    router.push(`/guest/ist/${slug}/subtest`);
+  const handleCompleteSubtest = async () => {
+    if (!question?.istResultId) return;
+    try {
+      await submitIstAnswers.mutateAsync({
+        istResultId: question.istResultId,
+        answers: answers.map((a) => ({
+          questionId: a.questionId,
+          answer: typeof a.answer === 'string' ? a.answer : JSON.stringify(a.answer),
+        })),
+      });
+      router.push(`/guest/ist/${slug}/subtest`);
+    } catch (e) {
+      // Optionally handle error (e.g., show toast)
+      console.error('Failed to submit answers', e);
+    }
   };
 
   const handleTimeUp = () => {
@@ -81,19 +103,21 @@ export function IstSelectedTest({
   };
 
   const isSubtestCompleted = () => {
-    // Check if all questions in the current subtest have been answered
+    if (!question?.questions) return false;
+    // Return true if at least one question in the current subtest has an answer
     for (let i = 0; i < totalQuestions; i++) {
-      const currentAnswer = answers[`${subtestId}-${i}`];
-
+      const questionId = String(question.questions[i]?.id);
+      const answerObj = answers.find((a) => a.questionId === questionId);
+      const currentAnswer = answerObj?.answer;
       if (currentSubtestData?.type === "radio") {
-        if (currentAnswer === undefined) return false;
+        if (currentAnswer !== undefined) return true;
       } else if (currentSubtestData?.type === "text") {
-        if (!currentAnswer || currentAnswer.trim() === "") return false;
+        if (currentAnswer && currentAnswer.trim() !== "") return true;
       } else if (currentSubtestData?.type === "number-selection") {
-        if (!currentAnswer || currentAnswer.length === 0) return false;
+        if (currentAnswer && currentAnswer.length > 0) return true;
       }
     }
-    return true;
+    return false;
   };
 
   if (timeExpired) {
@@ -152,70 +176,75 @@ export function IstSelectedTest({
                     height={300}
                     className="mb-6 h-auto w-full rounded-lg"
                   /> */}
-                  {question?.questions.map((questionData: any, index) => (
-                    <div
-                      key={questionData.id}
-                      className="border-b pb-6 last:border-b-0 last:pb-0 sm:pb-8"
-                    >
-                      {/* Question Number - Only show for non-number-selection types and not for subtest 5 & 6 */}
-                      {subtestId !== 5 && subtestId !== 6 && (
-                        <div className="mb-3 flex items-center gap-3 sm:mb-4">
-                          <div className="flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold sm:h-8 sm:w-8">
-                            {index + 1}
+                  {question?.questions.map((questionData: any, index: number) => {
+                    const questionId = String(questionData.id);
+                    const answerObj = answers.find((a) => a.questionId === questionId);
+                    const value = answerObj?.answer ?? "";
+                    return (
+                      <div
+                        key={questionData.id}
+                        className="border-b pb-6 last:border-b-0 last:pb-0 sm:pb-8"
+                      >
+                        {/* Question Number - Only show for non-number-selection types and not for subtest 5 & 6 */}
+                        {subtestId !== 5 && subtestId !== 6 && (
+                          <div className="mb-3 flex items-center gap-3 sm:mb-4">
+                            <div className="flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold sm:h-8 sm:w-8">
+                              {index + 1}
+                            </div>
+                            <h3 className="text-base font-semibold sm:text-lg">
+                              Pertanyaan {index + 1} dari{" "}
+                              {question?.questions.length}
+                            </h3>
                           </div>
-                          <h3 className="text-base font-semibold sm:text-lg">
-                            Pertanyaan {index + 1} dari{" "}
-                            {question?.questions.length}
-                          </h3>
-                        </div>
-                      )}
+                        )}
 
-                      {/* Question Text - Hide for number-selection type */}
-                      {subtestId !== 5 && subtestId !== 6 && (
-                        <p className="mb-4 text-lg leading-relaxed font-medium sm:mb-6 sm:text-xl">
-                          {questionData?.text}
-                        </p>
-                      )}
+                        {/* Question Text - Hide for number-selection type */}
+                        {subtestId !== 5 && subtestId !== 6 && (
+                          <p className="mb-4 text-lg leading-relaxed font-medium sm:mb-6 sm:text-xl">
+                            {questionData?.text}
+                          </p>
+                        )}
 
-                      {questionData?.text === "" && questionData?.imageUrl && (
-                        <div className="flex w-full justify-center">
-                          <Image
-                            src={`/api/images/${questionData?.imageUrl}`}
-                            alt={`Question ${index + 1}`}
-                            width={250}
-                            height={250}
-                            className="mb-6 rounded-lg border-2 dark:invert"
+                        {questionData?.text === "" && questionData?.imageUrl && (
+                          <div className="flex w-full justify-center">
+                            <Image
+                              src={`/api/images/${questionData?.imageUrl}`}
+                              alt={`Question ${index + 1}`}
+                              width={250}
+                              height={250}
+                              className="mb-6 rounded-lg border-2 dark:invert"
+                            />
+                          </div>
+                        )}
+
+                        {/* Question Components */}
+                        {(subtestId >= 1 && subtestId <= 3) ||
+                        subtestId === 9 ||
+                        subtestId === 7 ||
+                        subtestId === 8 ? (
+                          <RadioQuestion
+                            question={questionData}
+                            value={value}
+                            onChange={(value) => handleAnswer(questionId, value)}
                           />
-                        </div>
-                      )}
-
-                      {/* Question Components */}
-                      {(subtestId >= 1 && subtestId <= 3) ||
-                      subtestId === 9 ||
-                      subtestId === 7 ||
-                      subtestId === 8 ? (
-                        <RadioQuestion
-                          question={questionData}
-                          value={answers[`${subtestId}-${index}`]}
-                          onChange={(value) => handleAnswer(index, value)}
-                        />
-                      ) : subtestId === 4 ? (
-                        <TextQuestion
-                          question={questionData}
-                          value={answers[`${subtestId}-${index}`] || ""}
-                          onChange={(value) => handleAnswer(index, value)}
-                        />
-                      ) : subtestId === 5 || subtestId === 6 ? (
-                        <NumberSelectionQuestion
-                          question={questionData}
-                          value={answers[`${subtestId}-${index}`] || []}
-                          onChange={(value: any) => handleAnswer(index, value)}
-                          questionNumber={index + 1}
-                          totalQuestions={totalQuestions}
-                        />
-                      ) : null}
-                    </div>
-                  ))}
+                        ) : subtestId === 4 ? (
+                          <TextQuestion
+                            question={questionData}
+                            value={value}
+                            onChange={(value) => handleAnswer(questionId, value)}
+                          />
+                        ) : subtestId === 5 || subtestId === 6 ? (
+                          <NumberSelectionQuestion
+                            question={questionData}
+                            value={value || []}
+                            onChange={(value: any) => handleAnswer(questionId, value)}
+                            questionNumber={index + 1}
+                            totalQuestions={totalQuestions}
+                          />
+                        ) : null}
+                      </div>
+                    );
+                  })}
                 </div>
                 {/* Footer Content */}
                 <Footer

@@ -23,7 +23,7 @@ interface QuestionProps {
 }
 
 export function RadioQuestion({ question, value, onChange }: QuestionProps) {
-  console.log("ques", question)
+  // console.log("ques", question)
   const isImage = ["7","8"].includes(question.subtestTemplateId)
   return (
     <RadioGroup value={value} onValueChange={onChange} className={cn("space-y-2 sm:space-y-3 flex flex-col p-3", isImage && "flex-row" )}>
