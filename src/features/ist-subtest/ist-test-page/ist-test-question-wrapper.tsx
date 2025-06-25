@@ -13,12 +13,14 @@ export function IstTestQuestionWrapper({
   answers,
   handleAnswer,
   totalQuestions,
+  isTraining = false,
 }: {
   type: string;
   questions: any[];
   answers: { questionId: string; answer: any }[];
   handleAnswer: (questionId: string, answer: any) => void;
   totalQuestions: number;
+  isTraining?: boolean;
 }) {
   const QuestionComponent = getTestComponentByType(type);
 
@@ -63,6 +65,7 @@ export function IstTestQuestionWrapper({
               question={questionData}
               value={value}
               onChange={(val: any) => handleAnswer(questionId, val)}
+              isTraining={isTraining}
               {...(["5", "6"].includes(type)
                 ? { questionNumber: index + 1, totalQuestions }
                 : {})}
