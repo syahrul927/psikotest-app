@@ -1,19 +1,17 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { IstReviewFormWrapperDataProps } from "./types";
-import { z } from "zod";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
+import { z } from "zod";
+import type { IstReviewFormWrapperDataProps } from "./types";
 
 const answerSchema = z.array(
   z.object({
@@ -41,15 +39,18 @@ export const ReviewFormText = (props: IstReviewFormWrapperDataProps) => {
         <div className="flex w-full gap-2">
           <span className="text-muted-foreground">Jawaban:</span>
           <div className="flex w-full flex-col space-y-2">
-            <Textarea className="bg-background" value={props.userAnswer} />
+            <Textarea
+              className="bg-background"
+              defaultValue={props.userAnswer}
+            />
             <div className="flex space-x-1">
-              <Button size="sm" className={`h-7 text-xs`}>
+              <Button size="sm" variant={"outline"} className={`h-7 text-xs`}>
                 <ThumbsUp className="mr-1 h-3 w-3" />
-                Setuju
+                Benar
               </Button>
-              <Button size="sm" className="h-7 text-xs">
+              <Button size="sm" variant={"ghost"} className="h-7 text-xs">
                 <ThumbsDown className="mr-1 h-3 w-3" />
-                Tolak
+                Salah
               </Button>
             </div>
           </div>
@@ -67,16 +68,15 @@ export const ReviewFormText = (props: IstReviewFormWrapperDataProps) => {
             <TableRow>
               {answersJson.map((item, index) => (
                 <TableCell key={index} className="space-x-1">
-                  {item.data.map((d) => (
-                    <Badge
-                      className={cn(
-                        item.score === "2" ? "bg-amber-600" : "bg-indigo-600",
-                        "text-white",
-                      )}
-                    >
-                      {d}
-                    </Badge>
-                  ))}
+                  {item.data.map((d) => {
+                    const isMatch =
+                      d.toLowerCase() === props.userAnswer?.toLowerCase();
+                    return (
+                      <Badge variant={isMatch ? "positive" : "outline"} key={d}>
+                        {d}
+                      </Badge>
+                    );
+                  })}
                 </TableCell>
               ))}
             </TableRow>

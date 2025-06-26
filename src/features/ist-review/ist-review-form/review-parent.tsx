@@ -16,6 +16,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetAnswerReviewIst } from "@/hooks/api/ist-review/use-get-answer-review-ist";
 import { IstReviewFormWrapper } from "./review-form-wrapper";
+import { Badge } from "@/components/ui/badge";
 
 export const IstReviewFormParent = ({ slug }: { slug: string }) => {
   const { data, isLoading } = useGetAnswerReviewIst(slug);
@@ -37,8 +38,13 @@ export const IstReviewFormParent = ({ slug }: { slug: string }) => {
           <AccordionItem key={item.id} value={item.id}>
             <Card>
               <CardHeader className="relative">
-                <AccordionTrigger className="cursor-pointer py-0 [&>svg]:hidden">
-                  <CardTitle>{item.title}</CardTitle>
+                <AccordionTrigger className="cursor-pointer py-0">
+                  <CardTitle className="flex-1">{item.title}</CardTitle>
+                  <span>
+                    <Badge variant={"outline"}>
+                      {item.totalCorrect} / {item.data.length}
+                    </Badge>
+                  </span>
                 </AccordionTrigger>
                 <CardDescription>{item.description}</CardDescription>
               </CardHeader>

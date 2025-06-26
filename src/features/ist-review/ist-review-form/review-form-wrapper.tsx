@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { ReviewFormNumber } from "./review-form-number";
 import { ReviewFormRadio } from "./review-form-radio";
 import { ReviewFormText } from "./review-form-text";
@@ -31,12 +30,6 @@ export const IstReviewFormWrapper = (props: IstReviewFormWrapperProps) => {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="gap-2">
-        <span className="text-muted-foreground">Jawaban: </span>
-        <Badge variant={"outline"}>
-          {props.totalCorrect}/{props.data.length}
-        </Badge>
-      </div>
       {props.data.map((item) => (
         <ReviewItem {...item} key={item.id} />
       ))}

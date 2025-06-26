@@ -1,5 +1,7 @@
+import { buildMultiFieldBulkUpdateSQL } from "@/lib/prisma-utils";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import type { IstResultDetail, Prisma } from "@prisma/client";
+import type { IstResult, IstResultDetail, Prisma } from "@prisma/client";
+import type { Pick } from "@prisma/client/runtime/library";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -44,7 +46,11 @@ export const istReviewRouter = createTRPCRouter({
           },
         },
       });
-      const updated = listAnswerSubtest
+
+      const updated: Pick<
+        IstResult,
+        "id" | "answeredCorrectly" | "answered"
+      >[] = listAnswerSubtest
         .filter(
           (subtest) =>
             !subtest.answeredCorrectly && subtest.subtestTemplateId !== "4",
@@ -54,20 +60,24 @@ export const istReviewRouter = createTRPCRouter({
             subtest.subtestTemplateId,
             subtest.IstResultDetail,
           );
-
-          return ctx.db.istResult.updateMany({
-            where: {
-              istInvitationId: input,
-              subtestTemplateId: subtest.subtestTemplateId,
-            },
-            data: {
-              answeredCorrectly,
-              answered: subtest.IstResultDetail.length,
-            },
-          });
+          return {
+            id: subtest.id,
+            answeredCorrectly,
+            answered: subtest.IstResultDetail.length,
+          };
         });
       if (updated.length) {
-        await ctx.db.$transaction(updated);
+        const { sql: sqlIstResult, params: paramsIstResult } =
+          buildMultiFieldBulkUpdateSQL<
+            IstResult,
+            "answeredCorrectly" | "answered"
+          >({
+            table: "IstResult",
+            updates: updated,
+            fields: ["answeredCorrectly", "answered"],
+          });
+
+        await ctx.db.$executeRawUnsafe(sqlIstResult, ...paramsIstResult);
         listAnswerSubtest = await ctx.db.istResult.findMany({
           where: {
             istInvitationId: input,
@@ -81,6 +91,36 @@ export const istReviewRouter = createTRPCRouter({
             },
           },
         });
+        const updates: Pick<IstResultDetail, "id" | "isCorrect" | "score">[][] =
+          listAnswerSubtest
+            .filter((subtest) => subtest.subtestTemplateId !== "4")
+            .map((subtest) => {
+              return subtest.IstResultDetail.map((detail) => {
+                const isCorrect =
+                  detail.answer ===
+                  validateCorrectAnswer(
+                    subtest.subtestTemplateId,
+                    detail.question.correctAnswer,
+                  );
+
+                return {
+                  id: detail.id,
+                  isCorrect,
+                  score: 1,
+                };
+              });
+            });
+
+        const { sql, params } = buildMultiFieldBulkUpdateSQL<
+          IstResultDetail,
+          "isCorrect" | "score"
+        >({
+          table: "IstResultDetail",
+          updates: updates.flat(),
+          fields: ["isCorrect", "score"],
+        });
+
+        await ctx.db.$executeRawUnsafe(sql, ...params);
       }
       const results = listAnswerSubtest
         .map((subtest) => ({

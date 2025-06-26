@@ -193,6 +193,8 @@ model IstResultDetail {
     question    IstQuestionTemplate @relation(fields: [questionId], references: [id])
     questionId  String
     answer      String
+    isCorrect   Boolean?
+    score       Int?
     createdAt   DateTime            @default(now()) @db.Timestamptz(3)
 
     @@index([questionId], name: "user_question_unique")
