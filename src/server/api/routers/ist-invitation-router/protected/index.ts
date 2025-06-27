@@ -97,16 +97,4 @@ export const istInvitationRouter = createTRPCRouter({
       });
       return;
     }),
-
-    getUserDetail: protectedProcedure
-      .input(z.string())
-      .query(async ({ ctx, input }) => {
-        const istProfile = await ctx.db.istInvitation.findUnique({
-          where: { id: input },
-          include:{
-            testerProfile: true
-          }
-        })
-        return istProfile
-      })
 });

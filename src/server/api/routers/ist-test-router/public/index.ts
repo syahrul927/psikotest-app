@@ -225,6 +225,22 @@ export const IstSubtestRouter = createTRPCRouter({
         data: { answered: input.answers.length },
       });
 
+      // Update submittedAt in istSubtestSession
+      // First, get istResult to find istInvitationId and subtestTemplateId
+      const istResult = await ctx.db.istResult.findUnique({
+        where: { id: input.istResultId },
+        select: { istInvitationId: true, subtestTemplateId: true },
+      });
+      if (istResult) {
+        await ctx.db.istSubtestSession.updateMany({
+          where: {
+            istInvitationId: istResult.istInvitationId,
+            subtestTemplateId: istResult.subtestTemplateId,
+          },
+          data: { submittedAt: new Date() },
+        });
+      }
+
       return { success: true };
     }),
 });
