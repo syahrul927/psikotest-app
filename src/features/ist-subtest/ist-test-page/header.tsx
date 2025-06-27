@@ -8,22 +8,18 @@ interface HeaderProps {
     description?: string;
     questions?: any[];
   };
-  remainingTime?: number;
   SUBTEST_TIME?: number;
   timerActive?: boolean;
   handleBackToSelection: () => void;
   handleTimeUp: () => void;
-  handleTimeUpdate: (timeLeft: number) => void;
 }
 
 export default function Header({
   question,
-  remainingTime,
   SUBTEST_TIME,
   timerActive,
   handleBackToSelection,
   handleTimeUp,
-  handleTimeUpdate,
 }: HeaderProps) {
   return (
     <div className="bg-background/80 sticky top-0 z-50 border-b shadow-sm backdrop-blur-lg">
@@ -54,10 +50,9 @@ export default function Header({
           </div>
           <div className="self-end sm:ml-auto sm:self-auto">
             <Timer
-              seconds={remainingTime ?? SUBTEST_TIME ?? 300}
+              seconds={SUBTEST_TIME ?? 300}
               onTimeUp={handleTimeUp}
               isActive={timerActive ?? true}
-              onTimeUpdate={handleTimeUpdate}
             />
           </div>
         </div>

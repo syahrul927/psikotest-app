@@ -31,8 +31,8 @@ function TrainingPageContent() {
   const [answers, setAnswers] = useState<{ questionId: string; answer: any }[]>([]);
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(SUBTEST_TIME);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Simulate loading
   useEffect(() => {
@@ -70,8 +70,11 @@ function TrainingPageContent() {
   };
 
   const handleCompleteSubtest = () => {
+    setIsSubmitting(true);
     // For training, just navigate back to subtest page without submitting
-    router.push(PAGE_URLS.IST_SUBTEST(slug));
+    setTimeout(() => {
+      router.push(PAGE_URLS.IST_SUBTEST(slug));
+    }, 500); // short delay for loader effect
   };
 
   const handleTimeUp = () => {
@@ -81,10 +84,6 @@ function TrainingPageContent() {
 
   const handleContinueAfterTimeUp = () => {
     router.push(PAGE_URLS.IST_SUBTEST(slug));
-  };
-
-  const handleTimeUpdate = (timeLeft: number) => {
-    setRemainingTime(timeLeft);
   };
 
   const isSubtestCompleted = () => {
@@ -118,17 +117,26 @@ function TrainingPageContent() {
     );
   }
 
+  if (isSubmitting) {
+    return (
+      <div className="flex h-screen w-screen flex-row items-center justify-center gap-x-4 text-xl">
+        <div className="flex items-center gap-2">
+          <LoaderSpinner />
+          <span>Cleaning up training session...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
       {/* Sticky Header with Timer */}
       <Header
         question={{ ...trainingData, questions }}
-        remainingTime={remainingTime}
         SUBTEST_TIME={SUBTEST_TIME}
         timerActive={timerActive}
         handleBackToSelection={handleBackToSelection}
         handleTimeUp={handleTimeUp}
-        handleTimeUpdate={handleTimeUpdate}
       />
 
       {/* Main Content */}
@@ -163,6 +171,7 @@ function TrainingPageContent() {
               handleBackToSelection={handleBackToSelection}
               handleCompleteSubtest={handleCompleteSubtest}
               isSubtestCompleted={isSubtestCompleted}
+              isSubmitted={isSubmitting}
             />
           </CardContent>
         </Card>
