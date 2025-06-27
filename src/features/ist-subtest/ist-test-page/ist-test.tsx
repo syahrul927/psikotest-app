@@ -43,6 +43,7 @@ export function IstSelectedTest({
   const [timeExpired, setTimeExpired] = useState(false);
   const [remainingTime, setRemainingTime] = useState(SUBTEST_TIME);
   const submitIstAnswers = useSubmitIstAnswers();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   console.log("ini jawaban: ", answers);
 
@@ -76,6 +77,7 @@ export function IstSelectedTest({
 
   const handleCompleteSubtest = async () => {
     if (!question?.istResultId) return;
+    setIsSubmitting(true);
     try {
       await submitIstAnswers.mutateAsync({
         istResultId: question.istResultId,
@@ -88,6 +90,8 @@ export function IstSelectedTest({
     } catch (e) {
       // Optionally handle error (e.g., show toast)
       console.error('Failed to submit answers', e);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -147,6 +151,14 @@ export function IstSelectedTest({
     );
   }
 
+  if (isSubmitting) {
+    return (
+      <div className="flex h-screen w-screen flex-row items-center justify-center gap-x-4 text-xl">
+        <LoaderSpinner /> <div>Menyimpan jawaban...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen">
       {question ? (
@@ -154,12 +166,10 @@ export function IstSelectedTest({
           {/* Sticky Header with Timer */}
           <Header
             question={question}
-            remainingTime={remainingTime}
             SUBTEST_TIME={SUBTEST_TIME}
             timerActive={timerActive}
             handleBackToSelection={handleBackToSelection}
             handleTimeUp={handleTimeUp}
-            handleTimeUpdate={handleTimeUpdate}
           />
 
           {/* Main Content */}
@@ -191,6 +201,7 @@ export function IstSelectedTest({
                   handleBackToSelection={handleBackToSelection}
                   handleCompleteSubtest={handleCompleteSubtest}
                   isSubtestCompleted={isSubtestCompleted}
+                  isSubmitted={isSubmitting}
                 />
               </CardContent>
             </Card>
