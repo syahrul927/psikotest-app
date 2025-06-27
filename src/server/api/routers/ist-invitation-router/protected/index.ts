@@ -1,4 +1,4 @@
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import _ from "underscore";
 import { z } from "zod";
@@ -97,16 +97,4 @@ export const istInvitationRouter = createTRPCRouter({
       });
       return;
     }),
-
-    getUserDetail: publicProcedure
-      .input(z.string())
-      .query(async ({ ctx, input }) => {
-        const istProfile = await ctx.db.istInvitation.findUnique({
-          where: { id: input },
-          include:{
-            testerProfile: true
-          }
-        })
-        return istProfile
-      })
 });
