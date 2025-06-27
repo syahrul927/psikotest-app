@@ -11,7 +11,7 @@ export const PAGE_URLS = {
   // IST
   IST_INVITATION: "/ist-invitation",
   IST_INVITATION_REVIEW: (id: string) => `/ist-invitation/${id}/review`,
-  IST_INVITATION_RESULT: (id: string) => `/ist-invitation/${id}`,
+  IST_INVITATION_RESULT: (id: string) => `/ist-invitation/${id}/result`,
   IST_SETTINGS: "/ist-settings",
 
   //public IST

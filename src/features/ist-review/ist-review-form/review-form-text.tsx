@@ -1,3 +1,4 @@
+"use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +13,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { z } from "zod";
 import type { IstReviewFormWrapperDataProps } from "./types";
+import { useSubmitCorrection } from "@/hooks/api/ist-review/use-submit-correction";
+import { useReviewForm } from "@/hooks/use-review-form-context";
+import { useMemo } from "react";
 
 const answerSchema = z.array(
   z.object({
@@ -23,6 +27,20 @@ export const ReviewFormText = (props: IstReviewFormWrapperDataProps) => {
   const answersJson = props.correctAnswer
     ? answerSchema.parse(JSON.parse(props.correctAnswer))
     : [];
+  const { isLoadingCorrection, updateData } = useReviewForm();
+  const onClickCorrection = (isCorrect: boolean, score: number | null) => {
+    updateData(props.id, { score, isCorrect });
+  };
+  const isLoading = useMemo(
+    () => isLoadingCorrection?.id === props.id && isLoadingCorrection.isLoading,
+    [isLoadingCorrection],
+  );
+  const selectColor = (isMatch: boolean, index: number) => {
+    if (isMatch) {
+      return index === 0 ? "positive" : "positiveBlue";
+    }
+    return "outline";
+  };
   return (
     <div key={props.id} className="bg-muted rounded-lg border p-3">
       <div className="mb-2 flex items-start justify-between">
@@ -44,11 +62,41 @@ export const ReviewFormText = (props: IstReviewFormWrapperDataProps) => {
               defaultValue={props.userAnswer}
             />
             <div className="flex space-x-1">
-              <Button size="sm" variant={"outline"} className={`h-7 text-xs`}>
+              <Button
+                size="sm"
+                variant={
+                  props.isCorrect === true && props.score === 2
+                    ? "default"
+                    : "outline"
+                }
+                isLoading={isLoading}
+                onClick={() => onClickCorrection(true, 2)}
+                className={`h-7 text-xs`}
+              >
                 <ThumbsUp className="mr-1 h-3 w-3" />
-                Benar
+                Benar Score 2
               </Button>
-              <Button size="sm" variant={"ghost"} className="h-7 text-xs">
+              <Button
+                size="sm"
+                variant={
+                  props.isCorrect === true && props.score === 1
+                    ? "default"
+                    : "outline"
+                }
+                isLoading={isLoading}
+                onClick={() => onClickCorrection(true, 1)}
+                className={`h-7 text-xs`}
+              >
+                <ThumbsUp className="mr-1 h-3 w-3" />
+                Benar Score 1
+              </Button>
+              <Button
+                size="sm"
+                variant={props.isCorrect === false ? "default" : "outline"}
+                isLoading={isLoading}
+                onClick={() => onClickCorrection(false, null)}
+                className="h-7 text-xs"
+              >
                 <ThumbsDown className="mr-1 h-3 w-3" />
                 Salah
               </Button>
@@ -56,7 +104,8 @@ export const ReviewFormText = (props: IstReviewFormWrapperDataProps) => {
           </div>
         </div>
 
-        <Table className="w-full rounded-t-md">
+        <p>Opsi: </p>
+        <Table className="w-full rounded-t-md border">
           <TableHeader>
             <TableRow>
               {answersJson.map((item, index) => (
@@ -72,7 +121,7 @@ export const ReviewFormText = (props: IstReviewFormWrapperDataProps) => {
                     const isMatch =
                       d.toLowerCase() === props.userAnswer?.toLowerCase();
                     return (
-                      <Badge variant={isMatch ? "positive" : "outline"} key={d}>
+                      <Badge variant={selectColor(isMatch, index)} key={d}>
                         {d}
                       </Badge>
                     );

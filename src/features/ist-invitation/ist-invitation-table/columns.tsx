@@ -16,6 +16,7 @@ import { localDate } from "@/lib/date-utils";
 import { PAGE_URLS } from "@/lib/page-url";
 import { type ColumnDef, type Row } from "@tanstack/react-table";
 import {
+  CheckCheck,
   CopyIcon,
   EyeIcon,
   ListCheck,
@@ -125,6 +126,12 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
             <Link href={PAGE_URLS.IST_INVITATION_REVIEW(row.original.id)}>
               <ListCheck size={16} className="mr-2" />
               <span>Review</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={PAGE_URLS.IST_INVITATION_RESULT(row.original.id)}>
+              <CheckCheck size={16} className="mr-2" />
+              <span>Hasil Test</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

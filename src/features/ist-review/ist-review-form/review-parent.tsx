@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -14,12 +15,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetAnswerReviewIst } from "@/hooks/api/ist-review/use-get-answer-review-ist";
+import { useReviewForm } from "@/hooks/use-review-form-context";
 import { IstReviewFormWrapper } from "./review-form-wrapper";
-import { Badge } from "@/components/ui/badge";
 
 export const IstReviewFormParent = ({ slug }: { slug: string }) => {
-  const { data, isLoading } = useGetAnswerReviewIst(slug);
+  const { isLoadingGetAll: isLoading, reviewData: data } = useReviewForm();
 
   if (isLoading) {
     return (

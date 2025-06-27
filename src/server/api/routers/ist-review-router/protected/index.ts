@@ -46,34 +46,28 @@ export const istReviewRouter = createTRPCRouter({
           },
         },
       });
-
-      const updated: Pick<
+      const notReviewYet: Pick<
         IstResult,
         "id" | "answeredCorrectly" | "answered"
-      >[] = listAnswerSubtest
-        .filter(
-          (subtest) =>
-            !subtest.answeredCorrectly && subtest.subtestTemplateId !== "4",
-        )
-        .map((subtest) => {
-          const answeredCorrectly = correctionSubtest(
-            subtest.subtestTemplateId,
-            subtest.IstResultDetail,
-          );
-          return {
-            id: subtest.id,
-            answeredCorrectly,
-            answered: subtest.IstResultDetail.length,
-          };
-        });
-      if (updated.length) {
+      >[] = listAnswerSubtest.map((subtest) => {
+        const answeredCorrectly = correctionSubtest(
+          subtest.subtestTemplateId,
+          subtest.IstResultDetail,
+        );
+        return {
+          id: subtest.id,
+          answeredCorrectly,
+          answered: subtest.IstResultDetail.length,
+        };
+      });
+      if (notReviewYet.length) {
         const { sql: sqlIstResult, params: paramsIstResult } =
           buildMultiFieldBulkUpdateSQL<
             IstResult,
             "answeredCorrectly" | "answered"
           >({
             table: "IstResult",
-            updates: updated,
+            updates: notReviewYet,
             fields: ["answeredCorrectly", "answered"],
           });
 
@@ -91,32 +85,34 @@ export const istReviewRouter = createTRPCRouter({
             },
           },
         });
-        const updates: Pick<IstResultDetail, "id" | "isCorrect" | "score">[][] =
-          listAnswerSubtest
-            .filter((subtest) => subtest.subtestTemplateId !== "4")
-            .map((subtest) => {
-              return subtest.IstResultDetail.map((detail) => {
-                const isCorrect =
-                  detail.answer ===
-                  validateCorrectAnswer(
-                    subtest.subtestTemplateId,
-                    detail.question.correctAnswer,
-                  );
+        const updatedResultDetail: Pick<
+          IstResultDetail,
+          "id" | "isCorrect" | "score"
+        >[][] = listAnswerSubtest
+          .filter((subtest) => subtest.subtestTemplateId !== "4")
+          .map((subtest) => {
+            return subtest.IstResultDetail.map((detail) => {
+              const isCorrect =
+                detail.answer ===
+                validateCorrectAnswer(
+                  subtest.subtestTemplateId,
+                  detail.question.correctAnswer,
+                );
 
-                return {
-                  id: detail.id,
-                  isCorrect,
-                  score: 1,
-                };
-              });
+              return {
+                id: detail.id,
+                isCorrect,
+                score: 1,
+              };
             });
+          });
 
         const { sql, params } = buildMultiFieldBulkUpdateSQL<
           IstResultDetail,
           "isCorrect" | "score"
         >({
           table: "IstResultDetail",
-          updates: updates.flat(),
+          updates: updatedResultDetail.flat(),
           fields: ["isCorrect", "score"],
         });
 
@@ -136,10 +132,42 @@ export const istReviewRouter = createTRPCRouter({
             image: detail.question.imageUrl ?? "",
             correctAnswer: detail.question.correctAnswer ?? "",
             userAnswer: detail.answer ?? "",
+            isCorrect: detail.isCorrect,
+            score: detail.score,
           })).sort((a, b) => a.order - b.order),
         }))
         .sort((a, b) => Number(a.type) - Number(b.type));
       return results;
+    }),
+  submitCorrection: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        isCorrect: z.boolean().nullable(),
+        score: z.number().nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input: { id, isCorrect, score } }) => {
+      const resultDetail = await ctx.db.istResultDetail.findUnique({
+        where: {
+          id,
+        },
+      });
+      if (!resultDetail) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid Result Detail",
+        });
+      }
+      await ctx.db.istResultDetail.update({
+        where: {
+          id,
+        },
+        data: {
+          score,
+          isCorrect,
+        },
+      });
     }),
 });
 const validateCorrectAnswer = (
@@ -157,10 +185,16 @@ function correctionSubtest(
     include: { question: true };
   }>[],
 ): number {
+  if (subtestTemplateId === "4") {
+    return IstResultDetail.reduce(
+      (total, data) => total + (data.isCorrect ? 1 : 0),
+      0,
+    );
+  }
   const totalCorrect = IstResultDetail.reduce((prev, data) => {
     const isCorrect =
       data.answer ===
-        validateCorrectAnswer(subtestTemplateId, data.question.correctAnswer)
+      validateCorrectAnswer(subtestTemplateId, data.question.correctAnswer)
         ? 1
         : 0;
     return prev + isCorrect;
