@@ -4,7 +4,7 @@ import { useAccessIstInvitation } from "@/hooks/use-access-ist-test";
 import { PAGE_URLS } from "@/lib/page-url";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
-import { toast } from "sonner";
+import { toast } from "sonner";    
 
 export const IstWrapper = ({ children }: { children: ReactNode }) => {
   const { access } = useAccessIstInvitation();

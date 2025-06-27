@@ -36,6 +36,8 @@ export function IstSubtests({ id }: { id: string }) {
   const { data: subtestSession } = useGetSubtestSession(id);
   const { mutate: updateStartSession } = useUpdateSession();
 
+  console.log(id)
+
   const handleUpdateStartedTest = (subtest: string) => {
     updateStartSession({
       isInvitationId: id,
@@ -93,13 +95,13 @@ export function IstSubtests({ id }: { id: string }) {
   }, [subtestSession]);
 
   // test mode
-  useEffect(() => {
-    if (subtestist?.length) {
-      setCompletedSubtests(
-        subtestist.filter((_, index) => index % 2 === 0).map((item) => item.id),
-      );
-    }
-  }, [subtestist]);
+  // useEffect(() => {
+  //   if (subtestist?.length) {
+  //     setCompletedSubtests(
+  //       subtestist.filter((_, index) => index % 2 === 0).map((item) => item.id),
+  //     );
+  //   }
+  // }, [subtestist]);
 
   return (
     <div className="bg-sidebar min-h-screen space-y-3">
@@ -109,7 +111,7 @@ export function IstSubtests({ id }: { id: string }) {
         </div>
       </div>
       <div className="mx-auto max-w-7xl space-y-3 px-4">
-        <ParticipantInfo />
+        <ParticipantInfo slug={id} />
 
         {/* Subtests Grid */}
         <div className="mb-12 grid grid-cols-1 items-center justify-center gap-6 md:grid-cols-2 xl:grid-cols-4">
