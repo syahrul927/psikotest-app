@@ -1,34 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Timer } from "@/components/timer";
-import {
-  NumberSelectionQuestion,
-  RadioQuestion,
-  TextQuestion,
-} from "@/features/ist-subtest/ist-question-type";
 import { LoaderSpinner } from "@/components/ui/loading-spinner";
-import Header from "@/features/ist-subtest/ist-test-page/header";
+import { IstWrapper } from "@/features/ist-subtest";
 import Footer from "@/features/ist-subtest/ist-test-page/footer";
+import Header from "@/features/ist-subtest/ist-test-page/header";
 import { IstTestQuestionWrapper } from "@/features/ist-subtest/ist-test-page/ist-test-question-wrapper";
 import { PAGE_URLS } from "@/lib/page-url";
-import { IstWrapper } from "@/features/ist-subtest";
-import { trainingData, getTrainingQuestions } from "@/lib/training-data";
+import { getTrainingQuestions, trainingData } from "@/lib/training-data";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 function TrainingPageContent() {
   const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
   const type = params.type as string;
-  
+
   const subtestId = Number.parseInt(type);
   const questions = getTrainingQuestions(type);
   const SUBTEST_TIME = trainingData.timeLimit * 60; // Convert minutes to seconds
-  
-  const [answers, setAnswers] = useState<{ questionId: string; answer: any }[]>([]);
+
+  const [answers, setAnswers] = useState<{ questionId: string; answer: any }[]>(
+    [],
+  );
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -101,12 +97,13 @@ function TrainingPageContent() {
 
   if (timeExpired) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md mx-4">
+      <div className="flex min-h-screen items-center justify-center">
+        <Card className="mx-4 w-full max-w-md">
           <CardContent className="p-6 text-center">
-            <h2 className="text-xl font-bold mb-4">Waktu Latihan Habis</h2>
+            <h2 className="mb-4 text-xl font-bold">Waktu Latihan Habis</h2>
             <p className="text-muted-foreground mb-6">
-              Waktu latihan telah berakhir. Anda akan diarahkan kembali ke halaman pilihan subtes.
+              Waktu latihan telah berakhir. Anda akan diarahkan kembali ke
+              halaman pilihan subtes.
             </p>
             <Button onClick={handleContinueAfterTimeUp} className="w-full">
               Kembali ke Pilihan Subtes
@@ -147,15 +144,18 @@ function TrainingPageContent() {
               <div className="text-lg leading-tight font-bold sm:text-xl">
                 {trainingData.name} - Subtes {type}
               </div>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-blue-800 font-medium mb-2">📝 Mode Latihan</p>
-                <p className="text-blue-700 text-sm">
-                  Ini adalah halaman latihan. Anda dapat mencoba menjawab pertanyaan tanpa khawatir tentang hasil akhir. 
-                  Jawaban Anda tidak akan disimpan.
+              <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+                <p className="mb-2 font-medium text-blue-800">
+                  📝 Mode Latihan
+                </p>
+                <p className="text-sm text-blue-700">
+                  Ini adalah halaman latihan. Anda dapat mencoba menjawab
+                  pertanyaan tanpa khawatir tentang hasil akhir. Jawaban Anda
+                  tidak akan disimpan.
                 </p>
               </div>
               <div>{trainingData.description}</div>
-              
+
               <IstTestQuestionWrapper
                 type={type}
                 questions={questions}
@@ -165,7 +165,7 @@ function TrainingPageContent() {
                 isTraining={true}
               />
             </div>
-            
+
             {/* Footer Content */}
             <Footer
               handleBackToSelection={handleBackToSelection}

@@ -157,6 +157,7 @@ model IstInvitation {
     updatedAt         DateTime            @updatedAt @db.Timestamptz(3)
     IstSubtestSession IstSubtestSession[]
     IstResult         IstResult[]
+    IstResultSummary  IstResultSummary[]
 }
 
 model IstSubtestSession {
@@ -168,6 +169,21 @@ model IstSubtestSession {
     subtestTemplateId  String
     istInvitationId    String
     IstInvitation      IstInvitation       @relation(fields: [istInvitationId], references: [id])
+}
+
+model IstResultSummary {
+    id                     String        @id @default(cuid())
+    istInvitationId        String        @unique
+    IstInvitation          IstInvitation @relation(fields: [istInvitationId], references: [id])
+    thinkingFlexibility    Float
+    attentionFlexibility   Float
+    reasoningLogic         Float
+    memoryAndConcentration Float
+    analyticalSynthesis    Float
+    numericalAbility       Float
+    sumRawScore            Float
+    sumStandarizedScore    Float
+    totalIQ                Int
 }
 
 model IstResult {
@@ -247,6 +263,20 @@ model IstStandardScore {
     description        String
     createdAt          DateTime           @default(now()) @db.Timestamptz(3)
     updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
+
+    @@index([age])
+}
+
+model IstStandardIqScore {
+    id               String   @id @default(cuid())
+    age              Int
+    from             Int
+    to               Int
+    standarizedScore Int
+    createdAt        DateTime @default(now()) @db.Timestamptz(3)
+    updatedAt        DateTime @updatedAt @db.Timestamptz(3)
+
+    @@index([age])
 }
 
 enum StatusIstInvitation {

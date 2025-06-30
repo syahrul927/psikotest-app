@@ -42,7 +42,8 @@ export const IstReviewFormParent = ({ slug }: { slug: string }) => {
                   <CardTitle className="flex-1">{item.title}</CardTitle>
                   <span>
                     <Badge variant={"outline"}>
-                      {item.totalCorrect} / {item.data.length}
+                      {item.totalCorrect} /{" "}
+                      {item.data.length * (item.type === "4" ? 2 : 1)}
                     </Badge>
                   </span>
                 </AccordionTrigger>

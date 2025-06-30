@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any*/
 type BulkUpdateInput<T, K extends keyof T, ID extends keyof T> = {
   table: string;
   updates: (Pick<T, ID> & Pick<T, K>)[];

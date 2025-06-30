@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { buildMultiFieldBulkUpdateSQL } from "@/lib/prisma-utils";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import type { IstResult, IstResultDetail, Prisma } from "@prisma/client";
@@ -25,6 +27,9 @@ export const istReviewRouter = createTRPCRouter({
           message: "Undangan tidak valid.",
         });
       return {
+        placeOfBirth: invitation.testerProfile?.placeOfBirth,
+        dayOfBirth: invitation.testerProfile?.dateOfBirth,
+        educationName: invitation.testerProfile?.educationName,
         name: invitation.testerProfile?.name,
         phone: invitation.testerProfile?.phone,
         startAt: invitation.updatedAt,
@@ -48,7 +53,7 @@ export const istReviewRouter = createTRPCRouter({
       });
       const notReviewYet: Pick<
         IstResult,
-        "id" | "answeredCorrectly" | "answered"
+        "id" | "answeredCorrectly" | "answered" | "answeredWrong" | "missed"
       >[] = listAnswerSubtest.map((subtest) => {
         const answeredCorrectly = correctionSubtest(
           subtest.subtestTemplateId,
@@ -57,18 +62,28 @@ export const istReviewRouter = createTRPCRouter({
         return {
           id: subtest.id,
           answeredCorrectly,
+          answeredWrong:
+            (subtest.subtestTemplateId === "4" ? 32 : 20) - answeredCorrectly,
           answered: subtest.IstResultDetail.length,
+          missed:
+            (subtest.subtestTemplateId === "4" ? 16 : 20) -
+            subtest.IstResultDetail.length,
         };
       });
       if (notReviewYet.length) {
         const { sql: sqlIstResult, params: paramsIstResult } =
           buildMultiFieldBulkUpdateSQL<
             IstResult,
-            "answeredCorrectly" | "answered"
+            "answeredCorrectly" | "answered" | "answeredWrong" | "missed"
           >({
             table: "IstResult",
             updates: notReviewYet,
-            fields: ["answeredCorrectly", "answered"],
+            fields: [
+              "answeredCorrectly",
+              "answered",
+              "answeredWrong",
+              "missed",
+            ],
           });
 
         await ctx.db.$executeRawUnsafe(sqlIstResult, ...paramsIstResult);
@@ -102,7 +117,7 @@ export const istReviewRouter = createTRPCRouter({
               return {
                 id: detail.id,
                 isCorrect,
-                score: 1,
+                score: isCorrect ? 1 : 0,
               };
             });
           });
@@ -168,6 +183,38 @@ export const istReviewRouter = createTRPCRouter({
           isCorrect,
         },
       });
+      const result = await ctx.db.istResult.findUnique({
+        where: {
+          id: resultDetail.istResultId,
+        },
+        include: {
+          IstResultDetail: {
+            include: {
+              question: true,
+            },
+          },
+        },
+      });
+      if (result) {
+        const answeredCorrectly = correctionSubtest(
+          result?.subtestTemplateId,
+          result?.IstResultDetail,
+        );
+        await ctx.db.istResult.update({
+          where: {
+            id: resultDetail.istResultId,
+          },
+          data: {
+            answeredCorrectly,
+            answeredWrong:
+              (result.subtestTemplateId === "4" ? 32 : 20) - answeredCorrectly,
+            answered: result.IstResultDetail.length,
+            missed:
+              (result.subtestTemplateId === "4" ? 16 : 20) -
+              result.IstResultDetail.length,
+          },
+        });
+      }
     }),
 });
 const validateCorrectAnswer = (
@@ -187,7 +234,7 @@ function correctionSubtest(
 ): number {
   if (subtestTemplateId === "4") {
     return IstResultDetail.reduce(
-      (total, data) => total + (data.isCorrect ? 1 : 0),
+      (total, data) => total + (data.score ?? 0),
       0,
     );
   }

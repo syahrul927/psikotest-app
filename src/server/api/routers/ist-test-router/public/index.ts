@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { getImageKeyByValue } from "@/lib/image-map";
 
-export const IstSubtestRouter = createTRPCRouter({
+export const istSubtestRouter = createTRPCRouter({
   getSubtestSession: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input: istInvitationId }) => {
@@ -67,13 +67,13 @@ export const IstSubtestRouter = createTRPCRouter({
       return { success: true };
     }),
 
-    //Add invitationId
-    //Select subtest session where invitationId === invitationId && subtestTemplateId === subtest
+  //Add invitationId
+  //Select subtest session where invitationId === invitationId && subtestTemplateId === subtest
   getIstQuestionTemplateById: publicProcedure
     .input(
       z.object({
         subtestId: z.string(),
-        invitationId: z.string()
+        invitationId: z.string(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -100,9 +100,9 @@ export const IstSubtestRouter = createTRPCRouter({
       const session = await ctx.db.istSubtestSession.findFirst({
         where: {
           istInvitationId: input.invitationId,
-          subtestTemplateId: input.subtestId
-        }
-      })
+          subtestTemplateId: input.subtestId,
+        },
+      });
 
       // Check if a result already exists for this invitation and subtest
       const existingResult = await ctx.db.istResult.findFirst({
@@ -123,14 +123,14 @@ export const IstSubtestRouter = createTRPCRouter({
         istResultId = newResult.id;
       }
 
-      if(!session) {
+      if (!session) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "No subtest template found with the provided ID",
         });
       }
 
-      const result =  {
+      const result = {
         ...template,
         questions: template.questions.map((temp) => ({
           ...temp,
@@ -140,12 +140,12 @@ export const IstSubtestRouter = createTRPCRouter({
 
       return {
         ...result,
-        questions: session.questionOrder.map((question) => (
-          result.questions.find((item) => item.id === question)
-        )),
+        questions: session.questionOrder.map((question) =>
+          result.questions.find((item) => item.id === question),
+        ),
         istResultId,
-      }
-    }),    
+      };
+    }),
   submitIstAnswers: publicProcedure
     .input(
       z.object({
@@ -154,9 +154,9 @@ export const IstSubtestRouter = createTRPCRouter({
           z.object({
             questionId: z.string(),
             answer: z.string(),
-          })
+          }),
         ),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       // Process answers to map option IDs to labels, if applicable
@@ -181,7 +181,7 @@ export const IstSubtestRouter = createTRPCRouter({
         select: { id: true, questionId: true },
       });
       const existingAnswersMap = new Map(
-        existingAnswers.map((a) => [a.questionId, a.id])
+        existingAnswers.map((a) => [a.questionId, a.id]),
       );
 
       const toCreate: {
@@ -203,14 +203,14 @@ export const IstSubtestRouter = createTRPCRouter({
           });
         }
       }
-      
+
       const updateOperations = toUpdate.map((ans) =>
         ctx.db.istResultDetail.update({
           where: { id: ans.id },
           data: { answer: ans.answer },
-        })
+        }),
       );
-      
+
       // Perform DB operations in a transaction for atomicity
       await ctx.db.$transaction([
         ctx.db.istResultDetail.createMany({

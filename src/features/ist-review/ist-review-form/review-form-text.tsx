@@ -10,23 +10,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
-import { ThumbsDown, ThumbsUp } from "lucide-react";
-import { z } from "zod";
-import type { IstReviewFormWrapperDataProps } from "./types";
-import { useSubmitCorrection } from "@/hooks/api/ist-review/use-submit-correction";
 import { useReviewForm } from "@/hooks/use-review-form-context";
+import { parseFourthAnswerTemplate } from "@/lib/ist-utils";
+import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { useMemo } from "react";
+import type { IstReviewFormWrapperDataProps } from "./types";
 
-const answerSchema = z.array(
-  z.object({
-    score: z.string(),
-    data: z.array(z.string()),
-  }),
-);
 export const ReviewFormText = (props: IstReviewFormWrapperDataProps) => {
-  const answersJson = props.correctAnswer
-    ? answerSchema.parse(JSON.parse(props.correctAnswer))
-    : [];
+  const answersJson = parseFourthAnswerTemplate(props.correctAnswer);
   const { isLoadingCorrection, updateData } = useReviewForm();
   const onClickCorrection = (isCorrect: boolean, score: number | null) => {
     updateData(props.id, { score, isCorrect });

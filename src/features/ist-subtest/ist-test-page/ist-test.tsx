@@ -1,31 +1,19 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-import { testData } from "@/lib/test-data";
-import { AlertCircle, ArrowLeft, Brain } from "lucide-react";
-import { Timer } from "@/components/timer";
-import {
-  NumberSelectionQuestion,
-  RadioQuestion,
-  TextQuestion,
-} from "../ist-question-type";
-import Image from "next/image";
-import { useGetQuestionAndOptions } from "@/hooks/api/ist-test/use-ist-test";
 import { LoaderSpinner } from "@/components/ui/loading-spinner";
-import Header from "./header";
-import Footer from "./footer";
+import { useGetQuestionAndOptions } from "@/hooks/api/ist-test/use-ist-test";
 import { useSubmitIstAnswers } from "@/hooks/api/ist-test/use-submit-answer-ist";
-import { IstTestQuestionWrapper } from "./ist-test-question-wrapper";
 import { PAGE_URLS } from "@/lib/page-url";
+import { testData } from "@/lib/test-data";
+import { AlertCircle } from "lucide-react";
+import Footer from "./footer";
+import Header from "./header";
+import { IstTestQuestionWrapper } from "./ist-test-question-wrapper";
 
 export function IstSelectedTest({
   slug,
@@ -38,7 +26,9 @@ export function IstSelectedTest({
   const subtestId = Number.parseInt(type);
   const { data: question } = useGetQuestionAndOptions(slug, type);
   const SUBTEST_TIME = question?.timeLimit ? question.timeLimit * 60 : 300; // Convert minutes to seconds, default to 5 minutes (300 seconds)
-  const [answers, setAnswers] = useState<{ questionId: string; answer: any }[]>([]);
+  const [answers, setAnswers] = useState<{ questionId: string; answer: any }[]>(
+    [],
+  );
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
   const [remainingTime, setRemainingTime] = useState(SUBTEST_TIME);
@@ -83,13 +73,14 @@ export function IstSelectedTest({
         istResultId: question.istResultId,
         answers: answers.map((a) => ({
           questionId: a.questionId,
-          answer: typeof a.answer === 'string' ? a.answer : JSON.stringify(a.answer),
+          answer:
+            typeof a.answer === "string" ? a.answer : JSON.stringify(a.answer),
         })),
       });
       router.push(PAGE_URLS.IST_SUBTEST(slug));
     } catch (e) {
       // Optionally handle error (e.g., show toast)
-      console.error('Failed to submit answers', e);
+      console.error("Failed to submit answers", e);
     } finally {
       setIsSubmitting(false);
     }
