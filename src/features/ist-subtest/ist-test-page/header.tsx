@@ -2,11 +2,12 @@ import { Timer } from "@/components/timer";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Brain } from "lucide-react";
 import React from "react";
+import type { IstQuestion } from "./ist-test";
 
 interface HeaderProps {
   question?: {
     description?: string;
-    questions?: any[];
+    questions?: IstQuestion["questions"];
   };
   SUBTEST_TIME?: number;
   timerActive?: boolean;

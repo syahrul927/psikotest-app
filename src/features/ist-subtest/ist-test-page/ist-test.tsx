@@ -14,6 +14,28 @@ import { AlertCircle } from "lucide-react";
 import Footer from "./footer";
 import Header from "./header";
 import { IstTestQuestionWrapper } from "./ist-test-question-wrapper";
+import type { TrainingQuestion } from "@/lib/training-data";
+
+export interface IstQuestion {
+  id: string;
+  name: string;
+  description: string;
+  timeLimit: number;
+  questions: {
+    id: string;
+    text?: string | null;
+    imageUrl?: string | null;
+    options: {
+      id: string;
+      label: string;
+      text?: string | null;
+      imageUrl?: string | null;
+    }[];
+    correctAnswer?: string | null;
+    order: number;
+  }[];
+  istResultId: string;
+}
 
 export function IstSelectedTest({
   slug,
@@ -26,7 +48,7 @@ export function IstSelectedTest({
   const subtestId = Number.parseInt(type);
   const { data: question } = useGetQuestionAndOptions(slug, type);
   const SUBTEST_TIME = question?.timeLimit ? question.timeLimit * 60 : 300; // Convert minutes to seconds, default to 5 minutes (300 seconds)
-  const [answers, setAnswers] = useState<{ questionId: string; answer: any }[]>(
+  const [answers, setAnswers] = useState<{ questionId: string; answer: string | number[] }[]>(
     [],
   );
   const [timerActive, setTimerActive] = useState(true);
@@ -43,10 +65,9 @@ export function IstSelectedTest({
     return null;
   }
 
-  const currentSubtestData = testData[subtestId];
   const totalQuestions = question?.questions.length ?? 0;
 
-  const handleAnswer = (questionId: string, answer: any) => {
+  const handleAnswer = (questionId: string, answer: string | number[]) => {
     setAnswers((prev) => {
       const existingIndex = prev.findIndex((a) => a.questionId === questionId);
       if (existingIndex !== -1) {
@@ -101,17 +122,18 @@ export function IstSelectedTest({
 
   const isSubtestCompleted = () => {
     if (!question?.questions) return false;
-    // Return true if at least one question in the current subtest has an answer
     for (let i = 0; i < totalQuestions; i++) {
       const questionId = String(question.questions[i]?.id);
       const answerObj = answers.find((a) => a.questionId === questionId);
       const currentAnswer = answerObj?.answer;
-      if (currentSubtestData?.type === "radio") {
-        if (currentAnswer !== undefined) return true;
-      } else if (currentSubtestData?.type === "text") {
-        if (currentAnswer && currentAnswer.trim() !== "") return true;
-      } else if (currentSubtestData?.type === "number-selection") {
-        if (currentAnswer && currentAnswer.length > 0) return true;
+      const subtestTemplateId = question.questions[i]?.subtestTemplateId;
+      const subtestTemplateIdStr = String(subtestTemplateId ?? "");
+      if (["1", "2", "3", "7", "8", "9"].includes(subtestTemplateIdStr)) {
+        if (typeof currentAnswer === "string" && currentAnswer !== "") return true;
+      } else if (subtestTemplateIdStr === "4") {
+        if (typeof currentAnswer === "string" && currentAnswer.trim() !== "") return true;
+      } else if (["5", "6"].includes(subtestTemplateIdStr)) {
+        if (Array.isArray(currentAnswer) && currentAnswer.length > 0) return true;
       }
     }
     return false;
@@ -156,7 +178,7 @@ export function IstSelectedTest({
         <>
           {/* Sticky Header with Timer */}
           <Header
-            question={question}
+            question={question as IstQuestion}
             SUBTEST_TIME={SUBTEST_TIME}
             timerActive={timerActive}
             handleBackToSelection={handleBackToSelection}
@@ -181,7 +203,7 @@ export function IstSelectedTest({
                   /> */}
                   <IstTestQuestionWrapper
                     type={type}
-                    questions={question?.questions ?? []}
+                    questions={question?.questions as TrainingQuestion[] ?? []}
                     answers={answers}
                     handleAnswer={handleAnswer}
                     totalQuestions={totalQuestions}

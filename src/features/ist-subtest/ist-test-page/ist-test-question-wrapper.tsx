@@ -1,10 +1,13 @@
+import type { TrainingQuestion } from "@/lib/training-data";
 import { RadioQuestion, TextQuestion, NumberSelectionQuestion } from "../ist-question-type";
 
 export function getTestComponentByType(type: string) {
   if (["1", "2", "3", "7", "8", "9"].includes(type)) return RadioQuestion;
   if (type === "4") return TextQuestion;
   if (["5", "6"].includes(type)) return NumberSelectionQuestion;
-  return () => <div>Unknown Type: {type}</div>;
+  const UnknownTypeComponent = () => <div>Unknown Type: {type}</div>;
+  UnknownTypeComponent.displayName = "UnknownTypeComponent";
+  return UnknownTypeComponent;
 }
 
 export function IstTestQuestionWrapper({
@@ -16,14 +19,14 @@ export function IstTestQuestionWrapper({
   isTraining = false,
 }: {
   type: string;
-  questions: any[];
-  answers: { questionId: string; answer: any }[];
-  handleAnswer: (questionId: string, answer: any) => void;
+  questions: TrainingQuestion[];
+  answers: { questionId: string; answer: string | number[] }[];
+  handleAnswer: (questionId: string, answer: string | number[]) => void;
   totalQuestions: number;
   isTraining?: boolean;
 }) {
   const QuestionComponent = getTestComponentByType(type);
-
+  
   return (
     <>
       {questions.map((questionData, index) => {
@@ -62,9 +65,17 @@ export function IstTestQuestionWrapper({
               </div>
             )}
             <QuestionComponent
-              question={questionData}
-              value={value}
-              onChange={(val: any) => handleAnswer(questionId, val)}
+              question={{
+                ...questionData,
+                options: (questionData.options ?? []).map(opt => ({
+                  ...opt,
+                  text: opt.text ?? ""
+                })),
+                question: questionData.question ?? "",
+                text: questionData.text ?? ""
+              }}
+              value={value as string & number[]}
+              onChange={(val: string | number[]) => handleAnswer(questionId, val)}
               isTraining={isTraining}
               {...(["5", "6"].includes(type)
                 ? { questionNumber: index + 1, totalQuestions }

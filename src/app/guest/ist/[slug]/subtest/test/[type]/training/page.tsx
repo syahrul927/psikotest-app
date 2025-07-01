@@ -12,6 +12,34 @@ import { getTrainingQuestions, trainingData } from "@/lib/training-data";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+interface IstQuestion {
+  id: string;
+  name: string;
+  description: string;
+  timeLimit: number;
+  questions: {
+    id: string;
+    text?: string | null;
+    imageUrl?: string | null;
+    options: {
+      id: string;
+      label: string;
+      text?: string | null;
+      imageUrl?: string | null;
+    }[];
+    correctAnswer?: string | null;
+    order: number;
+  }[];
+  istResultId: string;
+}
+
+type TrainingAnswerValue = string | number[];
+
+interface TrainingAnswer {
+  questionId: string;
+  answer: TrainingAnswerValue;
+}
+
 function TrainingPageContent() {
   const router = useRouter();
   const params = useParams();
@@ -22,9 +50,7 @@ function TrainingPageContent() {
   const questions = getTrainingQuestions(type);
   const SUBTEST_TIME = trainingData.timeLimit * 60; // Convert minutes to seconds
 
-  const [answers, setAnswers] = useState<{ questionId: string; answer: any }[]>(
-    [],
-  );
+  const [answers, setAnswers] = useState<TrainingAnswer[]>([]);
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +72,7 @@ function TrainingPageContent() {
 
   const totalQuestions = questions.length;
 
-  const handleAnswer = (questionId: string, answer: any) => {
+  const handleAnswer = (questionId: string, answer: TrainingAnswerValue) => {
     setAnswers((prev) => {
       const existingIndex = prev.findIndex((a) => a.questionId === questionId);
       if (existingIndex !== -1) {
@@ -129,7 +155,7 @@ function TrainingPageContent() {
     <div className="min-h-screen">
       {/* Sticky Header with Timer */}
       <Header
-        question={{ ...trainingData, questions }}
+        question={{ ...trainingData, questions: questions as IstQuestion["questions"] }}
         SUBTEST_TIME={SUBTEST_TIME}
         timerActive={timerActive}
         handleBackToSelection={handleBackToSelection}

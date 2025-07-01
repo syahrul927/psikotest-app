@@ -68,20 +68,20 @@ export function SummaryScoreCard({
             <RadarChart data={radarData}>
               <ChartTooltip
                 content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    const data = payload[0]?.payload;
+                  if (active && payload?.length) {
+                    const data = payload[0]?.payload as RadarDataItem | undefined;
                     return (
                       <div className="bg-background rounded-lg border p-2 shadow-md">
                         <div className="grid gap-2">
                           <div className="flex flex-col">
                             <span className="text-muted-foreground text-[0.70rem] uppercase">
-                              {data.subtest}
+                              {data?.subtest}
                             </span>
                             <span className="text-muted-foreground font-bold">
-                              {data.fullName}
+                              {data?.fullName}
                             </span>
                             <span className="font-bold">
-                              Score: {data.score}
+                              Score: {data?.score}
                             </span>
                           </div>
                         </div>
