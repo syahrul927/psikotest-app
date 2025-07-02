@@ -6,7 +6,7 @@ import React from "react";
 interface HeaderProps {
   question?: {
     description?: string;
-    questions?: any[];
+    questions?: unknown[];
   };
   SUBTEST_TIME?: number;
   timerActive?: boolean;
@@ -14,7 +14,7 @@ interface HeaderProps {
   handleTimeUp: () => void;
 }
 
-export default function Header({
+export function Header({
   question,
   SUBTEST_TIME,
   timerActive,

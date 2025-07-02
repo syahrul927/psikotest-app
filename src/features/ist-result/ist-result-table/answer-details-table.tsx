@@ -10,48 +10,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import * as React from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { useGetAnswerDetailsResult } from "@/hooks/api/ist-result/use-get-answer-details-result";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useIstResultDetailInfo } from "@/hooks/use-ist-result-detail";
 import { parseFourthAnswerTemplate } from "@/lib/ist-utils";
 import { cn } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import * as React from "react";
 
-interface SubtestAnswerDetails {
-  id: string;
-  name: string;
-  fullName: string;
-  rawScore: number;
-  totalAnswered: number;
-  correctAnswers: number;
-  incorrectAnswers: number;
-}
-
-interface AnswerDetailsTableProps {
-  subtests: SubtestAnswerDetails[];
-  slug: string;
-}
-
-export function AnswerDetailsTable({
-  subtests,
-  slug,
-}: AnswerDetailsTableProps) {
-  const { data, isLoading } = useGetAnswerDetailsResult(slug);
-  const totals = subtests.reduce(
-    (acc, subtest) => {
-      return {
-        rawScore: acc.rawScore + subtest.rawScore,
-        totalAnswered: acc.totalAnswered + subtest.totalAnswered,
-        correctAnswers: acc.correctAnswers + subtest.correctAnswers,
-        incorrectAnswers: acc.incorrectAnswers + subtest.incorrectAnswers,
-      };
-    },
-    { rawScore: 0, totalAnswered: 0, correctAnswers: 0, incorrectAnswers: 0 },
-  );
-
+export function AnswerDetailsTable({ slug }: { slug: string }) {
+  const { data, isLoading } = useIstResultDetailInfo();
   const [expandedSubtests, setExpandedSubtests] = React.useState<{
     [key: string]: boolean;
   }>({});
+
   if (isLoading) {
     return <Skeleton className="col-span-2 h-96"></Skeleton>;
   }
@@ -138,7 +109,7 @@ export function AnswerDetailsTable({
                       {subtest.rawScore}
                     </TableCell>
                     <TableCell className="text-center">
-                      {subtest.correctAnswers}
+                      {subtest.standarizedScore}
                     </TableCell>
                   </TableRow>
 

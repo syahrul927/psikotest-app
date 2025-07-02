@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { LoaderSpinner } from "@/components/ui/loading-spinner";
-import { IstWrapper } from "@/features/ist-subtest";
-import Footer from "@/features/ist-subtest/ist-test-page/footer";
-import Header from "@/features/ist-subtest/ist-test-page/header";
-import { IstTestQuestionWrapper } from "@/features/ist-subtest/ist-test-page/ist-test-question-wrapper";
+import {
+  Footer,
+  Header,
+  IstTestQuestionWrapper,
+  IstWrapper,
+} from "@/features/ist-subtest";
 import { PAGE_URLS } from "@/lib/page-url";
 import { getTrainingQuestions, trainingData } from "@/lib/training-data";
 import { useParams, useRouter } from "next/navigation";
@@ -22,9 +24,9 @@ function TrainingPageContent() {
   const questions = getTrainingQuestions(type);
   const SUBTEST_TIME = trainingData.timeLimit * 60; // Convert minutes to seconds
 
-  const [answers, setAnswers] = useState<{ questionId: string; answer: any }[]>(
-    [],
-  );
+  const [answers, setAnswers] = useState<
+    { questionId: string; answer: string | number[] }[]
+  >([]);
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +48,7 @@ function TrainingPageContent() {
 
   const totalQuestions = questions.length;
 
-  const handleAnswer = (questionId: string, answer: any) => {
+  const handleAnswer = (questionId: string, answer: string | number[]) => {
     setAnswers((prev) => {
       const existingIndex = prev.findIndex((a) => a.questionId === questionId);
       if (existingIndex !== -1) {

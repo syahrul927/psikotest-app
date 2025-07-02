@@ -1,6 +1,14 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useGetSummaryScore } from "@/hooks/api/ist-result/use-get-summary-score";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  categorizeIq,
+  classificationCriteriaByIQ,
+  getBadgeVariant,
+} from "@/lib/ist-utils";
+import { useIstResultDetailInfo } from "@/hooks/use-ist-result-detail";
 
 interface CriteriaItem {
   name: string;
@@ -12,89 +20,140 @@ interface CriteriaInfoProps {
   criteria: CriteriaItem[];
 }
 
-export function CriteriaInfoCard({
-  criteria = [
-    {
-      name: "Fleksibilitas Berfikir",
-      totalIQ: 120.75,
-      classification: "Superior",
-    },
-    {
-      name: "Fleksibilitas Perhatian",
-      totalIQ: 123.5,
-      classification: "Superior",
-    },
-    { name: "Daya Nalar/Logika", totalIQ: 117, classification: "High Average" },
-    {
-      name: "Daya ingat &Konsentrasi",
-      totalIQ: 77,
-      classification: "Low Average",
-    },
-    { name: "Analisa Sintesa", totalIQ: 120.8, classification: "Superior" },
-    { name: "Numerik", totalIQ: 120, classification: "Superior" },
-    { name: "Total IQ", totalIQ: 160, classification: "Very Superior" },
-  ],
-}: CriteriaInfoProps) {
-  const getBadgeVariant = (value: string) => {
-    switch (value.toLowerCase()) {
-      case "low":
-        return "destructive";
-      case "average":
-        return "secondary";
-      case "high":
-        return "positive";
-      case "superior":
-        return "positive";
-      case "very superior":
-        return "positive";
-      case "low average":
-        return "destructive";
-      case "high average":
-        return "positiveBlue";
-      default:
-        return "secondary";
-    }
-  };
+export function CriteriaInfoCard({ slug }: { slug: string }) {
+  const { summary: data, isLoading } = useIstResultDetailInfo();
+  if (isLoading) {
+    return <Skeleton className="h-96 w-full" />;
+  }
 
   return (
     <Card>
-      <CardHeader className="border-b pb-3">
-        <CardTitle className="text-xl font-medium">Criteria Info</CardTitle>
+      <CardHeader className="border-b">
+        <CardTitle>Hasil Kriteria</CardTitle>
       </CardHeader>
       <CardContent className="pt-4">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-200">
-              <th className="text-muted-foreground py-2 text-left font-medium">
-                Criteria
-              </th>
-              <th className="text-muted-foreground py-2 text-center font-medium">
-                Total IQ
-              </th>
-              <th className="text-muted-foreground py-2 text-center font-medium">
-                Classification
-              </th>
+            <tr className="border-b">
+              <th className="py-2 text-left font-medium">Kriteria</th>
+              <th className="py-2 text-center font-medium">Total IQ</th>
+              <th className="py-2 text-center font-medium">Klasifikasi</th>
             </tr>
           </thead>
           <tbody>
-            {criteria.map((item, index) => (
-              <tr
-                key={index}
-                className={
-                  index < criteria.length - 1 ? "border-b border-gray-100" : ""
-                }
-              >
-                <td className="text-muted-foreground py-2 font-medium">
-                  {item.name}
-                </td>
-                <td className="py-2 text-center font-medium">{item.totalIQ}</td>
-                <td className="py-2 text-center">
-                  <Badge variant={getBadgeVariant(item.classification)}>
-                    {item.classification}
-                  </Badge>
-                </td>
-              </tr>
-            ))}
+            <tr>
+              <td className="text-muted-foreground py-2 font-medium">
+                Fleksibilitas Berfikir
+              </td>
+              <td className="py-2 text-center font-medium">
+                {data?.thinkingFlexibility}
+              </td>
+              <td className="py-2 text-center">
+                <Badge
+                  variant={getBadgeVariant(
+                    classificationCriteriaByIQ(data?.thinkingFlexibility),
+                  )}
+                >
+                  {classificationCriteriaByIQ(data?.thinkingFlexibility)}
+                </Badge>
+              </td>
+            </tr>
+            <tr>
+              <td className="text-muted-foreground py-2 font-medium">
+                Fleksibilitas Perhatian
+              </td>
+              <td className="py-2 text-center font-medium">
+                {data?.attentionFlexibility}
+              </td>
+              <td className="py-2 text-center">
+                <Badge
+                  variant={getBadgeVariant(
+                    classificationCriteriaByIQ(data?.attentionFlexibility),
+                  )}
+                >
+                  {classificationCriteriaByIQ(data?.attentionFlexibility)}
+                </Badge>
+              </td>
+            </tr>
+            <tr>
+              <td className="text-muted-foreground py-2 font-medium">
+                Daya Nalar/Logika
+              </td>
+              <td className="py-2 text-center font-medium">
+                {data?.reasoningLogic}
+              </td>
+              <td className="py-2 text-center">
+                <Badge
+                  variant={getBadgeVariant(
+                    classificationCriteriaByIQ(data?.reasoningLogic),
+                  )}
+                >
+                  {classificationCriteriaByIQ(data?.reasoningLogic)}
+                </Badge>
+              </td>
+            </tr>
+            <tr>
+              <td className="text-muted-foreground py-2 font-medium">
+                Daya ingat & Konsentrasi
+              </td>
+              <td className="py-2 text-center font-medium">
+                {data?.memoryAndConcentration}
+              </td>
+              <td className="py-2 text-center">
+                <Badge
+                  variant={getBadgeVariant(
+                    classificationCriteriaByIQ(data?.memoryAndConcentration),
+                  )}
+                >
+                  {classificationCriteriaByIQ(data?.memoryAndConcentration)}
+                </Badge>
+              </td>
+            </tr>
+            <tr>
+              <td className="text-muted-foreground py-2 font-medium">
+                Analisa Sintesa
+              </td>
+              <td className="py-2 text-center font-medium">
+                {data?.analyticalSynthesis}
+              </td>
+              <td className="py-2 text-center">
+                <Badge
+                  variant={getBadgeVariant(
+                    classificationCriteriaByIQ(data?.analyticalSynthesis),
+                  )}
+                >
+                  {classificationCriteriaByIQ(data?.analyticalSynthesis)}
+                </Badge>
+              </td>
+            </tr>
+            <tr>
+              <td className="text-muted-foreground py-2 font-medium">
+                Numerik
+              </td>
+              <td className="py-2 text-center font-medium">
+                {data?.numericalAbility}
+              </td>
+              <td className="py-2 text-center">
+                <Badge
+                  variant={getBadgeVariant(
+                    classificationCriteriaByIQ(data?.numericalAbility),
+                  )}
+                >
+                  {classificationCriteriaByIQ(data?.numericalAbility)}
+                </Badge>
+              </td>
+            </tr>
+            <tr>
+              <td className="text-muted-foreground py-2 font-medium">
+                Total IQ
+              </td>
+              <td className="py-2 text-center font-medium">{data?.totalIQ}</td>
+              <td className="py-2 text-center">
+                <Badge variant={getBadgeVariant(categorizeIq(data?.totalIQ))}>
+                  {categorizeIq(data?.totalIQ)}
+                </Badge>
+              </td>
+            </tr>
           </tbody>
         </table>
       </CardContent>

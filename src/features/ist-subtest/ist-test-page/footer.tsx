@@ -5,10 +5,10 @@ interface FooterProps {
   handleBackToSelection: () => void;
   handleCompleteSubtest: () => void;
   isSubtestCompleted: () => boolean;
-  isSubmitted: boolean
+  isSubmitted: boolean;
 }
 
-export default function Footer({
+export function Footer({
   handleBackToSelection,
   handleCompleteSubtest,
   isSubtestCompleted,
@@ -25,7 +25,7 @@ export default function Footer({
       </Button>
       <Button
         onClick={handleCompleteSubtest}
-        disabled={!isSubtestCompleted() || isSubmitted}
+        // disabled={!isSubtestCompleted() || isSubmitted}
         isLoading={isSubmitted}
         className="order-1 w-full px-4 sm:order-2 sm:w-auto sm:px-8"
       >

@@ -2,6 +2,7 @@ import { getAge } from "@/lib/date-utils";
 import { IstIQ } from "@/lib/ist-utils";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import type { IstResult } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 interface DefaultDataSchema {
@@ -141,13 +142,6 @@ export const istResultRouter = createTRPCRouter({
               (total, result) => total + (result.answeredCorrectly ?? 0),
               0,
             );
-            const age = getAge(invitation?.testerProfile?.dateOfBirth);
-            const standardIq = await ctx.db.istStandardIqScore.findFirst({
-              where: {
-                from: { lte: age }, // from <= age
-                to: { gte: age }, // to >= age
-              },
-            });
 
             const mappedResult = updatedResult.reduce(
               (map, result) => {
@@ -202,6 +196,14 @@ export const istResultRouter = createTRPCRouter({
                 return total + score;
               }, 0) / keyNumericalAbility.length;
 
+            const age = getAge(invitation?.testerProfile?.dateOfBirth);
+            const standardIq = await ctx.db.istStandardIqScore.findFirst({
+              where: {
+                from: { lte: sumRawScore }, // from <= age
+                to: { gte: sumRawScore }, // to >= age
+                age,
+              },
+            });
             if (standardIq) {
               const totalIQ = IstIQ(standardIq.standarizedScore);
               await ctx.db.istResultSummary.create({
@@ -229,11 +231,17 @@ export const istResultRouter = createTRPCRouter({
   getSummaryScoreResult: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const summary = await ctx.db.istResult.findMany({
+      const summary = await ctx.db.istResultSummary.findUnique({
         where: {
           istInvitationId: input,
         },
       });
+      if (!summary)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid Invitation",
+        });
+      return summary;
     }),
   getAnswerDetailsResult: protectedProcedure
     .input(z.string())
@@ -260,6 +268,7 @@ export const istResultRouter = createTRPCRouter({
         name: answer.IstSubtestTemplate.name,
         fullName: answer.IstSubtestTemplate.description,
         rawScore: answer.answeredCorrectly,
+        standarizedScore: answer.standarizedScore,
         totalAnswered: answer.answered,
         correctAnswers: answer.answeredCorrectly,
         incorrectAnswers: answer.answeredWrong,

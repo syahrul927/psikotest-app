@@ -183,7 +183,7 @@ model IstResultSummary {
     numericalAbility       Float
     sumRawScore            Float
     sumStandarizedScore    Float
-    totalIQ                Int
+    totalIQ                Float
 }
 
 model IstResult {

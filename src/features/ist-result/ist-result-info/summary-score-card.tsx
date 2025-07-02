@@ -12,6 +12,17 @@ import {
   ChartContainer,
   ChartTooltip,
 } from "@/components/ui/chart";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useIstResultDetailInfo } from "@/hooks/use-ist-result-detail";
+import { localDate } from "@/lib/date-utils";
+import {
+  categorizeIq,
+  classificationCriteriaByIQ,
+  getBadgeVariant,
+} from "@/lib/ist-utils";
+import { StandardSchemaV1Error } from "@trpc/server";
+import { Fullscreen } from "lucide-react";
+import { useMemo } from "react";
 import {
   PolarAngleAxis,
   PolarGrid,
@@ -19,6 +30,7 @@ import {
   Radar,
   RadarChart,
 } from "recharts";
+import type { map } from "underscore";
 
 interface RadarDataItem {
   subtest: string;
@@ -27,8 +39,7 @@ interface RadarDataItem {
 }
 
 interface SummaryScoreCardProps {
-  iqScore: number;
-  radarData: RadarDataItem[];
+  slug: string;
 }
 
 const chartConfig = {
@@ -38,24 +49,34 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function SummaryScoreCard({
-  iqScore,
-  radarData,
-}: SummaryScoreCardProps) {
+export function SummaryScoreCard({ slug }: SummaryScoreCardProps) {
+  const { data, isLoading, summary } = useIstResultDetailInfo();
+  const radarData: RadarDataItem[] = useMemo(() => {
+    return data.map((d) => ({
+      subtest: d.name,
+      score: d.rawScore ?? 0,
+      fullName: d.fullName,
+    }));
+  }, [data]);
+  if (isLoading) {
+    return <Skeleton className="row-span-2 h-96 w-full" />;
+  }
   return (
     <Card className="row-span-2">
-      <CardHeader className="border-b pb-3">
-        <CardTitle className="text-xl font-medium">Summary Score</CardTitle>
+      <CardHeader className="border-b">
+        <CardTitle>IQ Score</CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
         {/* IQ Score Summary */}
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <div className="text-3xl font-bold">160</div>
+            <div className="text-3xl font-bold">{summary?.totalIQ}</div>
             <div className="text-muted-foreground text-sm">IQ Score</div>
           </div>
           <div className="text-right">
-            <Badge variant={"positive"}>Very Superior</Badge>
+            <Badge variant={getBadgeVariant(categorizeIq(summary?.totalIQ))}>
+              {categorizeIq(summary?.totalIQ)}
+            </Badge>
           </div>
         </div>
 
@@ -63,13 +84,13 @@ export function SummaryScoreCard({
         <div className="mb-6">
           <ChartContainer
             config={chartConfig}
-            className="mx-auto aspect-square max-h-96"
+            className="mx-auto aspect-square h-full"
           >
             <RadarChart data={radarData}>
               <ChartTooltip
                 content={({ active, payload }) => {
-                  if (active && payload && payload.length) {
-                    const data = payload[0]?.payload;
+                  if (active && payload?.length) {
+                    const data = payload[0]?.payload as RadarDataItem;
                     return (
                       <div className="bg-background rounded-lg border p-2 shadow-md">
                         <div className="grid gap-2">
@@ -109,38 +130,7 @@ export function SummaryScoreCard({
             </RadarChart>
           </ChartContainer>
         </div>
-
-        {/* Top Performing Areas */}
-        <div>
-          <h4 className="mb-2 text-sm font-medium">
-            Raw Score - Standard Score
-          </h4>
-          <div className="grid grid-cols-3 gap-1">
-            {radarData.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between rounded-md border p-2"
-              >
-                <div>
-                  <div className="font-medium">{item.subtest}</div>
-                  <div className="text-muted-foreground text-xs">
-                    Score: {item.score}/20
-                  </div>
-                </div>
-                <span className="mr-3">{Math.floor((item.score * 2) / 3)}</span>
-              </div>
-            ))}
-          </div>
-        </div>
       </CardContent>
-      <CardFooter className="flex items-center justify-between border-t pt-4">
-        <div className="text-muted-foreground text-sm">
-          <span className="font-medium">Test Date:</span> June 10, 2025
-        </div>
-        <div className="text-muted-foreground text-sm">
-          <span className="font-medium">Validity:</span> High
-        </div>
-      </CardFooter>
     </Card>
   );
 }

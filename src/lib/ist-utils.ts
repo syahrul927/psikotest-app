@@ -19,8 +19,9 @@ import { z } from "zod";
  *
  * @see {@link https://en.wikipedia.org/wiki/Intelligence_quotient} for IQ scale reference
  */
-export function IstIQ(input: number): number {
+export function IstIQ(input?: number): number {
   // Clamp values below 0 and above 140
+  if (!input) return 0;
   if (input < 0) return 64;
   if (input > 140) return 160;
 
@@ -109,4 +110,54 @@ const answerSchema = z.array(
 );
 export const parseFourthAnswerTemplate = (str?: string) => {
   return str ? answerSchema.parse(JSON.parse(str)) : [];
+};
+
+export function classificationCriteriaByIQ(iq?: number) {
+  if (!iq) return "Invalid Score";
+  if (iq >= 129) {
+    return "Very Superior";
+  } else if (iq >= 120) {
+    return "Superior";
+  } else if (iq >= 110) {
+    return "High Average";
+  } else if (iq >= 90) {
+    return "Average";
+  } else {
+    return "Low Average";
+  }
+}
+export function categorizeIq(iq?: number) {
+  if (!iq) return "Invalid score";
+  if (iq >= 119) {
+    return "Very Superior";
+  } else if (iq >= 114) {
+    return "Superior";
+  } else if (iq >= 107) {
+    return "High Average";
+  } else if (iq >= 94) {
+    return "Average";
+  } else {
+    return "Low Average";
+  }
+}
+
+export const getBadgeVariant = (value: string) => {
+  switch (value.toLowerCase()) {
+    case "low":
+      return "destructive";
+    case "average":
+      return "secondary";
+    case "high":
+      return "positive";
+    case "superior":
+      return "positive";
+    case "very superior":
+      return "positive";
+    case "low average":
+      return "destructive";
+    case "high average":
+      return "positiveBlue";
+    default:
+      return "secondary";
+  }
 };

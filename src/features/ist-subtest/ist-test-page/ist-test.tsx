@@ -11,9 +11,7 @@ import { useSubmitIstAnswers } from "@/hooks/api/ist-test/use-submit-answer-ist"
 import { PAGE_URLS } from "@/lib/page-url";
 import { testData } from "@/lib/test-data";
 import { AlertCircle } from "lucide-react";
-import Footer from "./footer";
-import Header from "./header";
-import { IstTestQuestionWrapper } from "./ist-test-question-wrapper";
+import { Header, IstTestQuestionWrapper, Footer } from "@/features/ist-subtest";
 
 export function IstSelectedTest({
   slug,
@@ -26,12 +24,11 @@ export function IstSelectedTest({
   const subtestId = Number.parseInt(type);
   const { data: question } = useGetQuestionAndOptions(slug, type);
   const SUBTEST_TIME = question?.timeLimit ? question.timeLimit * 60 : 300; // Convert minutes to seconds, default to 5 minutes (300 seconds)
-  const [answers, setAnswers] = useState<{ questionId: string; answer: any }[]>(
-    [],
-  );
+  const [answers, setAnswers] = useState<
+    { questionId: string; answer: string | number[] }[]
+  >([]);
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(SUBTEST_TIME);
   const submitIstAnswers = useSubmitIstAnswers();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -46,7 +43,7 @@ export function IstSelectedTest({
   const currentSubtestData = testData[subtestId];
   const totalQuestions = question?.questions.length ?? 0;
 
-  const handleAnswer = (questionId: string, answer: any) => {
+  const handleAnswer = (questionId: string, answer: string | number[]) => {
     setAnswers((prev) => {
       const existingIndex = prev.findIndex((a) => a.questionId === questionId);
       if (existingIndex !== -1) {
@@ -95,10 +92,6 @@ export function IstSelectedTest({
     router.push(PAGE_URLS.IST_SUBTEST(slug));
   };
 
-  const handleTimeUpdate = (timeLeft: number) => {
-    setRemainingTime(timeLeft);
-  };
-
   const isSubtestCompleted = () => {
     if (!question?.questions) return false;
     // Return true if at least one question in the current subtest has an answer
@@ -109,9 +102,11 @@ export function IstSelectedTest({
       if (currentSubtestData?.type === "radio") {
         if (currentAnswer !== undefined) return true;
       } else if (currentSubtestData?.type === "text") {
-        if (currentAnswer && currentAnswer.trim() !== "") return true;
+        if (typeof currentAnswer === "string" && currentAnswer.trim() !== "")
+          return true;
       } else if (currentSubtestData?.type === "number-selection") {
-        if (currentAnswer && currentAnswer.length > 0) return true;
+        if (Array.isArray(currentAnswer) && currentAnswer.length > 0)
+          return true;
       }
     }
     return false;
@@ -151,7 +146,7 @@ export function IstSelectedTest({
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="bg-sidebar min-h-screen">
       {question ? (
         <>
           {/* Sticky Header with Timer */}
@@ -172,13 +167,6 @@ export function IstSelectedTest({
                     {question?.name}
                   </div>
                   <div>{question?.description}</div>
-                  {/* <Image
-                    src={`/contoh_soal/${type}.webp`}
-                    alt="Contoh Soal"
-                    width={500}
-                    height={300}
-                    className="mb-6 h-auto w-full rounded-lg"
-                  /> */}
                   <IstTestQuestionWrapper
                     type={type}
                     questions={question?.questions ?? []}

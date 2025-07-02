@@ -9,79 +9,32 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Logo } from "@/components/ui/logo";
 import { useGetAllSubtest } from "@/hooks/api/ist-test/use-get-all-subtest";
 import { useGetSubtestSession } from "@/hooks/api/ist-test/use-get-subtest-session";
 import { useUpdateSession } from "@/hooks/api/ist-test/use-update-session";
 import { PAGE_URLS } from "@/lib/page-url";
-import { cn } from "@/lib/utils";
-import {
-  BookOpen,
-  Brain,
-  CheckCircle,
-  CheckCircle2,
-  Clock,
-  MessageSquare,
-  Play,
-  RotateCcw,
-  Target,
-} from "lucide-react";
-import Link from "next/link";
+import { BookOpen, CheckCircle, CheckCircle2, Clock, Play } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ParticipantInfo } from "./participant-info";
-import { Logo } from "@/components/ui/logo";
 
 export function IstSubtests({ id }: { id: string }) {
   const [completedSubtests, setCompletedSubtests] = useState<string[]>([]);
   const { data: subtestist } = useGetAllSubtest();
   const { data: subtestSession } = useGetSubtestSession(id);
-  const { mutate: updateStartSession } = useUpdateSession();
+  const { mutateAsync: updateStartSession } = useUpdateSession();
+  const router = useRouter();
 
-  console.log(id)
-
-  const handleUpdateStartedTest = (subtest: string) => {
-    updateStartSession({
-      isInvitationId: id,
-      subtest,
+  const handleUpdateStartedTest = async (
+    istInvitationId: string,
+    type: string,
+  ) => {
+    await updateStartSession({
+      isInvitationId: istInvitationId,
+      subtest: type,
     });
-  };
-
-  // Map subtest types to more user-friendly descriptions and icons
-  const getSubtestInfo = (id: string) => {
-    // Convert id to number for comparison
-    const numericId = parseInt(id);
-
-    // Map specific ID ranges to types
-    if (numericId >= 1 && numericId <= 3) {
-      return {
-        description: "Pilihan Ganda",
-        icon: Target,
-        category: "Kepribadian",
-      };
-    } else if (numericId === 4) {
-      return {
-        description: "Jawaban Teks",
-        icon: MessageSquare,
-        category: "Refleksi Diri",
-      };
-    } else if (numericId >= 5 && numericId <= 6) {
-      return {
-        description: "Pola Angka",
-        icon: Brain,
-        category: "Kemampuan Kognitif",
-      };
-    } else if (numericId === 9) {
-      return {
-        description: "Pilihan Ganda",
-        icon: Target,
-        category: "Kepribadian",
-      };
-    } else {
-      return {
-        description: "Subtes Umum",
-        icon: Brain,
-        category: "Umum",
-      };
-    }
+    void router.push(PAGE_URLS.IST_SUBTEST_TEST(istInvitationId, type));
   };
 
   useEffect(() => {
@@ -94,15 +47,6 @@ export function IstSubtests({ id }: { id: string }) {
     }
   }, [subtestSession]);
 
-  // test mode
-  // useEffect(() => {
-  //   if (subtestist?.length) {
-  //     setCompletedSubtests(
-  //       subtestist.filter((_, index) => index % 2 === 0).map((item) => item.id),
-  //     );
-  //   }
-  // }, [subtestist]);
-
   return (
     <div className="bg-sidebar min-h-screen space-y-3">
       <div className="bg-background/80 sticky top-0 z-50 border-b shadow-sm backdrop-blur-lg">
@@ -114,10 +58,9 @@ export function IstSubtests({ id }: { id: string }) {
         <ParticipantInfo slug={id} />
 
         {/* Subtests Grid */}
-        <div className="mb-12 grid grid-cols-1 items-center justify-center gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mb-12 grid grid-cols-1 items-center justify-center gap-3 md:grid-cols-2 xl:grid-cols-4">
           {subtestist?.map((subtest) => {
             const isCompleted = completedSubtests.includes(subtest.id);
-            const subtestInfo = getSubtestInfo(subtest.id);
 
             return (
               <Card
@@ -158,26 +101,23 @@ export function IstSubtests({ id }: { id: string }) {
                   </div>
 
                   <div className="flex w-full space-x-1">
-                    <Link
-                      href={PAGE_URLS.IST_SUBTEST_TEST_TRAINING(id, subtest.id)}
-                    >
-                      <Button variant="outline" disabled={isCompleted}>
-                        <RotateCcw className="h-4 w-4" />
-                        <span>Latihan</span>
-                      </Button>
-                    </Link>
-                    <Link href={PAGE_URLS.IST_SUBTEST_TEST(id, subtest.id)}>
+                    {isCompleted ? (
                       <Button
-                        onClick={() => handleUpdateStartedTest(subtest.id)}
-                        disabled={isCompleted}
-                        className={cn(
-                          isCompleted && "dark:bg-emeralrd-400 bg-emerald-600",
-                        )}
+                        disabled
+                        className="w-full cursor-not-allowed bg-emerald-600 dark:bg-emerald-400"
                       >
                         <Play className="h-4 w-4" />
                         <span>Mulai Subtes</span>
                       </Button>
-                    </Link>
+                    ) : (
+                      <Button
+                        className="w-full"
+                        onClick={() => handleUpdateStartedTest(id, subtest.id)}
+                      >
+                        <Play className="h-4 w-4" />
+                        <span>Mulai Subtes</span>
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>

@@ -2,7 +2,7 @@
 import type {
   IstReviewFormWrapperDataProps,
   IstReviewFormWrapperProps,
-} from "@/features/ist-review/ist-review-form/types";
+} from "@/features/ist-review/";
 import React, {
   createContext,
   useContext,

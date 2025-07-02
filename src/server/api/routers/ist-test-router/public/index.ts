@@ -140,9 +140,11 @@ export const istSubtestRouter = createTRPCRouter({
 
       return {
         ...result,
-        questions: session.questionOrder.map((question) =>
-          result.questions.find((item) => item.id === question),
-        ),
+        questions: session.questionOrder
+          .map((question) =>
+            result.questions.find((item) => item.id === question),
+          )
+          .filter((question) => question != undefined),
         istResultId,
       };
     }),
@@ -238,6 +240,22 @@ export const istSubtestRouter = createTRPCRouter({
             subtestTemplateId: istResult.subtestTemplateId,
           },
           data: { submittedAt: new Date() },
+        });
+      }
+
+      const totalResult = await ctx.db.istResult.count({
+        where: {
+          istInvitationId: istResult?.istInvitationId,
+        },
+      });
+      if (totalResult === 9) {
+        await ctx.db.istInvitation.update({
+          where: {
+            id: istResult?.istInvitationId,
+          },
+          data: {
+            status: "AWAITING_REVIEW",
+          },
         });
       }
 

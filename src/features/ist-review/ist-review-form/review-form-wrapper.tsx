@@ -23,7 +23,9 @@ export const getComponentByType = (
   }
 
   // Optional: Fallback
-  return () => <div>Unknown Type: {type}</div>;
+  const FallbackComponent = () => <div>Unknown Type: {type}</div>;
+  FallbackComponent.displayName = `FallbackComponent_${type}`;
+  return FallbackComponent;
 };
 export const IstReviewFormWrapper = (props: IstReviewFormWrapperProps) => {
   const ReviewItem = getComponentByType(props.type);

@@ -4,3 +4,4 @@ export * from "./review-form-radio";
 export * from "./review-form-text";
 export * from "./review-form-number";
 export * from "./review-parent";
+export * from "./types";
