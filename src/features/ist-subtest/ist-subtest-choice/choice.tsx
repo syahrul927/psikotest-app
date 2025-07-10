@@ -18,6 +18,7 @@ import { BookOpen, CheckCircle, CheckCircle2, Clock, Play } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ParticipantInfo } from "./participant-info";
+import ConfirmationDialog from "./confirmation-dialog";
 
 export function IstSubtests({ id }: { id: string }) {
   const [completedSubtests, setCompletedSubtests] = useState<string[]>([]);
@@ -110,13 +111,23 @@ export function IstSubtests({ id }: { id: string }) {
                         <span>Mulai Subtes</span>
                       </Button>
                     ) : (
-                      <Button
-                        className="w-full"
-                        onClick={() => handleUpdateStartedTest(id, subtest.id)}
+                      <ConfirmationDialog
+                        onConfirm={() =>
+                          handleUpdateStartedTest(id, subtest.id)
+                        }
+                        instruction={subtest.instruction}
+                        informationData={{
+                          name: subtest.name,
+                          description: subtest.description,
+                          duration: subtest.timeLimit,
+                          totalQuestion: subtest._count.questions,
+                        }}
                       >
-                        <Play className="h-4 w-4" />
-                        <span>Mulai Subtes</span>
-                      </Button>
+                        <Button className="w-full">
+                          <Play className="h-4 w-4" />
+                          <span>Mulai Test</span>
+                        </Button>
+                      </ConfirmationDialog>
                     )}
                   </div>
                 </CardContent>

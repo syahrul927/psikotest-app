@@ -16,6 +16,9 @@ export const istSubtestRouter = createTRPCRouter({
     }),
   getAllSubtest: publicProcedure.query(async ({ ctx }) => {
     const template = await ctx.db.istSubtestTemplate.findMany({
+      orderBy: {
+        id: "asc",
+      },
       include: {
         _count: {
           select: {

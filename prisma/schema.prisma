@@ -221,6 +221,7 @@ model IstSubtestTemplate {
     id                String                @id @default(cuid())
     name              String
     description       String                @db.Text // markdown
+    instruction       String?               @db.Text
     timeLimit         Int // in seconds (or minutes — your choice)
     questions         IstQuestionTemplate[]
     createdAt         DateTime              @default(now()) @db.Timestamptz(3)
