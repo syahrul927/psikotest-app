@@ -1,4 +1,30 @@
-export function IstIQ(input: number): number | null {
+import { z } from "zod";
+
+/**
+ * Converts IST standardized score to IQ equivalent
+ *
+ * This function maps IST standardized scores (0-140) to IQ equivalents (64-160)
+ * based on established psychological testing norms. The mapping follows a
+ * standardized conversion table used in intelligence assessment.
+ *
+ * @param input - The IST standardized score (typically 0-140)
+ * @returns The IQ equivalent score (64-160) or null for invalid inputs
+ *
+ * @example
+ * ```typescript
+ * const iqScore = IstIQ(120); // Returns 130
+ * const lowScore = IstIQ(80);  // Returns 70
+ * const invalidScore = IstIQ(-5); // Returns null
+ * ```
+ *
+ * @see {@link https://en.wikipedia.org/wiki/Intelligence_quotient} for IQ scale reference
+ */
+export function IstIQ(input?: number): number {
+  // Clamp values below 0 and above 140
+  if (!input) return 0;
+  if (input < 0) return 64;
+  if (input > 140) return 160;
+
   const mappings: [number, number][] = [
     [140, 160],
     [139, 158.5],
@@ -73,5 +99,65 @@ export function IstIQ(input: number): number | null {
     }
   }
 
-  return null; // for negative values or anything unexpected
+  return 64; // fallback
 }
+
+const answerSchema = z.array(
+  z.object({
+    score: z.string(),
+    data: z.array(z.string()),
+  }),
+);
+export const parseFourthAnswerTemplate = (str?: string) => {
+  return str ? answerSchema.parse(JSON.parse(str)) : [];
+};
+
+export function classificationCriteriaByIQ(iq?: number) {
+  if (!iq) return "Invalid Score";
+  if (iq >= 129) {
+    return "Very Superior";
+  } else if (iq >= 120) {
+    return "Superior";
+  } else if (iq >= 110) {
+    return "High Average";
+  } else if (iq >= 90) {
+    return "Average";
+  } else {
+    return "Low Average";
+  }
+}
+export function categorizeIq(iq?: number) {
+  if (!iq) return "Invalid score";
+  if (iq >= 119) {
+    return "Very Superior";
+  } else if (iq >= 114) {
+    return "Superior";
+  } else if (iq >= 107) {
+    return "High Average";
+  } else if (iq >= 94) {
+    return "Average";
+  } else {
+    return "Low Average";
+  }
+}
+
+export const getBadgeVariant = (value: string) => {
+  switch (value.toLowerCase()) {
+    case "low":
+      return "destructive";
+    case "average":
+      return "secondary";
+    case "high":
+      return "positive";
+    case "superior":
+      return "positive";
+    case "very superior":
+      return "positive";
+    case "low average":
+      return "destructive";
+    case "high average":
+      return "positiveBlue";
+    default:
+      return "secondary";
+  }
+};

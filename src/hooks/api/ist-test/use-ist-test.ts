@@ -1,5 +1,5 @@
 import { api } from "@/trpc/react";
 
-export const useGetQuestionAndOptions = (id: string) => {
-  return api.istSubtest.getIstQuestionTemplateById.useQuery({subtest: id});
+export const useGetQuestionAndOptions = (invitationId: string, subtestId: string) => {
+  return api.istSubtest.getIstQuestionTemplateById.useQuery({invitationId: invitationId,subtestId: subtestId});
 };

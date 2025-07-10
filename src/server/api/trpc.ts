@@ -110,10 +110,28 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
+/**
+ * Guest procedure for test-taking functionality
+ * 
+ * This procedure is used for public test-taking routes where users don't need to be authenticated
+ * but may need access to specific test sessions through secret keys or invitation tokens.
+ * 
+ * @example
+ * ```typescript
+ * export const findInvitation = guestProcedure
+ *   .input(z.object({ secretKey: z.string() }))
+ *   .query(async ({ input, ctx }) => {
+ *     return await ctx.db.istInvitation.findFirst({
+ *       where: { secretKey: input.secretKey }
+ *     });
+ *   });
+ * ```
+ */
 export const guestProcedure = t.procedure
   .use(timingMiddleware)
   .use(({ ctx, next }) => {
-    // TODO validate the data token guest
+    // TODO: Implement guest token validation for enhanced security
+    // This could include validating invitation tokens or rate limiting
     return next({
       ctx,
     });
