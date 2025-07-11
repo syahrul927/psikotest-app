@@ -123,19 +123,6 @@ export const IstInvitationConfirmation = ({
                       />
                       {isLoading ? "Memverifikasi..." : "Lanjutkan"}
                     </Button>
-                    <p className="text-muted-foreground text-xs text-wrap">
-                      Belum tau cara kerja IST? Klik
-                      <Link
-                        href={PAGE_URLS.KRAEPELIN_TRAINING}
-                        className={cn(
-                          buttonVariants({ variant: "link" }),
-
-                          "p-0 text-xs underline",
-                        )}
-                      >
-                        &nbsp;disini&nbsp;
-                      </Link>
-                    </p>
                   </div>
                 </div>
               </form>

@@ -22,6 +22,7 @@ export const PAGE_URLS = {
   IST_SUBTEST_TEST_TRAINING: (id: string, type: string) =>
     `/guest/ist/${id}/subtest/test/${type}/training`,
   IST_TEST_CONFIRMATION: (id: string) => `/guest/ist/${id}/confirmation`,
+  IST_THANKS: "/guest/ist/thanks",
 
   // Kraepelin
   KRAEPELIN_INVITATION: "/kraepelin-invitation",

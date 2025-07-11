@@ -262,6 +262,6 @@ export const istSubtestRouter = createTRPCRouter({
         });
       }
 
-      return { success: true };
+      return { success: true, totalResult };
     }),
 });
