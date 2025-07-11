@@ -29,10 +29,8 @@ export function IstSelectedTest({
   >([]);
   const [timerActive, setTimerActive] = useState(true);
   const [timeExpired, setTimeExpired] = useState(false);
-  const submitIstAnswers = useSubmitIstAnswers();
+  const { mutateAsync } = useSubmitIstAnswers();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  console.log("ini jawaban: ", answers);
 
   // Validate subtest ID
   if (isNaN(subtestId) || subtestId < 0 || subtestId > 9) {
@@ -66,7 +64,7 @@ export function IstSelectedTest({
     if (!question?.istResultId) return;
     setIsSubmitting(true);
     try {
-      await submitIstAnswers.mutateAsync({
+      const response = await mutateAsync({
         istResultId: question.istResultId,
         answers: answers.map((a) => ({
           questionId: a.questionId,
@@ -74,6 +72,9 @@ export function IstSelectedTest({
             typeof a.answer === "string" ? a.answer : JSON.stringify(a.answer),
         })),
       });
+      if (response.totalResult === 9) {
+        router.push(PAGE_URLS.IST_THANKS);
+      }
       router.push(PAGE_URLS.IST_SUBTEST(slug));
     } catch (e) {
       // Optionally handle error (e.g., show toast)
