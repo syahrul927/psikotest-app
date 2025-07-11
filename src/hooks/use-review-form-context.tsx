@@ -15,6 +15,7 @@ import { useSubmitCorrection } from "./api/ist-review/use-submit-correction";
 
 interface ReviewFormContextType {
   reviewData: IstReviewFormWrapperProps[];
+  unTouchedFourthForm: boolean;
   isLoadingGetAll?: boolean;
   isLoadingCorrection?: {
     id?: string;
@@ -46,6 +47,13 @@ export const ReviewFormProvider: React.FC<{
     useSubmitCorrection();
   const [currentCorrectionId, setCurrentCorrectionId] = useState<string>();
   const [reviewData, setReviewData] = useState<IstReviewFormWrapperProps[]>([]);
+  const unTouchedFourthForm = useMemo(() => {
+    const fourthForm = reviewData.find((item) => item.type === "4");
+    if (fourthForm) {
+      return fourthForm.data.every((data) => data.isCorrect === null);
+    }
+    return false;
+  }, [reviewData]);
 
   const isLoadingCorrection = useMemo(
     () => ({
@@ -98,7 +106,13 @@ export const ReviewFormProvider: React.FC<{
 
   return (
     <ReviewFormContext.Provider
-      value={{ reviewData, updateData, isLoadingGetAll, isLoadingCorrection }}
+      value={{
+        reviewData,
+        updateData,
+        isLoadingGetAll,
+        isLoadingCorrection,
+        unTouchedFourthForm,
+      }}
     >
       {children}
     </ReviewFormContext.Provider>

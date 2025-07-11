@@ -10,6 +10,8 @@ import { publicIstInvitationRouter } from "./routers/ist-invitation-router/publi
 import { istSubtestRouter } from "./routers/ist-test-router";
 import { istReviewRouter } from "./routers/ist-review-router";
 import { istResultRouter } from "./routers/ist-result-router";
+import { istSettingsRouter } from "./routers/ist-settings-router";
+import { dashboardRouter } from "./routers/dashboard-router";
 
 /**
  * This is the primary router for your server.
@@ -25,7 +27,9 @@ export const appRouter = createTRPCRouter({
   istReview: istReviewRouter,
   istResult: istResultRouter,
   istSubtest: istSubtestRouter,
+  istSettings: istSettingsRouter,
   publicIstInvitation: publicIstInvitationRouter,
+  dashboard: dashboardRouter,
 });
 
 // export type definition of API

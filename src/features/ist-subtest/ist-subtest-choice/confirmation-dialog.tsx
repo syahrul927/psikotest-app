@@ -112,7 +112,7 @@ const ConfirmationDialog = React.forwardRef<
                 {/* Custom Instruction Section with Markdown */}
                 {instruction && (
                   <div className="rounded-lg border bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/30">
-                    <article className="prose prose-sm">
+                    <article className="prose prose-sm dark:prose-invert">
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
@@ -137,10 +137,8 @@ const ConfirmationDialog = React.forwardRef<
                 {/* Warning Section */}
                 <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30">
                   <div className="prose prose-sm dark:prose-invert max-w-none">
-                    <h4 className="mb-2 font-semibold text-amber-800 dark:text-amber-200">
-                      Perhatian Penting:
-                    </h4>
-                    <ul className="space-y-1 text-amber-700 dark:text-amber-300">
+                    <h4 className="mb-2 font-semibold">Perhatian Penting:</h4>
+                    <ul className="space-y-1">
                       <li>Setelah memulai, timer akan berjalan otomatis</li>
                       <li>Pastikan koneksi internet stabil</li>
                       <li>Jangan menutup atau refresh halaman selama tes</li>

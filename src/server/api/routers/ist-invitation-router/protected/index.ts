@@ -67,7 +67,8 @@ export const istInvitationRouter = createTRPCRouter({
       invitations: istInvitationRaw,
       pending: istInvitation.PENDING?.length,
       onprogress: istInvitation.ONPROGRESS?.length,
-      done: istInvitation.AWAITING_REVIEW?.length,
+      done: istInvitation.DONE?.length,
+      awaitingreview: istInvitation.AWAITING_REVIEW?.length,
       total: istInvitationRaw.length,
     };
   }),

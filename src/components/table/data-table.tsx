@@ -34,6 +34,8 @@ export interface DataTableProps<TData, TValue> {
   data: TData[];
   isLoading?: boolean;
   toolbar?: (props: DataTableToolbarProps<TData>) => React.ReactNode;
+  enablePagination?: boolean;
+  meta?: Record<string, unknown>;
 }
 
 export function DataTable<TData, TValue>({
@@ -41,6 +43,8 @@ export function DataTable<TData, TValue>({
   data,
   toolbar: DataTableToolbar,
   isLoading,
+  enablePagination = true,
+  meta,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -70,6 +74,7 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    meta,
   });
 
   if (isLoading) {
@@ -128,7 +133,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      {enablePagination && <DataTablePagination table={table} />}
     </div>
   );
 }

@@ -12,16 +12,19 @@ import {
   StopwatchIcon,
 } from "@radix-ui/react-icons";
 import { IstInvitationSummarySkeleton } from "./summary-skeleton";
+import { CircleDashed } from "lucide-react";
 
 interface IstInvitationSummaryProps {
   pending?: number;
   done?: number;
+  awaitingReview?: number;
   onprogress?: number;
   total?: number;
   isLoading?: boolean;
 }
 export const IstInvitationSummary = ({
   pending = 0,
+  awaitingReview = 0,
   done = 0,
   onprogress = 0,
   total = 0,
@@ -31,7 +34,7 @@ export const IstInvitationSummary = ({
     return <IstInvitationSummarySkeleton />;
   }
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-1 md:grid-cols-3 lg:grid-cols-5">
       <Card className="">
         <CardHeader className="relative">
           <CardDescription>Pending</CardDescription>
@@ -55,6 +58,19 @@ export const IstInvitationSummary = ({
         </CardHeader>
         <CardFooter className="text-muted-foreground text-sm">
           Sedang dikerjakan
+        </CardFooter>
+      </Card>
+
+      <Card className="">
+        <CardHeader className="relative">
+          <CardDescription>Awaiting Review</CardDescription>
+          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+            {awaitingReview}
+          </CardTitle>
+          <CircleDashed className="text-muted-foreground absolute top-1.5 right-6" />
+        </CardHeader>
+        <CardFooter className="text-muted-foreground text-sm">
+          Menunggu di Review
         </CardFooter>
       </Card>
 

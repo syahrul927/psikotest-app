@@ -8,6 +8,35 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 export const istReviewRouter = createTRPCRouter({
+  completeReview: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input: invitationId }) => {
+      // Check if invitation exists
+      const invitation = await ctx.db.istInvitation.findUnique({
+        where: {
+          id: invitationId,
+        },
+      });
+
+      if (!invitation) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Undangan tidak ditemukan.",
+        });
+      }
+
+      // Update invitation status to DONE
+      await ctx.db.istInvitation.update({
+        where: {
+          id: invitationId,
+        },
+        data: {
+          status: "DONE",
+        },
+      });
+
+      return { success: true, message: "Review berhasil diselesaikan." };
+    }),
   getProfileInvitation: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input: invitationId }) => {

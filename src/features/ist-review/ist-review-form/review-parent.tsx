@@ -16,10 +16,16 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useReviewForm } from "@/hooks/use-review-form-context";
+import { cn } from "@/lib/utils";
 import { IstReviewFormWrapper } from "./review-form-wrapper";
+import type { IstReviewFormWrapperDataProps } from "./types";
 
 export const IstReviewFormParent = ({ slug }: { slug: string }) => {
-  const { isLoadingGetAll: isLoading, reviewData: data } = useReviewForm();
+  const {
+    isLoadingGetAll: isLoading,
+    reviewData: data,
+    unTouchedFourthForm,
+  } = useReviewForm();
 
   if (isLoading) {
     return (
@@ -36,7 +42,12 @@ export const IstReviewFormParent = ({ slug }: { slug: string }) => {
       {data?.map((item) => {
         return (
           <AccordionItem key={item.id} value={item.id}>
-            <Card>
+            <Card
+              className={cn(
+                unTouchedFourthForm &&
+                  "border-amber-600 bg-amber-200/30 dark:border-amber-400 dark:bg-amber-900/30",
+              )}
+            >
               <CardHeader className="relative">
                 <AccordionTrigger className="cursor-pointer py-0">
                   <CardTitle className="flex-1">{item.title}</CardTitle>

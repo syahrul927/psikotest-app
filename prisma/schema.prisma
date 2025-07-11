@@ -222,7 +222,7 @@ model IstSubtestTemplate {
     name              String
     description       String                @db.Text // markdown
     instruction       String?               @db.Text
-    timeLimit         Int // in seconds (or minutes — your choice)
+    timeLimit         Int // in  minutes
     questions         IstQuestionTemplate[]
     createdAt         DateTime              @default(now()) @db.Timestamptz(3)
     updatedAt         DateTime              @updatedAt @db.Timestamptz(3)
