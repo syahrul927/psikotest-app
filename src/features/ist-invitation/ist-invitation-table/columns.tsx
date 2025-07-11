@@ -16,8 +16,10 @@ import { localDate } from "@/lib/date-utils";
 import { PAGE_URLS } from "@/lib/page-url";
 import { type ColumnDef, type Row } from "@tanstack/react-table";
 import {
+  CheckCheck,
   CopyIcon,
   EyeIcon,
+  ListCheck,
   MoreHorizontalIcon,
   Settings2,
   TrashIcon,
@@ -26,6 +28,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { IstInvitationStatus, type IstInvitationTableProps } from "./schema";
 import { useIstInvFormDialogController } from "../ist-invitation-form";
+import { cn } from "@/lib/utils";
 
 export const columnsIstInvitation: ColumnDef<IstInvitationTableProps>[] = [
   {
@@ -57,10 +60,13 @@ export const columnsIstInvitation: ColumnDef<IstInvitationTableProps>[] = [
         return null;
       }
       return (
-        <div className="flex w-[200px] items-center">
-          {status.icon && (
-            <status.icon className="text-muted-foreground mr-2 h-4 w-4" />
+        <div
+          className={cn(
+            "flex w-fit items-center rounded-sm border px-2 py-0.5",
+            status.style,
           )}
+        >
+          {status.icon && <status.icon className="mr-2 h-4 w-4" />}
           <span className="font-medium">{status.label}</span>
         </div>
       );
@@ -119,8 +125,27 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
             <CopyIcon size={16} className="mr-2" />
             <span>Share</span>
           </DropdownMenuItem>
-          <DropdownMenuLabel>Action</DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          {(status === "AWAITING_REVIEW" || status === "DONE") && (
+            <DropdownMenuLabel>Action</DropdownMenuLabel>
+          )}
+          {status === "AWAITING_REVIEW" && (
+            <>
+              <DropdownMenuItem asChild>
+                <Link href={PAGE_URLS.IST_INVITATION_REVIEW(row.original.id)}>
+                  <ListCheck size={16} className="mr-2" />
+                  <span>Review</span>
+                </Link>
+              </DropdownMenuItem>
+            </>
+          )}
+          {status === "DONE" && (
+            <DropdownMenuItem asChild>
+              <Link href={PAGE_URLS.IST_INVITATION_RESULT(row.original.id)}>
+                <CheckCheck size={16} className="mr-2" />
+                <span>Hasil Test</span>
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuGroup>
             {status === "PENDING" ? (
               <DropdownMenuItem onClick={() => openDialog(row.original.id)}>
@@ -130,8 +155,11 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
             ) : null}
             {status !== "DONE" ? (
               <AlertDialogTrigger asChild className="flex w-full justify-start">
-                <DropdownMenuItem className="text-red-600">
-                  <TrashIcon size={16} className="mr-2" />
+                <DropdownMenuItem className="text-destructive">
+                  <TrashIcon
+                    size={16}
+                    className="mr-2 text-current hover:text-current"
+                  />
                   <span>Delete</span>
                 </DropdownMenuItem>
               </AlertDialogTrigger>

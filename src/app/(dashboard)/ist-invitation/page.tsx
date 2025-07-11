@@ -1,5 +1,4 @@
 "use client";
-import { DevelopmentFlag } from "@/components/layout/development-flag";
 import {
   IstInvFormDialogProvider,
   IstInvitationForm,
@@ -27,6 +26,7 @@ export default function IstInvitationPage() {
           isLoading={isLoading}
           total={data?.total}
           done={data?.done}
+          awaitingReview={data?.awaitingreview}
           pending={data?.pending}
           onprogress={data?.onprogress}
         />

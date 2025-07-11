@@ -29,6 +29,7 @@ import {
   KraepelinInvitationStatus,
   type KraepelinInvitationTableProps,
 } from "./schema";
+import { cn } from "@/lib/utils";
 
 export const columnsInvitation: ColumnDef<KraepelinInvitationTableProps>[] = [
   {
@@ -60,10 +61,13 @@ export const columnsInvitation: ColumnDef<KraepelinInvitationTableProps>[] = [
         return null;
       }
       return (
-        <div className="flex w-[200px] items-center">
-          {status.icon && (
-            <status.icon className="text-muted-foreground mr-2 h-4 w-4" />
+        <div
+          className={cn(
+            "flex w-fit items-center rounded-sm px-2 py-0.5",
+            status.style,
           )}
+        >
+          {status.icon && <status.icon className="mr-2 h-4 w-4" />}
           <span className="font-medium">{status.label}</span>
         </div>
       );

@@ -7,95 +7,143 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowBottomRightIcon, ArrowTopRightIcon } from "@radix-ui/react-icons";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useGetDashboardMetrics } from "@/hooks/api/dashboard/use-get-dashboard-metrics";
+import { ArrowBottomRightIcon, ArrowTopRightIcon, ClockIcon, CheckIcon, ExclamationTriangleIcon, BarChartIcon } from "@radix-ui/react-icons";
 
 export function SectionCards() {
+  const { data: metrics, isLoading } = useGetDashboardMetrics();
+
+  if (isLoading) {
+    return <SectionCardsSkeleton />;
+  }
+
+  if (!metrics) {
+    return null;
+  }
+
+  const completionRate = metrics.completionRate || 0;
+  const isCompletionRateGood = completionRate >= 70;
+
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
+          <CardDescription>Total Tes Aktif</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
+            {metrics.totalActiveTests}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <ArrowTopRightIcon />
-              +12.5%
+            <Badge variant="positiveBlue">
+              <ClockIcon />
+              Aktif
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <ArrowTopRightIcon className="size-4" />
+            IST: {metrics.breakdown.ist.pending + metrics.breakdown.ist.onProgress} | Kraepelin: {metrics.breakdown.kraepelin.active}
           </div>
           <div className="text-muted-foreground">
-            Visitors for the last 6 months
+            Tes yang sedang berjalan atau menunggu
           </div>
         </CardFooter>
       </Card>
+      
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>New Customers</CardDescription>
+          <CardDescription>Menunggu Review</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
+            {metrics.testsAwaitingReview}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <ArrowBottomRightIcon />
-              -20%
+            <Badge variant={metrics.testsAwaitingReview > 0 ? "destructive" : "positive"}>
+              <ExclamationTriangleIcon />
+              {metrics.testsAwaitingReview > 0 ? "Perlu Aksi" : "Clear"}
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <ArrowBottomRightIcon className="size-4" />
+            IST: {metrics.breakdown.ist.awaitingReview} | Kraepelin: {metrics.breakdown.kraepelin.awaitingReview}
           </div>
           <div className="text-muted-foreground">
-            Acquisition needs attention
+            Tes yang memerlukan review admin
           </div>
         </CardFooter>
       </Card>
+
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
+          <CardDescription>Selesai Bulan Ini</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
+            {metrics.completedThisMonth}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <ArrowTopRightIcon />
-              +12.5%
+            <Badge variant="positive">
+              <CheckIcon />
+              Selesai
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <ArrowTopRightIcon className="size-4" />
+            Produktivitas bulan ini <BarChartIcon className="size-4" />
           </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
+          <div className="text-muted-foreground">
+            Total tes yang diselesaikan
+          </div>
         </CardFooter>
       </Card>
+
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
+          <CardDescription>Tingkat Penyelesaian</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
+            {completionRate.toFixed(1)}%
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <ArrowTopRightIcon />
-              +4.5%
+            <Badge variant={isCompletionRateGood ? "positive" : "destructive"}>
+              {isCompletionRateGood ? <ArrowTopRightIcon /> : <ArrowBottomRightIcon />}
+              {isCompletionRateGood ? "Baik" : "Perlu Perhatian"}
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase <ArrowTopRightIcon className="size-4" />
+            {isCompletionRateGood ? "Performa sistem baik" : "Banyak tes belum selesai"}
           </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
+          <div className="text-muted-foreground">
+            Efisiensi penyelesaian tes
+          </div>
         </CardFooter>
       </Card>
+    </div>
+  );
+}
+
+function SectionCardsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Card key={i} className="@container/card">
+          <CardHeader>
+            <CardDescription>
+              <Skeleton className="h-4 w-24" />
+            </CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              <Skeleton className="h-8 w-16" />
+            </CardTitle>
+            <CardAction>
+              <Skeleton className="h-6 w-16" />
+            </CardAction>
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1.5 text-sm">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-40" />
+          </CardFooter>
+        </Card>
+      ))}
     </div>
   );
 }

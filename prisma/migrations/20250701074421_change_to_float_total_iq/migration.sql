@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "IstResultSummary" ALTER COLUMN "totalIQ" SET DATA TYPE DOUBLE PRECISION;

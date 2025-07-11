@@ -1,6 +1,7 @@
 import type React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { useGetDetailUser } from "@/hooks/api/ist-invitation/use-get-user-detail-ist";
 
 interface ParticipantInfoProps {
   name?: string;
@@ -11,14 +12,21 @@ interface ParticipantInfoProps {
   education?: string;
 }
 
-export function ParticipantInfo({
-  name = "John Doe",
-  phone = "+1 (555) 123-4567",
-  address = "123 Main Street, New York, NY 10001",
-  dateOfBirth = "January 15, 1990",
-  placeOfBirth = "New York, USA",
-  education = "Bachelor of Science in Computer Science",
-}: ParticipantInfoProps) {
+
+export function ParticipantInfo({slug}: { slug: string}) {
+  const { data } = useGetDetailUser(slug)
+
+  console.log("ini data",data)
+  
+  const getEducationText = () => {
+    const educationId = data?.testerProfile?.educationId;
+    if (educationId === "1") return "SMA IPA";
+    if (educationId === "2") return "SMA IPS";
+    if (educationId === "3") return "S1 IPA";
+    if (educationId === "4") return "S1 IPS";
+    return educationId || "-";
+  };
+
   return (
     <Card className="relative w-full overflow-hidden">
       {/* Add the geometric pattern overlay */}
@@ -43,38 +51,49 @@ export function ParticipantInfo({
       />
 
       <CardHeader className="relative z-10">
-        <CardTitle className="text-2xl">{name}</CardTitle>
+        <CardTitle className="text-2xl">{data?.testerProfile?.name}</CardTitle>
       </CardHeader>
       <CardContent className="relative z-10 grid grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label className="text-muted-foreground text-sm font-medium">
             Phone
           </Label>
-          <p className="text-sm">{phone}</p>
+          <p className="text-sm">{data?.testerProfile?.phone}</p>
         </div>
         <div className="space-y-2">
           <Label className="text-muted-foreground text-sm font-medium">
             Date of Birth
           </Label>
-          <p className="text-sm">{dateOfBirth}</p>
+          <p className="text-sm">
+            {data?.testerProfile?.dateOfBirth 
+              ? new Date(data.testerProfile.dateOfBirth).toLocaleDateString('id-ID', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })
+              : '-'
+            }
+          </p>
         </div>
         <div className="space-y-2">
           <Label className="text-muted-foreground text-sm font-medium">
             Address
           </Label>
-          <p className="text-sm">{address}</p>
+          <p className="text-sm">{data?.testerProfile?.address}</p>
         </div>
         <div className="space-y-2">
           <Label className="text-muted-foreground text-sm font-medium">
             Place of Birth
           </Label>
-          <p className="text-sm">{placeOfBirth}</p>
+          <p className="text-sm">{data?.testerProfile?.placeOfBirth}</p>
         </div>
         <div className="col-span-2 space-y-2">
           <Label className="text-muted-foreground text-sm font-medium">
             Education
           </Label>
-          <p className="text-sm">{education}</p>
+          <p className="text-sm">
+            {getEducationText()}
+          </p>
         </div>
       </CardContent>
     </Card>

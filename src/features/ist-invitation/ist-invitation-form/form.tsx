@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useGetDetailIstInvitation } from "@/hooks/api/ist-invitation/use-get-detail-kraepelin-invitation";
+import { useGetDetailIstInvitation } from "@/hooks/api/ist-invitation/use-get-detail-ist-invitation";
 import { useSaveIstInvitation } from "@/hooks/api/ist-invitation/use-save-ist-invitation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";

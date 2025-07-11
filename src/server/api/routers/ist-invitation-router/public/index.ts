@@ -156,4 +156,15 @@ export const publicIstInvitationRouter = createTRPCRouter({
       });
       return { resultId: resultId.id };
     }),
+    getUserDetail: publicProcedure
+      .input(z.string())
+      .query(async ({ ctx, input }) => {
+        const istProfile = await ctx.db.istInvitation.findUnique({
+          where: { id: input },
+          include:{
+            testerProfile: true
+          }
+        })
+        return istProfile
+      })
 });

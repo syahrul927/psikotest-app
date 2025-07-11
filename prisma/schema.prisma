@@ -157,6 +157,7 @@ model IstInvitation {
     updatedAt         DateTime            @updatedAt @db.Timestamptz(3)
     IstSubtestSession IstSubtestSession[]
     IstResult         IstResult[]
+    IstResultSummary  IstResultSummary[]
 }
 
 model IstSubtestSession {
@@ -170,17 +171,32 @@ model IstSubtestSession {
     IstInvitation      IstInvitation       @relation(fields: [istInvitationId], references: [id])
 }
 
+model IstResultSummary {
+    id                     String        @id @default(cuid())
+    istInvitationId        String        @unique
+    IstInvitation          IstInvitation @relation(fields: [istInvitationId], references: [id])
+    thinkingFlexibility    Float
+    attentionFlexibility   Float
+    reasoningLogic         Float
+    memoryAndConcentration Float
+    analyticalSynthesis    Float
+    numericalAbility       Float
+    sumRawScore            Float
+    sumStandarizedScore    Float
+    totalIQ                Float
+}
+
 model IstResult {
     id                 String             @id @default(cuid())
     istInvitationId    String
     IstInvitation      IstInvitation      @relation(fields: [istInvitationId], references: [id])
     IstSubtestTemplate IstSubtestTemplate @relation(fields: [subtestTemplateId], references: [id])
     subtestTemplateId  String
-    answered           Int
-    missed             Int
-    answeredCorrectly  Int // RW (raw score)
-    answeredWrong      Int
-    standarizedScore   Int // SW
+    answered           Int?
+    missed             Int?
+    answeredCorrectly  Int? // RW (raw score)
+    answeredWrong      Int?
+    standarizedScore   Int? // SW
     IstResultDetail    IstResultDetail[]
     createdAt          DateTime           @default(now()) @db.Timestamptz(3)
     updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
@@ -193,6 +209,8 @@ model IstResultDetail {
     question    IstQuestionTemplate @relation(fields: [questionId], references: [id])
     questionId  String
     answer      String
+    isCorrect   Boolean?
+    score       Int?
     createdAt   DateTime            @default(now()) @db.Timestamptz(3)
 
     @@index([questionId], name: "user_question_unique")
@@ -203,7 +221,8 @@ model IstSubtestTemplate {
     id                String                @id @default(cuid())
     name              String
     description       String                @db.Text // markdown
-    timeLimit         Int // in seconds (or minutes — your choice)
+    instruction       String?               @db.Text
+    timeLimit         Int // in  minutes
     questions         IstQuestionTemplate[]
     createdAt         DateTime              @default(now()) @db.Timestamptz(3)
     updatedAt         DateTime              @updatedAt @db.Timestamptz(3)
@@ -245,6 +264,20 @@ model IstStandardScore {
     description        String
     createdAt          DateTime           @default(now()) @db.Timestamptz(3)
     updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
+
+    @@index([age])
+}
+
+model IstStandardIqScore {
+    id               String   @id @default(cuid())
+    age              Int
+    from             Int
+    to               Int
+    standarizedScore Int
+    createdAt        DateTime @default(now()) @db.Timestamptz(3)
+    updatedAt        DateTime @updatedAt @db.Timestamptz(3)
+
+    @@index([age])
 }
 
 enum StatusIstInvitation {

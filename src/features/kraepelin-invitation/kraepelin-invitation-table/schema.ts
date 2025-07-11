@@ -24,20 +24,18 @@ export const KraepelinInvitationStatus = [
     value: "PENDING",
     label: "Pending",
     icon: CircleIcon,
-    style: "text-blue-600 bg-blue-200/30 rounded-lg py-0.5 px-2 font-semibold",
+    style: "text-blue-600 bg-blue-200/30 dark:text-blue-400 dark:bg-blue-900/30",
   },
   {
     value: "DONE",
     label: "Done",
     icon: CheckCircledIcon,
-    style:
-      "text-green-600 bg-green-200/30 rounded-lg py-0.5 px-2 font-semibold",
+    style: "text-green-600 bg-green-200/30 dark:text-green-400 dark:bg-green-900/30",
   },
   {
     value: "ONPROGRESS",
     label: "On Progress",
     icon: StopwatchIcon,
-    style:
-      "text-violet-600 bg-violet-200/30 rounded-lg py-0.5 px-2 font-semibold",
+    style: "text-violet-600 bg-violet-200/30 dark:text-violet-400 dark:bg-violet-900/30",
   },
 ];
