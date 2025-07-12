@@ -82,12 +82,12 @@ const ConfirmationDialog = React.forwardRef<
             "max-h-[80dvh] max-w-lg overflow-scroll md:max-w-xl lg:max-w-7xl"
           }
         >
-          <AlertDialogHeader>
+          <AlertDialogHeader className="text-left">
             <AlertDialogTitle>{title}</AlertDialogTitle>
             <AlertDialogDescription asChild>
               <div className="space-y-4">
                 {/* Information Section */}
-                <div className="bg-muted/50 rounded-lg border p-4">
+                <div className="bg-muted/50 rounded-lg border p-4 text-left">
                   <div className="prose prose-sm dark:prose-invert max-w-none">
                     <h4 className="mb-2 font-semibold">Information:</h4>
                     <ul className="space-y-1">
@@ -112,7 +112,7 @@ const ConfirmationDialog = React.forwardRef<
                 {/* Custom Instruction Section with Markdown */}
                 {instruction && (
                   <div className="rounded-lg border bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/30">
-                    <article className="prose prose-sm dark:prose-invert">
+                    <article className="prose prose-sm dark:prose-invert text-left">
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
@@ -136,7 +136,7 @@ const ConfirmationDialog = React.forwardRef<
 
                 {/* Warning Section */}
                 <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30">
-                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                  <div className="prose prose-sm dark:prose-invert max-w-none text-left">
                     <h4 className="mb-2 font-semibold">Perhatian Penting:</h4>
                     <ul className="space-y-1">
                       <li>Setelah memulai, timer akan berjalan otomatis</li>
