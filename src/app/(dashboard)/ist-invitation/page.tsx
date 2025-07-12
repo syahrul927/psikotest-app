@@ -14,6 +14,7 @@ export default function IstInvitationPage() {
   const { mutateAsync: deleteIstInvitation } = useDeleteIstInvitation();
   const onDelete = async (id: string) => {
     await deleteIstInvitation(id);
+    await refetch();
   };
   if (!data && !isLoading) {
     return notFound();

@@ -168,7 +168,7 @@ model IstSubtestSession {
     IstSubtestTemplate IstSubtestTemplate? @relation(fields: [subtestTemplateId], references: [id])
     subtestTemplateId  String
     istInvitationId    String
-    IstInvitation      IstInvitation       @relation(fields: [istInvitationId], references: [id])
+    IstInvitation      IstInvitation       @relation(fields: [istInvitationId], references: [id], onDelete: Cascade)
 }
 
 model IstResultSummary {
