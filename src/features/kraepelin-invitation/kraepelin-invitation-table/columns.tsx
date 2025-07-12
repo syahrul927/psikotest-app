@@ -1,7 +1,5 @@
 "use client";
 
-import AlertConfirm from "@/components/ui/alert-confirm";
-import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,6 +28,7 @@ import {
   type KraepelinInvitationTableProps,
 } from "./schema";
 import { cn } from "@/lib/utils";
+import { useDeleteDialog } from "./delete-dialog-context";
 
 export const columnsInvitation: ColumnDef<KraepelinInvitationTableProps>[] = [
   {
@@ -92,65 +91,60 @@ export const columnsInvitation: ColumnDef<KraepelinInvitationTableProps>[] = [
 ];
 const CellAction = ({ row }: { row: Row<KraepelinInvitationTableProps> }) => {
   const { openDialog } = useKraepelinInvFormDialogController();
+  const { openDeleteDialog } = useDeleteDialog();
   const { name, id, onDelete, status } = row.original;
+
   return (
     <DropdownMenu>
-      <AlertDialog>
-        <DropdownMenuTrigger asChild>
-          <Button variant={"ghost"}>
-            <MoreHorizontalIcon size={16} />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>Informasi</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          {status === "DONE" ? (
-            <DropdownMenuGroup>
-              <Link href={PAGE_URLS.KRAEPELIN_INVITATION_RESULT(id)}>
-                <DropdownMenuItem>
-                  <EyeIcon size={16} className="mr-2" />
-                  <span>Hasil Test</span>
-                </DropdownMenuItem>
-              </Link>
-            </DropdownMenuGroup>
-          ) : null}
-          <DropdownMenuItem
-            onClick={async () => {
-              const base = process.env.NEXT_PUBLIC_BASE_URL;
-              const text = `Undangan Psikotest:\n${base}${PAGE_URLS.KRAEPELIN_TEST_CONFIRMATION(id)}\n\nSecret Key:\n${row.original.secretKey}`;
-              toast.success("Berhasil Copy Link ke Clipboard");
-              return navigator.clipboard.writeText(text);
-            }}
-          >
-            <CopyIcon size={16} className="mr-2" />
-            <span>Share</span>
-          </DropdownMenuItem>
+      <DropdownMenuTrigger asChild>
+        <Button variant={"ghost"}>
+          <MoreHorizontalIcon size={16} />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuLabel>Informasi</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {status === "DONE" ? (
           <DropdownMenuGroup>
-            {status === "PENDING" ? (
-              <DropdownMenuItem onClick={() => openDialog(row.original.id)}>
-                <Settings2 size={16} className="mr-2" />
-                <span>Ubah Undangan</span>
+            <Link href={PAGE_URLS.KRAEPELIN_INVITATION_RESULT(id)}>
+              <DropdownMenuItem>
+                <EyeIcon size={16} className="mr-2" />
+                <span>Hasil Test</span>
               </DropdownMenuItem>
-            ) : null}
-            {status !== "DONE" ? (
-              <AlertDialogTrigger asChild className="flex w-full justify-start">
-                <DropdownMenuItem className="text-destructive">
-                  <TrashIcon size={16} className="text-destructive mr-2" />
-                  <span>Hapus</span>
-                </DropdownMenuItem>
-              </AlertDialogTrigger>
-            ) : null}
+            </Link>
           </DropdownMenuGroup>
-        </DropdownMenuContent>
-        <AlertConfirm
-          title={`Apakah kamu yakin ingin menghapus ${name} ?`}
-          description="Ini akan menghapus permanen"
-          onAction={() => onDelete(id)}
-          variant="destructive"
+        ) : null}
+        <DropdownMenuItem
+          onClick={async () => {
+            const base = process.env.NEXT_PUBLIC_BASE_URL;
+            const text = `Undangan Psikotest:\n${base}${PAGE_URLS.KRAEPELIN_TEST_CONFIRMATION(id)}\n\nSecret Key:\n${row.original.secretKey}`;
+            toast.success("Berhasil Copy Link ke Clipboard");
+            return navigator.clipboard.writeText(text);
+          }}
         >
-          Hapus
-        </AlertConfirm>
-      </AlertDialog>
+          <CopyIcon size={16} className="mr-2" />
+          <span>Share</span>
+        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          {status === "PENDING" ? (
+            <DropdownMenuItem onClick={() => openDialog(row.original.id)}>
+              <Settings2 size={16} className="mr-2" />
+              <span>Ubah Undangan</span>
+            </DropdownMenuItem>
+          ) : null}
+          {status !== "DONE" ? (
+            <DropdownMenuItem
+              className="text-destructive"
+              onClick={() =>
+                openDeleteDialog({ id, name: name ?? "", onDelete })
+              }
+            >
+              <TrashIcon size={16} className="text-destructive mr-2" />
+              <span>Hapus</span>
+            </DropdownMenuItem>
+          ) : null}
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 };

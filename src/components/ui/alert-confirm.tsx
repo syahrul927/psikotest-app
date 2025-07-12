@@ -13,14 +13,15 @@ import { type buttonVariants } from "./button";
 
 export interface AlertDeleteProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   title: string;
   description?: string;
   onAction: () => void;
+  onCancel?: () => void;
 }
 
 const AlertConfirm = React.forwardRef<HTMLDivElement, AlertDeleteProps>(
-  ({ title, description, onAction, variant, size, children }, ref) => {
+  ({ title, description, onAction, onCancel, variant, size, children }, ref) => {
     return (
       <AlertDialogContent ref={ref}>
         <AlertDialogHeader>
@@ -30,11 +31,11 @@ const AlertConfirm = React.forwardRef<HTMLDivElement, AlertDeleteProps>(
           )}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             variant={variant}
             size={size}
-            onClick={() => onAction()}
+            onClick={onAction}
           >
             {children}
           </AlertDialogAction>

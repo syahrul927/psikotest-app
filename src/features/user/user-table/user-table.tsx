@@ -5,6 +5,8 @@ import type { UserTableProps } from "./schema";
 import { columnsUser } from "./user-columns";
 import { DataTableToolbarUser } from "./user-toolbar";
 import { UserFormDialogProvider } from "../user-form/user-form-dialog-controller";
+import { DeleteDialogProvider } from "./delete-dialog-context";
+import { DeleteDialog } from "./delete-dialog";
 
 export const UserTable = ({
   data = [],
@@ -18,18 +20,21 @@ export const UserTable = ({
   const { data: sessionData } = useSession();
   return (
     <UserFormDialogProvider>
-      <DataTable
-        isLoading={isLoading}
-        columns={columnsUser}
-        toolbar={DataTableToolbarUser}
-        data={data}
-      />
-      {sessionData?.user.id && (
-        <UserForm
-          onSuccessCallback={refetchData}
-          currentUserId={sessionData?.user.id}
+      <DeleteDialogProvider>
+        <DataTable
+          isLoading={isLoading}
+          columns={columnsUser}
+          toolbar={DataTableToolbarUser}
+          data={data}
         />
-      )}
+        <DeleteDialog />
+        {sessionData?.user.id && (
+          <UserForm
+            onSuccessCallback={refetchData}
+            currentUserId={sessionData?.user.id}
+          />
+        )}
+      </DeleteDialogProvider>
     </UserFormDialogProvider>
   );
 };
