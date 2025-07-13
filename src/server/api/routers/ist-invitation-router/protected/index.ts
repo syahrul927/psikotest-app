@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import _ from "underscore";
 import { z } from "zod";
 import { SaveIstInvitationRouterSchema } from "./type";
+import { QuestionMarkIcon } from "@radix-ui/react-icons";
 
 export const istInvitationRouter = createTRPCRouter({
   save: protectedProcedure
@@ -46,7 +47,8 @@ export const istInvitationRouter = createTRPCRouter({
             createMany: {
               data: istTypes.map((type) => ({
                 subtestTemplateId: type.id,
-                questionOrder: _.shuffle(type.questions.map((q) => q.id)),
+                // questionOrder: _.shuffle(type.questions.map((q) => q.id)),
+                questionOrder: _.sortBy(type.questions, "id").map((q) => q.id),
               })),
             },
           },
