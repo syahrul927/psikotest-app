@@ -6,12 +6,18 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { LoaderSpinner } from "@/components/ui/loading-spinner";
-import { useGetQuestionAndOptions } from "@/hooks/api/ist-test/use-ist-test";
-import { useSubmitIstAnswers } from "@/hooks/api/ist-test/use-submit-answer-ist";
+import { Footer, Header, IstTestQuestionWrapper } from "@/features/ist-subtest";
+import {
+  useGetQuestionAndOptions,
+  type QuestionAndOptionsResponseType,
+} from "@/hooks/api/ist-test/use-ist-test";
+import {
+  useSubmitIstAnswers,
+  type CompletionSubtestResponseType,
+} from "@/hooks/api/ist-test/use-submit-answer-ist";
 import { PAGE_URLS } from "@/lib/page-url";
 import { testData } from "@/lib/test-data";
 import { AlertCircle } from "lucide-react";
-import { Header, IstTestQuestionWrapper, Footer } from "@/features/ist-subtest";
 
 export function IstSelectedTest({
   slug,
@@ -62,29 +68,28 @@ export function IstSelectedTest({
 
   const handleCompleteSubtest = async () => {
     if (!question?.istResultId) return;
-    setIsSubmitting(true);
-    try {
-      const response = await mutateAsync({
-        istResultId: question.istResultId,
-        answers: answers.map((a) => ({
-          questionId: a.questionId,
-          answer:
-            typeof a.answer === "string" ? a.answer : JSON.stringify(a.answer),
-        })),
-      });
-      if (response.totalResult === 9) {
-        router.push(PAGE_URLS.IST_THANKS);
-      }
-      router.push(PAGE_URLS.IST_SUBTEST(slug));
-    } catch (e) {
-      // Optionally handle error (e.g., show toast)
-      console.error("Failed to submit answers", e);
-    } finally {
-      setIsSubmitting(false);
+    const response = await completeSubtest(question.istResultId);
+    if (response?.totalResult === 9) {
+      router.push(PAGE_URLS.IST_THANKS);
     }
+    router.push(PAGE_URLS.IST_SUBTEST(slug));
+  };
+  const completeSubtest = async (istResultId: string) => {
+    setIsSubmitting(true);
+    return await mutateAsync({
+      istResultId: istResultId,
+      answers: answers.map((a) => ({
+        questionId: a.questionId,
+        answer:
+          typeof a.answer === "string" ? a.answer : JSON.stringify(a.answer),
+      })),
+    });
   };
 
-  const handleTimeUp = () => {
+  const handleTimeUp = async () => {
+    if (question?.istResultId) {
+      await completeSubtest(question.istResultId);
+    }
     setTimeExpired(true);
     setTimerActive(false);
   };
