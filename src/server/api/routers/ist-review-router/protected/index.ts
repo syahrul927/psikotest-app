@@ -4,6 +4,7 @@ import { buildMultiFieldBulkUpdateSQL } from "@/lib/prisma-utils";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import type { IstResult, IstResultDetail, Prisma } from "@prisma/client";
 import type { Pick } from "@prisma/client/runtime/library";
+import { isNumberArray } from "@tanstack/react-table";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -136,13 +137,17 @@ export const istReviewRouter = createTRPCRouter({
           .filter((subtest) => subtest.subtestTemplateId !== "4")
           .map((subtest) => {
             return subtest.IstResultDetail.map((detail) => {
-              const isCorrect =
-                detail.answer ===
-                validateCorrectAnswer(
-                  subtest.subtestTemplateId,
-                  detail.question.correctAnswer,
-                );
+              const isNumber = isNumberAnswer(
+                detail.question.subtestTemplateId,
+              );
 
+              const correctAnswer = isNumber
+                ? sortStr(detail.question.correctAnswer)
+                : detail.question.correctAnswer;
+
+              const isCorrect =
+                correctAnswer ===
+                validateCorrectAnswer(subtest.subtestTemplateId, detail.answer);
               return {
                 id: detail.id,
                 isCorrect,
@@ -247,14 +252,28 @@ export const istReviewRouter = createTRPCRouter({
     }),
 });
 
-const NumberSchema = z.array(z.string());
+const NumberAnswerSchema = z.array(z.number());
+const isNumberAnswer = (subtestTemplateId: string) => {
+  return ["5", "6"].includes(subtestTemplateId);
+};
 const validateCorrectAnswer = (
   subtestTemplateId: string,
   str: string | null,
 ) => {
-  if (["5", "6"].includes(subtestTemplateId)) {
-    const parsed = NumberSchema.parse(str);
-    return parsed.sort().join("");
+  if (isNumberAnswer(subtestTemplateId)) {
+    if (str) {
+      console.log("answer: ", subtestTemplateId, str);
+      const arr = NumberAnswerSchema.parse(JSON.parse(str));
+      const arrString = arr.join("");
+      return sortStr(arrString);
+    }
+  }
+  return str;
+};
+
+const sortStr = (str?: string | null) => {
+  if (str) {
+    return str.split("").sort().join("");
   }
   return str;
 };
@@ -271,9 +290,12 @@ function correctionSubtest(
     );
   }
   const totalCorrect = IstResultDetail.reduce((prev, data) => {
+    const isNumber = isNumberAnswer(data.question.subtestTemplateId);
+    const correctAnswer = isNumber
+      ? sortStr(data.question.correctAnswer)
+      : data.question.correctAnswer;
     const isCorrect =
-      data.answer ===
-        validateCorrectAnswer(subtestTemplateId, data.question.correctAnswer)
+      correctAnswer === validateCorrectAnswer(subtestTemplateId, data.answer)
         ? 1
         : 0;
     return prev + isCorrect;
