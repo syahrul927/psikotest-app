@@ -246,12 +246,15 @@ export const istReviewRouter = createTRPCRouter({
       }
     }),
 });
+
+const NumberSchema = z.array(z.string());
 const validateCorrectAnswer = (
   subtestTemplateId: string,
   str: string | null,
 ) => {
   if (["5", "6"].includes(subtestTemplateId)) {
-    return str?.split("").sort().join("");
+    const parsed = NumberSchema.parse(str);
+    return parsed.sort().join("");
   }
   return str;
 };
@@ -270,7 +273,7 @@ function correctionSubtest(
   const totalCorrect = IstResultDetail.reduce((prev, data) => {
     const isCorrect =
       data.answer ===
-      validateCorrectAnswer(subtestTemplateId, data.question.correctAnswer)
+        validateCorrectAnswer(subtestTemplateId, data.question.correctAnswer)
         ? 1
         : 0;
     return prev + isCorrect;
