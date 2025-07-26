@@ -116,6 +116,7 @@ export function IstSubtests({ id }: { id: string }) {
                           handleUpdateStartedTest(id, subtest.id)
                         }
                         instruction={subtest.instruction}
+                        videos={subtest.videos}
                         informationData={{
                           name: subtest.name,
                           description: subtest.description,

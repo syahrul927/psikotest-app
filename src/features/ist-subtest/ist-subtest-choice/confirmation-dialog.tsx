@@ -15,6 +15,7 @@ import { Play } from "lucide-react";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { VideoPlaylist } from "./video-playlist";
 
 const defaultInstruction = `
 ## PETUNJUK DAN CONTOH 
@@ -52,6 +53,14 @@ Jawabannya ialah B) putus asa
 Maka huruf B yang seharusnya dicoret.
 `;
 
+export interface VideoData {
+  id: string;
+  title: string;
+  url: string;
+  duration?: number; // in seconds
+  thumbnail?: string;
+}
+
 export interface ConfirmationDialogProps
   extends React.HTMLAttributes<HTMLDivElement> {
   instruction?: string | null;
@@ -61,6 +70,7 @@ export interface ConfirmationDialogProps
     duration: number;
     totalQuestion: number;
   };
+  videos?: string[]; // Array of video URLs from database
   onConfirm: () => void;
 }
 
@@ -69,9 +79,22 @@ const ConfirmationDialog = React.forwardRef<
   ConfirmationDialogProps
 >(
   (
-    { instruction = defaultInstruction, informationData, onConfirm, children },
+    {
+      instruction = defaultInstruction,
+      informationData,
+      videos,
+      onConfirm,
+      children,
+    },
     ref,
   ) => {
+    // Convert video URLs from database to VideoData format
+    const videosFromDb = videos || [];
+    const formattedVideos: VideoData[] = videosFromDb.map((url, index) => ({
+      id: `video-${index + 1}`,
+      title: `Video ${index + 1}`,
+      url: url,
+    }));
     const title = `Konfirmasi Memulai Subtes: ${informationData.name} (${informationData.description})`;
     return (
       <AlertDialog>
@@ -79,7 +102,7 @@ const ConfirmationDialog = React.forwardRef<
         <AlertDialogContent
           ref={ref}
           className={
-            "max-h-[80dvh] max-w-lg overflow-scroll md:max-w-xl lg:max-w-7xl"
+            "max-h-[90dvh] max-w-xl overflow-scroll md:max-w-xl lg:max-w-7xl"
           }
         >
           <AlertDialogHeader className="text-left">
@@ -108,6 +131,16 @@ const ConfirmationDialog = React.forwardRef<
                     </ul>
                   </div>
                 </div>
+
+                {/* Video Section */}
+                {formattedVideos.length > 0 && (
+                  <div className="rounded-lg border bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-950/30">
+                    <div className="prose prose-sm dark:prose-invert max-w-none text-left">
+                      <h4 className="mb-3 font-semibold">Video Panduan:</h4>
+                      <VideoPlaylist videos={formattedVideos} />
+                    </div>
+                  </div>
+                )}
 
                 {/* Custom Instruction Section with Markdown */}
                 {instruction && (
