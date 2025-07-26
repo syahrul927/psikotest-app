@@ -19,7 +19,13 @@ export const istSubtestRouter = createTRPCRouter({
       orderBy: {
         id: "asc",
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        instruction: true,
+        videos: true,
+        timeLimit: true,
         _count: {
           select: {
             questions: true,

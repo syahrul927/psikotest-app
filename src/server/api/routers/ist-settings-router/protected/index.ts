@@ -6,6 +6,16 @@ export const istSettingsRouter = createTRPCRouter({
   // Get all subtest templates
   getAllSubtestTemplates: protectedProcedure.query(async ({ ctx }) => {
     const templates = await ctx.db.istSubtestTemplate.findMany({
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        instruction: true,
+        videos: true,
+        timeLimit: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       orderBy: {
         name: 'asc',
       },
@@ -21,6 +31,16 @@ export const istSettingsRouter = createTRPCRouter({
       const template = await ctx.db.istSubtestTemplate.findUnique({
         where: {
           id,
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          instruction: true,
+          videos: true,
+          timeLimit: true,
+          createdAt: true,
+          updatedAt: true,
         },
       });
 
