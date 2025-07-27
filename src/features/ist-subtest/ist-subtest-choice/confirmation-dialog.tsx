@@ -102,7 +102,7 @@ const ConfirmationDialog = React.forwardRef<
         <AlertDialogContent
           ref={ref}
           className={
-            "max-h-[90dvh] max-w-xl overflow-scroll md:max-w-xl lg:max-w-7xl"
+            "max-h-[100dvh] max-w-xl overflow-scroll md:max-h-[90dvh] md:max-w-xl lg:max-w-7xl"
           }
         >
           <AlertDialogHeader className="text-left">

@@ -100,7 +100,9 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
 
   const updateProgressFromMouse = (e: React.MouseEvent | MouseEvent) => {
     if (duration > 0) {
-      const progressBar = (e.target as HTMLElement).closest('.progress-container');
+      const progressBar = (e.target as HTMLElement).closest(
+        ".progress-container",
+      );
       if (progressBar) {
         const rect = progressBar.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
@@ -129,7 +131,7 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   // Calculate progress percentage
@@ -139,11 +141,11 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
   // Add global mouse event listeners for dragging
   useEffect(() => {
     if (isDragging) {
-      document.addEventListener('mousemove', handleProgressMouseMove);
-      document.addEventListener('mouseup', handleProgressMouseUp);
+      document.addEventListener("mousemove", handleProgressMouseMove);
+      document.addEventListener("mouseup", handleProgressMouseUp);
       return () => {
-        document.removeEventListener('mousemove', handleProgressMouseMove);
-        document.removeEventListener('mouseup', handleProgressMouseUp);
+        document.removeEventListener("mousemove", handleProgressMouseMove);
+        document.removeEventListener("mouseup", handleProgressMouseUp);
       };
     }
   }, [isDragging, dragTime]);
@@ -154,7 +156,7 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
     setDuration(0);
     setIsDragging(false);
     setDragTime(0);
-    
+
     if (currentVideoIndex === 0) {
       // First video - don't autoplay
       setIsPlaying(false);
@@ -167,7 +169,7 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
           videoRef.current.play().catch(console.error);
         }
       }, 100);
-      
+
       return () => clearTimeout(timer);
     }
   }, [currentVideoIndex]);
@@ -177,10 +179,10 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
   return (
     <div className="space-y-4">
       {/* Video Player and Playlist Row */}
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-4 md:flex-row">
         {/* Video Player - 65% width */}
-        <div className="flex-[0_0_65%]">
-          <div className="relative overflow-hidden rounded-lg bg-black group cursor-pointer">
+        <div className="flex-3/4">
+          <div className="group relative cursor-pointer overflow-hidden rounded-lg bg-black">
             <video
               ref={videoRef}
               key={currentVideo.id}
@@ -196,17 +198,16 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
             />
 
             {/* Center Play/Pause Button - YouTube Style */}
-            <div 
-              className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
-                isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
-              }`}
+            <div
+              className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${isPlaying ? "opacity-0 group-hover:opacity-100" : "opacity-100"
+                }`}
               onClick={togglePlayPause}
             >
-              <div className="flex items-center justify-center w-16 h-16 bg-black/70 rounded-full backdrop-blur-sm hover:bg-black/80 transition-all duration-200 hover:scale-110 cursor-pointer">
+              <div className="flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-black/70 backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-black/80">
                 {isPlaying ? (
                   <Pause className="h-8 w-8 text-white" />
                 ) : (
-                  <Play className="h-8 w-8 text-white ml-1" />
+                  <Play className="ml-1 h-8 w-8 text-white" />
                 )}
               </div>
             </div>
@@ -216,27 +217,29 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
               <div className="space-y-2">
                 {/* Draggable Progress Bar */}
                 <div className="progress-container relative">
-                  <Progress value={progressPercentage} className="h-2 bg-white/20" />
-                  
+                  <Progress
+                    value={progressPercentage}
+                    className="h-2 bg-white/20"
+                  />
+
                   {/* Draggable Progress Bar Overlay */}
-                  <div 
-                    className={`absolute top-0 left-0 right-0 h-2 cursor-pointer ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+                  <div
+                    className={`absolute top-0 right-0 left-0 h-2 cursor-pointer ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
                     onMouseDown={handleProgressMouseDown}
                   />
-                  
+
                   {/* Progress Handle/Thumb */}
-                  <div 
-                    className={`absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg transition-transform ${
-                      isDragging ? 'scale-125' : 'scale-100 hover:scale-110'
-                    }`}
+                  <div
+                    className={`absolute top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-white shadow-lg transition-transform ${isDragging ? "scale-125" : "scale-100 hover:scale-110"
+                      }`}
                     style={{ left: `calc(${progressPercentage}% - 6px)` }}
                     onMouseDown={handleProgressMouseDown}
                   />
-                  
+
                   {/* Time Preview Tooltip */}
                   {isDragging && (
-                    <div 
-                      className="absolute -top-8 bg-black/80 text-white text-xs px-2 py-1 rounded pointer-events-none"
+                    <div
+                      className="pointer-events-none absolute -top-8 rounded bg-black/80 px-2 py-1 text-xs text-white"
                       style={{ left: `calc(${progressPercentage}% - 20px)` }}
                     >
                       {formatTime(dragTime)}
@@ -284,7 +287,7 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
           </div>
 
           {/* Current Video Info */}
-          <div className="mt-3 text-center">
+          <div className="text-center">
             <h5 className="text-lg font-medium">{currentVideo.title}</h5>
             <p className="text-muted-foreground text-sm">
               Video {currentVideoIndex + 1} dari {videos.length}
@@ -293,7 +296,7 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
         </div>
 
         {/* Video Playlist - 35% width */}
-        <div className="flex-[0_0_35%]">
+        <div className="md:flex-1/4">
           <div className="space-y-2">
             <h6 className="text-sm font-medium">Daftar Video:</h6>
             <div className="max-h-80 space-y-1 overflow-y-auto pr-2">
@@ -310,7 +313,7 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
                         : "bg-gray-50 hover:bg-gray-100 dark:bg-gray-800/50 dark:hover:bg-gray-800"
                       }`}
                   >
-                    <div className="flex flex-1 items-center space-x-2 min-w-0">
+                    <div className="flex min-w-0 flex-1 items-center space-x-2">
                       <div className="flex-shrink-0">
                         {isWatched ? (
                           <CheckCircle className="h-4 w-4 text-green-500" />
@@ -321,7 +324,7 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
                         )}
                       </div>
 
-                      <div className="flex-1 text-left min-w-0">
+                      <div className="min-w-0 flex-1 text-left">
                         <p className="truncate text-sm font-medium">
                           {video.title}
                         </p>
@@ -334,14 +337,17 @@ export const VideoPlaylist: React.FC<VideoPlaylistProps> = ({
                       </div>
                     </div>
 
-                    <div className="flex-shrink-0 ml-2">
+                    <div className="ml-2 flex-shrink-0">
                       {isCurrent && (
                         <Badge variant="secondary" className="text-xs">
                           Playing
                         </Badge>
                       )}
                       {isWatched && !isCurrent && (
-                        <Badge variant="outline" className="text-xs text-green-600">
+                        <Badge
+                          variant="outline"
+                          className="text-xs text-green-600"
+                        >
                           Done
                         </Badge>
                       )}
