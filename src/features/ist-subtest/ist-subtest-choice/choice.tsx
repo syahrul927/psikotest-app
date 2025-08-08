@@ -66,11 +66,10 @@ export function IstSubtests({ id }: { id: string }) {
             return (
               <Card
                 key={subtest.id}
-                className={`relative w-full transition-all hover:shadow-lg ${
-                  isCompleted
+                className={`relative w-full transition-all hover:shadow-lg ${isCompleted
                     ? "border-emerald-200 bg-emerald-50/50 dark:border-emerald-800 dark:bg-emerald-950/30"
                     : "hover:shadow-md dark:hover:shadow-lg"
-                }`}
+                  }`}
               >
                 {/* Completion Badge */}
                 {isCompleted && (
@@ -112,6 +111,8 @@ export function IstSubtests({ id }: { id: string }) {
                       </Button>
                     ) : (
                       <ConfirmationDialog
+                        subtestType={subtest.id}
+                        istInvitationId={id}
                         onConfirm={() =>
                           handleUpdateStartedTest(id, subtest.id)
                         }

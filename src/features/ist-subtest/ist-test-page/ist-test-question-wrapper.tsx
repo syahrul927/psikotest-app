@@ -114,6 +114,7 @@ export function IstTestQuestionWrapper({
                 options: (questionData.options || []).map(
                   (option: OptionData) => ({
                     id: option.id,
+                    optionLabel: `${option.label})`,
                     text: option.text || option.label || "",
                     imageUrl: option.imageUrl || undefined,
                   }),

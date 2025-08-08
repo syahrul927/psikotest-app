@@ -7,6 +7,7 @@ import Image from "next/image";
 
 interface Option {
   id: string;
+  optionLabel?: string;
   text: string;
   imageUrl?: string | null;
 }
@@ -73,7 +74,10 @@ export function RadioQuestion({ question, value, onChange }: QuestionProps) {
               <span
                 className={`flex-grow text-sm sm:text-base ${question.subtestTemplateId === "7" || (question.subtestTemplateId === "8" && "hidden")}`}
               >
-                {option.text.charAt(0).toUpperCase() + option.text.slice(1)}
+                <span className="font-semibold uppercase">
+                  {option.optionLabel}
+                </span>{" "}
+                {option.text}
               </span>
             </div>
           </Label>
