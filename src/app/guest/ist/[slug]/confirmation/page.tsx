@@ -20,8 +20,8 @@ const IstConfirmationPage = async ({ params }: PageType) => {
         </div>
       </AnimatedWrapper>
       <IstInvitationConfirmation
-        slug={slug}
-        name={data.invitationName ?? ""}
+        invitationId={slug}
+        invitationName={data.invitationName ?? ""}
       />
     </div>
   );

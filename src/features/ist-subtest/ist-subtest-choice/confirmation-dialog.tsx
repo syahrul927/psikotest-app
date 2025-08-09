@@ -11,18 +11,19 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { api } from "@/trpc/react";
+import { useCheckSubtest9Access } from "@/hooks/api/ist-test/use-check-subtest9-access";
+import { useMarkSubtest9Image } from "@/hooks/api/ist-test/use-mark-subtest9-image";
 import { ClockAlert, Eye, Play } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import {
+  InteractiveExampleDataSchema,
+  type InteractiveExampleData,
+} from "../types/interactive-instruction";
 import { InteractiveExample } from "./interactive-example";
 import { VideoPlaylist } from "./video-playlist";
-import { useCheckSubtest9Access } from "@/hooks/api/ist-test/use-check-subtest9-access";
-import { useMarkSubtest9Image } from "@/hooks/api/ist-test/use-mark-subtest9-image";
-
-const defaultInstruction = `No Content Here`;
 
 export interface VideoData {
   id: string;
@@ -53,7 +54,7 @@ const ConfirmationDialog = React.forwardRef<
 >(
   (
     {
-      instruction = defaultInstruction,
+      instruction = `No instruction available for this subtest`,
       informationData,
       videos,
       subtestType,
@@ -231,7 +232,9 @@ const ConfirmationDialog = React.forwardRef<
                         code: ({ node, className, children, ...props }) => {
                           if (className === "language-json-interactive") {
                             try {
-                              const data = JSON.parse(String(children));
+                              const data = InteractiveExampleDataSchema.parse(
+                                JSON.parse(children as string),
+                              );
                               return <InteractiveExample data={data} />;
                             } catch (error) {
                               console.warn(

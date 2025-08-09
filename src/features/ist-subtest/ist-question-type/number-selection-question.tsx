@@ -1,7 +1,7 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import { NUMBERS } from "../lib/ist-constants";
 import { motion } from "framer-motion";
 
 interface QuestionProps {
@@ -22,7 +22,7 @@ export function NumberSelectionQuestion({
   questionNumber,
   totalQuestions,
 }: QuestionProps) {
-  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+  const numbers = NUMBERS.AVAILABLE;
 
   const toggleNumber = (num: number) => {
     if (value.includes(num)) {
@@ -37,7 +37,7 @@ export function NumberSelectionQuestion({
       {/* Question Number Header */}
       {questionNumber && totalQuestions && (
         <div className="mb-4 flex items-center gap-3">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-background text-sm font-bold sm:h-8 sm:w-8">
+          <div className="bg-background flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold sm:h-8 sm:w-8">
             {questionNumber}
           </div>
           <h3 className="text-base font-semibold sm:text-lg">
@@ -47,12 +47,10 @@ export function NumberSelectionQuestion({
       )}
 
       {/* Pattern display */}
-      <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
-          <div
-            className="flex items-center justify-center w-full rounded-lg text-lg sm:text-xl font-medium p-4"
-          >
-            <div>{question?.text}</div>
-          </div>
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+        <div className="flex w-full items-center justify-center rounded-lg p-4 text-lg font-medium sm:text-xl">
+          <div>{question?.text}</div>
+        </div>
       </div>
 
       <div className="pt-4">
@@ -68,8 +66,8 @@ export function NumberSelectionQuestion({
                   "relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-lg border-2 text-xl font-bold transition-all select-none",
                   "active:scale-95",
                   isSelected
-                    ? "border-gray-800 dark:border-gray-200 bg-background"
-                    : "border-2 bg-background",
+                    ? "bg-background border-gray-800 dark:border-gray-200"
+                    : "bg-background border-2",
                 )}
                 whileTap={{ scale: 0.95 }}
                 initial={{ scale: 1 }}
@@ -100,11 +98,7 @@ export function NumberSelectionQuestion({
                   </motion.div>
                 )}
 
-                <Checkbox
-                  checked={isSelected}
-                  className="sr-only"
-                  onCheckedChange={() => { }}
-                />
+                <Checkbox checked={isSelected} className="sr-only" />
               </motion.div>
             );
           })}
@@ -122,8 +116,8 @@ export function NumberSelectionQuestion({
                   "relative flex h-14 w-14 cursor-pointer items-center justify-center rounded-lg border-2 text-2xl font-bold transition-all select-none",
                   "active:scale-95",
                   isSelected
-                    ? "dark:border-gray-200 border-gray-800 bg-background"
-                    : "border-2 bg-background",
+                    ? "bg-background border-gray-800 dark:border-gray-200"
+                    : "bg-background border-2",
                 )}
                 whileTap={{ scale: 0.95 }}
                 initial={{ scale: 1 }}
@@ -154,11 +148,7 @@ export function NumberSelectionQuestion({
                   </motion.div>
                 )}
 
-                <Checkbox
-                  checked={isSelected}
-                  className="sr-only"
-                  onCheckedChange={() => { }}
-                />
+                <Checkbox checked={isSelected} className="sr-only" />
               </motion.div>
             );
           })}
@@ -167,9 +157,10 @@ export function NumberSelectionQuestion({
 
       {value.length > 0 && (
         <div className="mt-6 flex items-center justify-center">
-          <div className="rounded-lg bg-background px-6 py-3 border-2">
+          <div className="bg-background rounded-lg border-2 px-6 py-3">
             <p className="text-lg font-medium">
-              Angka yang dipilih: {value.sort((a: number, b: number) => a - b).join(", ")}
+              Angka yang dipilih:{" "}
+              {value.sort((a: number, b: number) => a - b).join(", ")}
             </p>
           </div>
         </div>

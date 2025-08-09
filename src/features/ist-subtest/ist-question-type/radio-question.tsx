@@ -3,6 +3,7 @@
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
+import { SUBTEST_IDS } from "../lib/ist-constants";
 import Image from "next/image";
 
 interface Option {
@@ -24,8 +25,7 @@ interface QuestionProps {
 }
 
 export function RadioQuestion({ question, value, onChange }: QuestionProps) {
-  // console.log("ques", question)
-  const isImage = ["7", "8"].includes(question.subtestTemplateId);
+  const isImage = SUBTEST_IDS.IMAGE_BASED.map(String).includes(question.subtestTemplateId);
   return (
     <RadioGroup
       value={value}

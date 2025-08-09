@@ -1,23 +1,34 @@
-export interface InteractiveExampleData {
-  type: string;
-  subtestType: string;
-  question: InteractiveQuestionData;
-  correctAnswer?: string;
-  explanation?: string;
-  exampleAnswer?: string;
-  instruction?: string;
-}
+import { z } from "zod";
 
-export interface InteractiveQuestionData {
-  id: string;
-  text?: string | null;
-  imageUrl?: string | null;
-  options?: InteractiveOptionData[];
-}
+export const InteractiveOptionDataSchema = z.object({
+  id: z.string(),
+  text: z.string().nullable().optional(),
+  imageUrl: z.string().nullable().optional(),
+  label: z.string().optional(),
+});
 
-export interface InteractiveOptionData {
-  id: string;
-  text?: string | null;
-  imageUrl?: string | null;
-  label?: string;
-}
+export const InteractiveQuestionDataSchema = z.object({
+  id: z.string(),
+  text: z.string().nullable().optional(),
+  imageUrl: z.string().nullable().optional(),
+  options: z.array(InteractiveOptionDataSchema).optional(),
+});
+
+export const InteractiveExampleDataSchema = z.object({
+  type: z.string(),
+  subtestType: z.string(),
+  question: InteractiveQuestionDataSchema,
+  correctAnswer: z.string().optional(),
+  explanation: z.string().optional(),
+  exampleAnswer: z.string().optional(),
+  instruction: z.string().optional(),
+});
+export type InteractiveExampleData = z.infer<
+  typeof InteractiveExampleDataSchema
+>;
+
+export type InteractiveQuestionData = z.infer<
+  typeof InteractiveQuestionDataSchema
+>;
+
+export type InteractiveOptionData = z.infer<typeof InteractiveOptionDataSchema>;

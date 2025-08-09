@@ -6,7 +6,7 @@ export function useCheckSubtest9Access(
 ) {
   return api.istSubtest.checkSubtest9ImageAccess.useQuery(
     {
-      istInvitationId: istInvitationId || "",
+      istInvitationId: istInvitationId,
       subtestId: subtestType,
     },
     {
