@@ -9,7 +9,7 @@ export const dashboardRouter = createTRPCRouter({
 
     // Get IST invitation counts
     const istInvitations = await ctx.db.istInvitation.groupBy({
-      by: ['status'],
+      by: ["status"],
       _count: {
         id: true,
       },
@@ -28,33 +28,43 @@ export const dashboardRouter = createTRPCRouter({
     });
 
     // Get Kraepelin result summaries count
-    const kraepelinResultSummaries = await ctx.db.kraepelinResultSummary.findMany({
-      select: {
-        kraepelinResultId: true,
-      },
-    });
+    const kraepelinResultSummaries =
+      await ctx.db.kraepelinResultSummary.findMany({
+        select: {
+          kraepelinResultId: true,
+        },
+      });
 
     // Calculate metrics
-    const istPending = istInvitations.find(i => i.status === 'PENDING')?._count.id || 0;
-    const istOnProgress = istInvitations.find(i => i.status === 'ONPROGRESS')?._count.id || 0;
-    const istAwaitingReview = istInvitations.find(i => i.status === 'AWAITING_REVIEW')?._count.id || 0;
-    const istDone = istInvitations.find(i => i.status === 'DONE')?._count.id || 0;
+    const istPending =
+      istInvitations.find((i) => i.status === "PENDING")?._count.id || 0;
+    const istOnProgress =
+      istInvitations.find((i) => i.status === "ONPROGRESS")?._count.id || 0;
+    const istAwaitingReview =
+      istInvitations.find((i) => i.status === "AWAITING_REVIEW")?._count.id ||
+      0;
+    const istDone =
+      istInvitations.find((i) => i.status === "DONE")?._count.id || 0;
 
     // Kraepelin metrics - using simple field-based logic
-    const kraepelinSummaryResultIds = kraepelinResultSummaries.map(s => s.kraepelinResultId);
-    
+    const kraepelinSummaryResultIds = kraepelinResultSummaries.map(
+      (s) => s.kraepelinResultId,
+    );
+
     // Calculate awaiting review: results that exist but have no summary and are not generated
-    const kraepelinAwaitingReview = kraepelinResults.filter(r => 
-      !kraepelinSummaryResultIds.includes(r.id) && !r.generated
+    const kraepelinAwaitingReview = kraepelinResults.filter(
+      (r) => !kraepelinSummaryResultIds.includes(r.id) && !r.generated,
     ).length;
-    
-    const kraepelinCompleted = kraepelinResults.filter(r => r.generated === true).length;
+
+    const kraepelinCompleted = kraepelinResults.filter(
+      (r) => r.generated === true,
+    ).length;
     const kraepelinActive = kraepelinTotal - kraepelinCompleted;
 
     // Get completed tests this month
     const istCompletedThisMonth = await ctx.db.istInvitation.count({
       where: {
-        status: 'DONE',
+        status: "DONE",
         updatedAt: {
           gte: startOfMonth,
         },
@@ -73,8 +83,20 @@ export const dashboardRouter = createTRPCRouter({
       totalActiveTests: istPending + istOnProgress + kraepelinActive,
       testsAwaitingReview: istAwaitingReview + kraepelinAwaitingReview,
       completedThisMonth: istCompletedThisMonth + kraepelinCompletedThisMonth,
-      totalTests: istPending + istOnProgress + istAwaitingReview + istDone + kraepelinTotal,
-      completionRate: ((istDone + kraepelinCompleted) / (istDone + kraepelinCompleted + istPending + istOnProgress + kraepelinActive)) * 100,
+      totalTests:
+        istPending +
+        istOnProgress +
+        istAwaitingReview +
+        istDone +
+        kraepelinTotal,
+      completionRate:
+        ((istDone + kraepelinCompleted) /
+          (istDone +
+            kraepelinCompleted +
+            istPending +
+            istOnProgress +
+            kraepelinActive)) *
+        100,
       breakdown: {
         ist: {
           pending: istPending,
@@ -94,62 +116,20 @@ export const dashboardRouter = createTRPCRouter({
 
   // Get test completion trends for chart
   getCompletionTrends: protectedProcedure
-    .input(z.object({
-      days: z.number().default(30),
-    }))
+    .input(
+      z.object({
+        days: z.number().default(30),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       const { days } = input;
       const endDate = new Date();
       const startDate = new Date();
       startDate.setDate(endDate.getDate() - days);
-
-      console.log('CHART DEBUG - Date Range:', {
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
-        days
-      });
-
-      // Let's first check what data exists in the database
-      const allIstInvitations = await ctx.db.istInvitation.findMany({
-        select: {
-          id: true,
-          status: true,
-          updatedAt: true,
-          createdAt: true,
-        },
-      });
-
-      const allKraepelinInvitations = await ctx.db.invitation.findMany({
-        select: {
-          id: true,
-          updatedAt: true,
-          createdAt: true,
-        },
-      });
-
-      const allKraepelinResults = await ctx.db.kraepelinResult.findMany({
-        select: {
-          id: true,
-          invitationId: true,
-          generated: true,
-        },
-      });
-
-      console.log('DATABASE OVERVIEW:', {
-        totalIstInvitations: allIstInvitations.length,
-        istByStatus: allIstInvitations.reduce((acc, inv) => {
-          acc[inv.status] = (acc[inv.status] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>),
-        totalKraepelinInvitations: allKraepelinInvitations.length,
-        totalKraepelinResults: allKraepelinResults.length,
-        kraepelinResultsGenerated: allKraepelinResults.filter(r => r.generated).length,
-      });
-
       // Get IST completions by day (when status changed to DONE)
       const istCompletions = await ctx.db.istInvitation.findMany({
         where: {
-          status: 'DONE',
+          status: "DONE",
           updatedAt: {
             gte: startDate,
             lte: endDate,
@@ -159,8 +139,6 @@ export const dashboardRouter = createTRPCRouter({
           updatedAt: true,
         },
       });
-
-      console.log('IST Completions found:', istCompletions.length, istCompletions);
 
       // For Kraepelin, since we don't have updatedAt on KraepelinResult,
       // we'll use the Invitation's updatedAt when it has results
@@ -177,42 +155,43 @@ export const dashboardRouter = createTRPCRouter({
         },
       });
 
-      console.log('Kraepelin Invitations in range:', kraepelinInvitationsWithResults.length, kraepelinInvitationsWithResults);
-
       // Check which of these invitations have completed results
-      const kraepelinResultsByInvitation = await ctx.db.kraepelinResult.findMany({
-        where: {
-          invitationId: {
-            in: kraepelinInvitationsWithResults.map(inv => inv.id),
+      const kraepelinResultsByInvitation =
+        await ctx.db.kraepelinResult.findMany({
+          where: {
+            invitationId: {
+              in: kraepelinInvitationsWithResults.map((inv) => inv.id),
+            },
+            generated: true,
           },
-          generated: true,
-        },
-        select: {
-          invitationId: true,
-        },
-      });
+          select: {
+            invitationId: true,
+          },
+        });
 
-      console.log('Kraepelin Results (generated=true):', kraepelinResultsByInvitation.length, kraepelinResultsByInvitation);
-
-      const completedKraepelinInvitationIds = kraepelinResultsByInvitation.map(r => r.invitationId);
-      const kraepelinCompletions = kraepelinInvitationsWithResults.filter(inv => 
-        completedKraepelinInvitationIds.includes(inv.id)
+      const completedKraepelinInvitationIds = kraepelinResultsByInvitation.map(
+        (r) => r.invitationId,
       );
-
-      console.log('Final Kraepelin Completions:', kraepelinCompletions.length, kraepelinCompletions);
+      const kraepelinCompletions = kraepelinInvitationsWithResults.filter(
+        (inv) => completedKraepelinInvitationIds.includes(inv.id),
+      );
 
       // Group by date
       const dateMap = new Map<string, { ist: number; kraepelin: number }>();
-      
+
       // Initialize all dates in range
-      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-        const dateKey = d.toISOString().split('T')[0];
+      for (
+        let d = new Date(startDate);
+        d <= endDate;
+        d.setDate(d.getDate() + 1)
+      ) {
+        const dateKey = d.toISOString().split("T")[0];
         dateMap.set(dateKey!, { ist: 0, kraepelin: 0 });
       }
 
       // Count IST completions by date
-      istCompletions.forEach(completion => {
-        const dateKey = completion.updatedAt.toISOString().split('T')[0];
+      istCompletions.forEach((completion) => {
+        const dateKey = completion.updatedAt.toISOString().split("T")[0];
         if (dateKey && dateMap.has(dateKey)) {
           const current = dateMap.get(dateKey)!;
           dateMap.set(dateKey, { ...current, ist: current.ist + 1 });
@@ -220,11 +199,14 @@ export const dashboardRouter = createTRPCRouter({
       });
 
       // Count Kraepelin completions by date
-      kraepelinCompletions.forEach(completion => {
-        const dateKey = completion.updatedAt.toISOString().split('T')[0];
+      kraepelinCompletions.forEach((completion) => {
+        const dateKey = completion.updatedAt.toISOString().split("T")[0];
         if (dateKey && dateMap.has(dateKey)) {
           const current = dateMap.get(dateKey)!;
-          dateMap.set(dateKey, { ...current, kraepelin: current.kraepelin + 1 });
+          dateMap.set(dateKey, {
+            ...current,
+            kraepelin: current.kraepelin + 1,
+          });
         }
       });
 
@@ -235,23 +217,23 @@ export const dashboardRouter = createTRPCRouter({
         total: counts.ist + counts.kraepelin,
       }));
 
-      console.log('FINAL CHART DATA:', result);
-
       return result;
     }),
 
   // Get recent tests for table
   getRecentTests: protectedProcedure
-    .input(z.object({
-      limit: z.number().default(10),
-    }))
+    .input(
+      z.object({
+        limit: z.number().default(10),
+      }),
+    )
     .query(async ({ ctx, input }) => {
       const { limit } = input;
 
       // Get recent IST invitations
       const recentIstTests = await ctx.db.istInvitation.findMany({
         take: Math.ceil(limit / 2),
-        orderBy: { updatedAt: 'desc' },
+        orderBy: { updatedAt: "desc" },
         include: {
           testerProfile: {
             select: {
@@ -264,7 +246,7 @@ export const dashboardRouter = createTRPCRouter({
       // Get recent Kraepelin invitations
       const recentKraepelinTests = await ctx.db.invitation.findMany({
         take: Math.ceil(limit / 2),
-        orderBy: { updatedAt: 'desc' },
+        orderBy: { updatedAt: "desc" },
         include: {
           testerProfile: {
             select: {
@@ -276,21 +258,21 @@ export const dashboardRouter = createTRPCRouter({
 
       // Combine and format
       const combinedTests = [
-        ...recentIstTests.map(test => ({
+        ...recentIstTests.map((test) => ({
           id: test.id,
-          name: test.name || 'Unnamed Test',
-          type: 'IST' as const,
+          name: test.name || "Unnamed Test",
+          type: "IST" as const,
           status: test.status,
-          participantName: test.testerProfile?.name || '-',
+          participantName: test.testerProfile?.name || "-",
           updatedAt: test.updatedAt,
           secretKey: test.secretKey,
         })),
-        ...recentKraepelinTests.map(test => ({
+        ...recentKraepelinTests.map((test) => ({
           id: test.id,
-          name: test.name || 'Unnamed Test',
-          type: 'KRAEPELIN' as const,
-          status: test.startAt ? 'STARTED' : 'PENDING',
-          participantName: test.testerProfile?.name || '-',
+          name: test.name || "Unnamed Test",
+          type: "KRAEPELIN" as const,
+          status: test.startAt ? "STARTED" : "PENDING",
+          participantName: test.testerProfile?.name || "-",
           updatedAt: test.updatedAt,
           secretKey: test.secretKey,
         })),
@@ -305,7 +287,7 @@ export const dashboardRouter = createTRPCRouter({
   // Get status distribution for pie chart
   getStatusDistribution: protectedProcedure.query(async ({ ctx }) => {
     const istInvitations = await ctx.db.istInvitation.groupBy({
-      by: ['status'],
+      by: ["status"],
       _count: {
         id: true,
       },
@@ -318,40 +300,53 @@ export const dashboardRouter = createTRPCRouter({
       },
     });
 
-    const kraepelinResultSummaries = await ctx.db.kraepelinResultSummary.findMany({
-      select: {
-        kraepelinResultId: true,
-      },
-    });
+    const kraepelinResultSummaries =
+      await ctx.db.kraepelinResultSummary.findMany({
+        select: {
+          kraepelinResultId: true,
+        },
+      });
 
     const kraepelinTotal = await ctx.db.invitation.count();
-    const kraepelinCompleted = kraepelinResults.filter(r => r.generated === true).length;
-    const kraepelinSummaryResultIds = kraepelinResultSummaries.map(s => s.kraepelinResultId);
-    const kraepelinAwaitingReview = kraepelinResults.filter(r => 
-      !kraepelinSummaryResultIds.includes(r.id) && !r.generated
+    const kraepelinCompleted = kraepelinResults.filter(
+      (r) => r.generated === true,
     ).length;
-    const kraepelinPending = kraepelinTotal - kraepelinCompleted - kraepelinAwaitingReview;
+    const kraepelinSummaryResultIds = kraepelinResultSummaries.map(
+      (s) => s.kraepelinResultId,
+    );
+    const kraepelinAwaitingReview = kraepelinResults.filter(
+      (r) => !kraepelinSummaryResultIds.includes(r.id) && !r.generated,
+    ).length;
+    const kraepelinPending =
+      kraepelinTotal - kraepelinCompleted - kraepelinAwaitingReview;
 
     return [
       {
-        status: 'Pending',
-        count: (istInvitations.find(i => i.status === 'PENDING')?._count.id || 0) + kraepelinPending,
-        color: '#f59e0b',
+        status: "Pending",
+        count:
+          (istInvitations.find((i) => i.status === "PENDING")?._count.id || 0) +
+          kraepelinPending,
+        color: "#f59e0b",
       },
       {
-        status: 'In Progress',
-        count: istInvitations.find(i => i.status === 'ONPROGRESS')?._count.id || 0,
-        color: '#3b82f6',
+        status: "In Progress",
+        count:
+          istInvitations.find((i) => i.status === "ONPROGRESS")?._count.id || 0,
+        color: "#3b82f6",
       },
       {
-        status: 'Awaiting Review',
-        count: (istInvitations.find(i => i.status === 'AWAITING_REVIEW')?._count.id || 0) + kraepelinAwaitingReview,
-        color: '#f97316',
+        status: "Awaiting Review",
+        count:
+          (istInvitations.find((i) => i.status === "AWAITING_REVIEW")?._count
+            .id || 0) + kraepelinAwaitingReview,
+        color: "#f97316",
       },
       {
-        status: 'Completed',
-        count: (istInvitations.find(i => i.status === 'DONE')?._count.id || 0) + kraepelinCompleted,
-        color: '#10b981',
+        status: "Completed",
+        count:
+          (istInvitations.find((i) => i.status === "DONE")?._count.id || 0) +
+          kraepelinCompleted,
+        color: "#10b981",
       },
     ];
   }),

@@ -17,8 +17,8 @@ import { PAGE_URLS } from "@/lib/page-url";
 import { BookOpen, CheckCircle, CheckCircle2, Clock, Play } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ParticipantInfo } from "./participant-info";
 import ConfirmationDialog from "./confirmation-dialog";
+import { ParticipantInfo } from "./participant-info";
 
 export function IstSubtests({ id }: { id: string }) {
   const [completedSubtests, setCompletedSubtests] = useState<string[]>([]);
@@ -117,7 +117,6 @@ export function IstSubtests({ id }: { id: string }) {
                           handleUpdateStartedTest(id, subtest.id)
                         }
                         instruction={subtest.instruction}
-                        videos={subtest.videos}
                         informationData={{
                           name: subtest.name,
                           description: subtest.description,

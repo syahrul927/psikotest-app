@@ -262,7 +262,6 @@ const validateCorrectAnswer = (
 ) => {
   if (isNumberAnswer(subtestTemplateId)) {
     if (str) {
-      console.log("answer: ", subtestTemplateId, str);
       const arr = NumberAnswerSchema.parse(JSON.parse(str));
       const arrString = arr.join("");
       return sortStr(arrString);

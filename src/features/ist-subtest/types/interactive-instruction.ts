@@ -10,6 +10,7 @@ export const InteractiveOptionDataSchema = z.object({
 export const InteractiveQuestionDataSchema = z.object({
   id: z.string(),
   text: z.string().nullable().optional(),
+  video: z.string().optional(),
   imageUrl: z.string().nullable().optional(),
   options: z.array(InteractiveOptionDataSchema).optional(),
 });

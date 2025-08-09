@@ -96,7 +96,6 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   const result = await next();
 
   const end = Date.now();
-  console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
 
   return result;
 });
@@ -112,10 +111,10 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
 
 /**
  * Guest procedure for test-taking functionality
- * 
+ *
  * This procedure is used for public test-taking routes where users don't need to be authenticated
  * but may need access to specific test sessions through secret keys or invitation tokens.
- * 
+ *
  * @example
  * ```typescript
  * export const findInvitation = guestProcedure

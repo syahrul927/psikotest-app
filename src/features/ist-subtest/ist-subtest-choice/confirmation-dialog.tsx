@@ -18,20 +18,8 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import {
-  InteractiveExampleDataSchema,
-  type InteractiveExampleData,
-} from "../types/interactive-instruction";
+import { InteractiveExampleDataSchema } from "../types/interactive-instruction";
 import { InteractiveExample } from "./interactive-example";
-import { VideoPlaylist } from "./video-playlist";
-
-export interface VideoData {
-  id: string;
-  title: string;
-  url: string;
-  duration?: number; // in seconds
-  thumbnail?: string;
-}
 
 export interface ConfirmationDialogProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -43,7 +31,6 @@ export interface ConfirmationDialogProps
     duration: number;
     totalQuestion: number;
   };
-  videos?: string[]; // Array of video URLs from database
   onConfirm: () => void;
   istInvitationId?: string; // NEW: For tracking subtest 9 image access
 }
@@ -56,7 +43,6 @@ const ConfirmationDialog = React.forwardRef<
     {
       instruction = `No instruction available for this subtest`,
       informationData,
-      videos,
       subtestType,
       onConfirm,
       istInvitationId,
@@ -70,12 +56,6 @@ const ConfirmationDialog = React.forwardRef<
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     // Convert video URLs from database to VideoData format
-    const videosFromDb = videos || [];
-    const formattedVideos: VideoData[] = videosFromDb.map((url, index) => ({
-      id: `video-${index + 1}`,
-      title: `Video ${index + 1}`,
-      url: url,
-    }));
     const title = `Konfirmasi Memulai Subtes: ${informationData.name} (${informationData.description})`;
 
     // Clean up timer on unmount
@@ -160,12 +140,6 @@ const ConfirmationDialog = React.forwardRef<
       return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     };
 
-    const stopMemorization = () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      onConfirm();
-    };
     return (
       <AlertDialog>
         <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -202,20 +176,10 @@ const ConfirmationDialog = React.forwardRef<
                 </div>
               </div>
 
-              {/* Video Section */}
-              {formattedVideos.length > 0 && (
-                <div className="rounded-lg border bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-950/30">
-                  <div className="prose prose-sm dark:prose-invert max-w-none text-left">
-                    <h4 className="mb-3 font-semibold">Video Panduan:</h4>
-                    <VideoPlaylist videos={formattedVideos} />
-                  </div>
-                </div>
-              )}
-
               {/* Custom Instruction Section with Markdown */}
               {instruction && (
                 <div className="rounded-lg border bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/30">
-                  <article className="prose prose-pre:bg-transparent prose-pre:p-0 prose-sm dark:prose-invert text-left">
+                  <article className="prose prose-pre:bg-transparent prose-pre:p-0 prose-sm dark:prose-invert max-w-3xl text-left">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{
