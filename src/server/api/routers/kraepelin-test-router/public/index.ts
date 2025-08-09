@@ -74,7 +74,6 @@ export const kraepelinTestRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const { xA, yA, xB, yB, a, b, id, value } = input;
-      console.log("id", id);
       await ctx.db.kraepelinResultDetail.create({
         data: {
           xA,

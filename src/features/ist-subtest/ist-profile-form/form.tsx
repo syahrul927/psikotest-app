@@ -81,7 +81,7 @@ export const IstProfileForm = ({ id }: { id: string }) => {
     router.push(PAGE_URLS.IST_SUBTEST(id));
   };
 
-  const { mutate, isPending: loading } = useUpdateProfileIstInvitation(
+  const { mutate, isPending: isUpdatingProfile } = useUpdateProfileIstInvitation(
     onSuccessUpdateProfile,
   );
 
@@ -274,8 +274,8 @@ export const IstProfileForm = ({ id }: { id: string }) => {
 
                 {/* Submit Button */}
                 <div className="flex w-full flex-col space-y-3">
-                  <Button isLoading={loading} type="submit">
-                    <ArrowRight className={cn(loading ? "hidden" : "")} />{" "}
+                  <Button isLoading={isUpdatingProfile} type="submit">
+                    <ArrowRight className={cn(isUpdatingProfile ? "hidden" : "")} />{" "}
                     Lanjutkan
                   </Button>
                 </div>

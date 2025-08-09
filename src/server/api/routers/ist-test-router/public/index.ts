@@ -270,4 +270,76 @@ export const istSubtestRouter = createTRPCRouter({
 
       return { success: true, totalResult };
     }),
+
+  checkSubtest9ImageAccess: publicProcedure
+    .input(
+      z.object({
+        istInvitationId: z.string(),
+        subtestId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      // Only check for subtest 9
+      if (input.subtestId !== "9") {
+        return { viewed: false };
+      }
+
+      const session = await ctx.db.istSubtestSession.findFirst({
+        where: {
+          istInvitationId: input.istInvitationId,
+          subtestTemplateId: input.subtestId,
+        },
+        select: {
+          subtest9ImageViewedAt: true,
+        },
+      });
+
+      return { viewed: session?.subtest9ImageViewedAt !== null };
+    }),
+
+  markSubtest9ImageViewed: publicProcedure
+    .input(
+      z.object({
+        istInvitationId: z.string(),
+        subtestId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Ensure this is for subtest 9
+      if (input.subtestId !== "9") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid subtest ID",
+        });
+      }
+
+      const session = await ctx.db.istSubtestSession.findFirst({
+        where: {
+          istInvitationId: input.istInvitationId,
+          subtestTemplateId: input.subtestId,
+        },
+      });
+
+      if (!session) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Subtest session not found",
+        });
+      }
+
+      // Check if already viewed (idempotent)
+      if (session.subtest9ImageViewedAt) {
+        return { success: true, viewed: true, alreadyMarked: true };
+      }
+
+      // Mark as viewed
+      await ctx.db.istSubtestSession.update({
+        where: { id: session.id },
+        data: {
+          subtest9ImageViewedAt: new Date(),
+        },
+      });
+
+      return { success: true, viewed: true, alreadyMarked: false };
+    }),
 });

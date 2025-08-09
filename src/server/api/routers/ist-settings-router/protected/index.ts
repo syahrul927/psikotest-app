@@ -17,7 +17,7 @@ export const istSettingsRouter = createTRPCRouter({
         updatedAt: true,
       },
       orderBy: {
-        name: 'asc',
+        id: "asc",
       },
     });
 
@@ -62,7 +62,7 @@ export const istSettingsRouter = createTRPCRouter({
         description: z.string().min(1, "Deskripsi harus diisi"),
         instruction: z.string().min(1, "Instruksi harus diisi"),
         timeLimit: z.number().min(1, "Batas waktu minimal 1 menit"),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       // Check if template exists
@@ -101,10 +101,10 @@ export const istSettingsRouter = createTRPCRouter({
   // Get summary statistics
   getSubtestTemplatesSummary: protectedProcedure.query(async ({ ctx }) => {
     const totalTemplates = await ctx.db.istSubtestTemplate.count();
-    
+
     const lastModified = await ctx.db.istSubtestTemplate.findFirst({
       orderBy: {
-        updatedAt: 'desc',
+        updatedAt: "desc",
       },
       select: {
         updatedAt: true,
@@ -114,10 +114,12 @@ export const istSettingsRouter = createTRPCRouter({
 
     return {
       totalTemplates,
-      lastModified: lastModified ? {
-        date: lastModified.updatedAt,
-        templateName: lastModified.name,
-      } : null,
+      lastModified: lastModified
+        ? {
+          date: lastModified.updatedAt,
+          templateName: lastModified.name,
+        }
+        : null,
     };
   }),
 });

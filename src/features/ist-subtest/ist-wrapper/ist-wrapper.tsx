@@ -13,14 +13,13 @@ export const IstWrapper = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!access) {
-      console.log("toast cuy");
       toast.error("Oops..", {
         description: "Kamu tidak memiliki akses, silahkan konfirmasi ulang!",
       });
 
       const timeout = setTimeout(() => {
         router.replace(PAGE_URLS.IST_TEST_CONFIRMATION(slug));
-      }, 5000); // 1 second delay
+      }, 5000);
       return () => clearTimeout(timeout);
     }
   }, [access, router, slug]);

@@ -12,12 +12,9 @@ interface ParticipantInfoProps {
   education?: string;
 }
 
+export function ParticipantInfo({ slug }: { slug: string }) {
+  const { data } = useGetDetailUser(slug);
 
-export function ParticipantInfo({slug}: { slug: string}) {
-  const { data } = useGetDetailUser(slug)
-
-  console.log("ini data",data)
-  
   const getEducationText = () => {
     const educationId = data?.testerProfile?.educationId;
     if (educationId === "1") return "SMA IPA";
@@ -65,14 +62,16 @@ export function ParticipantInfo({slug}: { slug: string}) {
             Date of Birth
           </Label>
           <p className="text-sm">
-            {data?.testerProfile?.dateOfBirth 
-              ? new Date(data.testerProfile.dateOfBirth).toLocaleDateString('id-ID', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })
-              : '-'
-            }
+            {data?.testerProfile?.dateOfBirth
+              ? new Date(data.testerProfile.dateOfBirth).toLocaleDateString(
+                "id-ID",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              )
+              : "-"}
           </p>
         </div>
         <div className="space-y-2">
@@ -91,9 +90,7 @@ export function ParticipantInfo({slug}: { slug: string}) {
           <Label className="text-muted-foreground text-sm font-medium">
             Education
           </Label>
-          <p className="text-sm">
-            {getEducationText()}
-          </p>
+          <p className="text-sm">{getEducationText()}</p>
         </div>
       </CardContent>
     </Card>
