@@ -25,19 +25,26 @@ interface QuestionProps {
 }
 
 export function RadioQuestion({ question, value, onChange }: QuestionProps) {
-  const isImage = SUBTEST_IDS.IMAGE_BASED.map(String).includes(question.subtestTemplateId);
+  const isImage = SUBTEST_IDS.IMAGE_BASED.map(String).includes(
+    question.subtestTemplateId,
+  );
   return (
     <RadioGroup
       value={value}
       onValueChange={onChange}
-      className={cn("flex flex-col p-3", isImage && "flex-row")}
+      className={cn(
+        "flex p-3",
+        !isImage && "flex-col",
+        isImage && "flex-wrap items-center justify-between",
+      )}
     >
       {question.options.map((option) => (
         <div
           key={option.id}
           className={cn(
             "rounded-md border p-3",
-            isImage && "h-48 w-48 flex-col justify-center dark:bg-black",
+            isImage &&
+            "h-auto w-fit flex-col items-center justify-center p-3 dark:bg-black",
             "cursor-pointer",
           )}
         >
@@ -46,16 +53,14 @@ export function RadioQuestion({ question, value, onChange }: QuestionProps) {
             className="flex h-full w-full cursor-pointer flex-col items-center justify-center"
           >
             {option.imageUrl && (
-              <Image
-                src={option.imageUrl}
-                alt={`Question ${question.id + 1}`}
-                width={200}
-                height={200}
-                className={cn(
-                  "m-4 hidden aspect-square rounded-lg object-contain dark:invert",
-                  isImage && "flex",
-                )}
-              />
+              <div className="relative aspect-square h-auto w-20 sm:w-24 md:w-40 dark:invert">
+                <Image
+                  src={option.imageUrl}
+                  alt={`Question ${question.id + 1}`}
+                  fill
+                  className="object-contain"
+                />
+              </div>
             )}
             <div
               className={cn(
@@ -74,9 +79,6 @@ export function RadioQuestion({ question, value, onChange }: QuestionProps) {
               <span
                 className={`flex-grow text-sm sm:text-base ${question.subtestTemplateId === "7" || (question.subtestTemplateId === "8" && "hidden")}`}
               >
-                <span className="font-semibold uppercase">
-                  {option.optionLabel}
-                </span>{" "}
                 {option.text}
               </span>
             </div>
