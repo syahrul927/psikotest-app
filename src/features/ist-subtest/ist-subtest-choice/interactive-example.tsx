@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getTestComponentByType } from "../ist-test-page/ist-test-question-wrapper";
 import type { InteractiveExampleData } from "../types/interactive-instruction";
 import {
@@ -22,6 +22,7 @@ interface InteractiveExampleProps {
 }
 
 export function InteractiveExample({ data }: InteractiveExampleProps) {
+  const [isIos, setIsIos] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string | number[]>(
     `${data.question.id}-${data.correctAnswer}` as string | number[],
   );
@@ -32,6 +33,15 @@ export function InteractiveExample({ data }: InteractiveExampleProps) {
     setSelectedValue(value);
   };
 
+  useEffect(() => {
+    const detectSafari = () => {
+      const userAgent =
+        typeof window !== "undefined" ? window.navigator.userAgent : "";
+      const isMobile = /iphone|ipad|ipod/i.test(userAgent);
+      setIsIos(isMobile);
+    };
+    detectSafari();
+  }, []);
   return (
     <div className="space-y-4">
       {data.question.video && (
@@ -42,15 +52,12 @@ export function InteractiveExample({ data }: InteractiveExampleProps) {
             slot="media"
             src={data.question.video}
           />
-          <VideoPlayerControlBar>
-            <VideoPlayerPlayButton />
-            <VideoPlayerSeekBackwardButton />
-            <VideoPlayerSeekForwardButton />
-            <VideoPlayerTimeRange />
-            <VideoPlayerTimeDisplay showDuration />
-            <VideoPlayerMuteButton />
-            <VideoPlayerVolumeRange />
-          </VideoPlayerControlBar>
+          {!isIos && (
+            <VideoPlayerControlBar>
+              <VideoPlayerPlayButton />
+              <VideoPlayerTimeRange />
+            </VideoPlayerControlBar>
+          )}
         </VideoPlayer>
       )}
       <div className="interactive-example bg-background text-foreground rounded-lg border p-4">

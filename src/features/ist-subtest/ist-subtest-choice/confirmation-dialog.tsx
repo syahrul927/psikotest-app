@@ -67,6 +67,8 @@ const ConfirmationDialog = React.forwardRef<
       };
     }, []);
 
+    // Detect Safari mobile
+
     // Check image access status for subtest 9
     const { data: imageAccessData, isLoading: isCheckingAccess } =
       useCheckSubtest9Access(istInvitationId || "", subtestType);
