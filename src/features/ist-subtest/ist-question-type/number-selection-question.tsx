@@ -23,6 +23,7 @@ export function NumberSelectionQuestion({
   totalQuestions,
 }: QuestionProps) {
   const numbers = NUMBERS.AVAILABLE;
+  console.log("value", value, typeof value);
 
   const toggleNumber = (num: number) => {
     if (value.includes(num)) {

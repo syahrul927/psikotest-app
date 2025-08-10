@@ -10,8 +10,8 @@ import {
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { getTestComponentByType } from "../ist-test-page/ist-test-question-wrapper";
-import type { InteractiveExampleData } from "../types/interactive-instruction";
 import { SUBTEST_IDS } from "../lib/ist-constants";
+import type { InteractiveExampleData } from "../types/interactive-instruction";
 
 interface InteractiveExampleProps {
   data: InteractiveExampleData;
@@ -19,14 +19,18 @@ interface InteractiveExampleProps {
 
 export function InteractiveExample({ data }: InteractiveExampleProps) {
   const [isIos, setIsIos] = useState(false);
+
   const defaultAnswer = useMemo(() => {
     if (SUBTEST_IDS.TEXT.map(String).includes(data.subtestType)) {
+      return data.correctAnswer as string;
+    }
+    if (SUBTEST_IDS.NUMBER_SELECTION.map(String).includes(data.subtestType)) {
       return data.correctAnswer as number[];
     }
-    return `${data.question.id}-${data.correctAnswer}`;
+    return `${data.question.id}-${data.correctAnswer as string}`;
   }, [data.correctAnswer]);
-  const [selectedValue, setSelectedValue] = useState<string & number[]>(
-    defaultAnswer as string & number[],
+  const [selectedValue, setSelectedValue] = useState<string | number[]>(
+    defaultAnswer,
   );
 
   const QuestionComponent = getTestComponentByType(data.subtestType);
@@ -102,7 +106,7 @@ export function InteractiveExample({ data }: InteractiveExampleProps) {
                   imageUrl: option.imageUrl || undefined,
                 })),
               }}
-              value={selectedValue}
+              value={selectedValue as unknown as string & number[]}
               onChange={handleChange}
               isTraining={true}
               {...(data.subtestType === "5" || data.subtestType === "6"
