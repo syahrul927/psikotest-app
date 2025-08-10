@@ -1,21 +1,17 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { getTestComponentByType } from "../ist-test-page/ist-test-question-wrapper";
-import type { InteractiveExampleData } from "../types/interactive-instruction";
 import {
   VideoPlayer,
   VideoPlayerContent,
   VideoPlayerControlBar,
-  VideoPlayerMuteButton,
   VideoPlayerPlayButton,
-  VideoPlayerSeekBackwardButton,
-  VideoPlayerSeekForwardButton,
-  VideoPlayerTimeDisplay,
   VideoPlayerTimeRange,
-  VideoPlayerVolumeRange,
 } from "@/components/ui/video-player";
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
+import { getTestComponentByType } from "../ist-test-page/ist-test-question-wrapper";
+import type { InteractiveExampleData } from "../types/interactive-instruction";
+import { SUBTEST_IDS } from "../lib/ist-constants";
 
 interface InteractiveExampleProps {
   data: InteractiveExampleData;
@@ -23,14 +19,20 @@ interface InteractiveExampleProps {
 
 export function InteractiveExample({ data }: InteractiveExampleProps) {
   const [isIos, setIsIos] = useState(false);
-  const [selectedValue, setSelectedValue] = useState<string | number[]>(
-    `${data.question.id}-${data.correctAnswer}` as string | number[],
+  const defaultAnswer = useMemo(() => {
+    if (SUBTEST_IDS.TEXT.map(String).includes(data.subtestType)) {
+      return data.correctAnswer as number[];
+    }
+    return `${data.question.id}-${data.correctAnswer}`;
+  }, [data.correctAnswer]);
+  const [selectedValue, setSelectedValue] = useState<string & number[]>(
+    defaultAnswer as string & number[],
   );
 
   const QuestionComponent = getTestComponentByType(data.subtestType);
 
   const handleChange = (value: string | number[]) => {
-    setSelectedValue(value);
+    setSelectedValue(value as string & number[]);
   };
 
   useEffect(() => {
@@ -64,30 +66,25 @@ export function InteractiveExample({ data }: InteractiveExampleProps) {
         {/* Question Display following ist-test-question-wrapper patterns */}
         <div className="text-wrap">
           {/* Question Text - Hide for number-selection type */}
-          {!(data.subtestType === "5" || data.subtestType === "6") && (
-            <p className="mb-4 text-sm leading-relaxed font-medium sm:mb-6">
-              {data.question.text}
-            </p>
-          )}
+          {![...SUBTEST_IDS.NUMBER_SELECTION, ...SUBTEST_IDS.TEXT]
+            .map(String)
+            .includes(data.subtestType) && (
+              <p className="mb-4 text-sm leading-relaxed font-medium sm:mb-6">
+                {data.question.text}
+              </p>
+            )}
 
           {/* Image Display */}
           {data.question.text === "" && data.question.imageUrl && (
             <div className="flex w-full justify-center">
               <Image
-                src={`/api/images/${data.question.imageUrl}`}
+                src={data.question.imageUrl}
                 alt="Question example"
                 width={150}
                 height={150}
                 className="mb-6 rounded-lg border-2 dark:invert"
               />
             </div>
-          )}
-
-          {/* Number selection shows question text separately */}
-          {(data.subtestType === "5" || data.subtestType === "6") && (
-            <p className="mb-4 text-lg leading-relaxed font-medium sm:mb-6 sm:text-xl">
-              {data.question.text}
-            </p>
           )}
 
           {/* Interactive Question Component */}
@@ -101,11 +98,11 @@ export function InteractiveExample({ data }: InteractiveExampleProps) {
                 options: (data.question.options || []).map((option) => ({
                   optionLabel: `${option.id})`,
                   id: `${data.question.id}-${option.id}`,
-                  text: option.text || option.label || "",
+                  text: option.text || option.label || option.id || "",
                   imageUrl: option.imageUrl || undefined,
                 })),
               }}
-              value={selectedValue as string & number[]}
+              value={selectedValue}
               onChange={handleChange}
               isTraining={true}
               {...(data.subtestType === "5" || data.subtestType === "6"

@@ -19,7 +19,7 @@ export const InteractiveExampleDataSchema = z.object({
   type: z.string(),
   subtestType: z.string(),
   question: InteractiveQuestionDataSchema,
-  correctAnswer: z.string().optional(),
+  correctAnswer: z.string().optional().or(z.array(z.number())),
   explanation: z.string().optional(),
   exampleAnswer: z.string().optional(),
   instruction: z.string().optional(),

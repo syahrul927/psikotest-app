@@ -127,14 +127,6 @@ const ConfirmationDialog = React.forwardRef<
       });
     };
 
-    // Close memorization view (when timer ends or user closes)
-    const closeMemorization = () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      setIsMemorizing(false);
-    };
-
     // Format time as MM:SS
     const formatTime = (seconds: number) => {
       const mins = Math.floor(seconds / 60);
@@ -148,7 +140,7 @@ const ConfirmationDialog = React.forwardRef<
         <AlertDialogContent
           ref={ref}
           className={
-            "max-h-[100dvh] max-w-xl overflow-scroll md:max-h-[90dvh] md:max-w-xl lg:max-w-7xl"
+            "max-h-[100dvh] overflow-scroll sm:max-w-7xl md:max-h-[90dvh]"
           }
         >
           <>
@@ -158,30 +150,28 @@ const ConfirmationDialog = React.forwardRef<
             <div className="space-y-4">
               {/* Information Section */}
               <div className="bg-muted/50 rounded-lg border p-4 text-left">
-                <div className="prose prose-sm dark:prose-invert max-w-none">
-                  <h4 className="mb-2 font-semibold">Information:</h4>
-                  <ul className="space-y-1">
-                    <li>
-                      <strong>Nama:</strong> {informationData.name}
-                    </li>
-                    <li>
-                      <strong>Deskripsi:</strong> {informationData.description}
-                    </li>
-                    <li>
-                      <strong>Durasi:</strong> {informationData.duration}
-                    </li>
-                    <li>
-                      <strong>Total Pertanyaan:</strong>{" "}
-                      {informationData.totalQuestion}
-                    </li>
-                  </ul>
-                </div>
+                <h4 className="mb-2 font-semibold">Information:</h4>
+                <ul className="space-y-1">
+                  <li>
+                    <strong>Nama:</strong> {informationData.name}
+                  </li>
+                  <li>
+                    <strong>Deskripsi:</strong> {informationData.description}
+                  </li>
+                  <li>
+                    <strong>Durasi:</strong> {informationData.duration}
+                  </li>
+                  <li>
+                    <strong>Total Pertanyaan:</strong>{" "}
+                    {informationData.totalQuestion}
+                  </li>
+                </ul>
               </div>
 
               {/* Custom Instruction Section with Markdown */}
               {instruction && (
                 <div className="rounded-lg border bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/30">
-                  <article className="prose prose-pre:bg-transparent prose-pre:p-0 prose-sm dark:prose-invert max-w-3xl text-left">
+                  <article className="prose prose-pre:bg-transparent prose-pre:p-0 prose-sm dark:prose-invert prose-img:m-0 w-full text-left sm:max-w-7xl">
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{
@@ -284,15 +274,6 @@ const ConfirmationDialog = React.forwardRef<
                             className="object-contain dark:invert"
                           />
                         </div>
-
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={closeMemorization}
-                          className="text-muted-foreground hover:text-foreground text-xs"
-                        >
-                          Tutup gambar
-                        </Button>
                       </div>
                     </div>
                   )}
