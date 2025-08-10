@@ -218,6 +218,19 @@ const ConfirmationDialog = React.forwardRef<
                 </div>
               )}
 
+              {/* Warning Section */}
+              <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30">
+                <div className="prose prose-sm dark:prose-invert max-w-none text-left">
+                  <h4 className="mb-2 font-semibold">Perhatian Penting:</h4>
+                  <ul className="space-y-1">
+                    <li>Setelah memulai, timer akan berjalan otomatis</li>
+                    <li>Pastikan koneksi internet stabil</li>
+                    <li>Jangan menutup atau refresh halaman selama tes</li>
+                    <li>Subtes yang sudah dimulai tidak dapat diulang</li>
+                  </ul>
+                </div>
+              </div>
+
               {/* Special instruction and image button for subtest 9 */}
               {subtestType === "9" && (
                 <div className="space-y-3">
@@ -231,28 +244,12 @@ const ConfirmationDialog = React.forwardRef<
                       Mencatat akses gambar...
                     </div>
                   )}
-                  {!isCheckingAccess && !markImageViewedMutation.isPending && (
-                    <>
-                      {!hasViewedImage && (
-                        <Button
-                          variant="secondary"
-                          onClick={startMemorization}
-                          disabled={isMemorizing}
-                        >
-                          <Eye />
-                          {isMemorizing
-                            ? `Lihat gambar (tersisa ${formatTime(timeLeft)})`
-                            : "Lihat gambar untuk dihafal"}
-                        </Button>
-                      )}
-                      {hasViewedImage && (
-                        <span className="text-muted-foreground inline-flex align-middle text-sm">
-                          <ClockAlert className="mr-2" size={16} />
-                          Gambar sudah pernah dilihat - tidak dapat melihat
-                          kembali
-                        </span>
-                      )}
-                    </>
+
+                  {!isMemorizing && hasViewedImage && (
+                    <span className="text-muted-foreground inline-flex align-middle text-sm">
+                      <ClockAlert className="mr-2" size={16} />
+                      Gambar sudah pernah dilihat - tidak dapat melihat kembali
+                    </span>
                   )}
 
                   {isMemorizing && subtestType === "9" && (
@@ -279,22 +276,28 @@ const ConfirmationDialog = React.forwardRef<
                   )}
                 </div>
               )}
-
-              {/* Warning Section */}
-              <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30">
-                <div className="prose prose-sm dark:prose-invert max-w-none text-left">
-                  <h4 className="mb-2 font-semibold">Perhatian Penting:</h4>
-                  <ul className="space-y-1">
-                    <li>Setelah memulai, timer akan berjalan otomatis</li>
-                    <li>Pastikan koneksi internet stabil</li>
-                    <li>Jangan menutup atau refresh halaman selama tes</li>
-                    <li>Subtes yang sudah dimulai tidak dapat diulang</li>
-                  </ul>
-                </div>
-              </div>
             </div>
+
             <AlertDialogFooter>
               <AlertDialogCancel>Batal</AlertDialogCancel>
+              {!isCheckingAccess &&
+                !markImageViewedMutation.isPending &&
+                subtestType === "9" && (
+                  <>
+                    {!hasViewedImage && (
+                      <Button
+                        variant="default"
+                        onClick={startMemorization}
+                        disabled={isMemorizing}
+                      >
+                        <Eye />
+                        {isMemorizing
+                          ? `Lihat gambar (tersisa ${formatTime(timeLeft)})`
+                          : "Lihat gambar untuk dihafal"}
+                      </Button>
+                    )}
+                  </>
+                )}
               <AlertDialogAction onClick={() => onConfirm()}>
                 <Play className="mr-2 h-4 w-4" /> Mulai Test
               </AlertDialogAction>
