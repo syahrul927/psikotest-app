@@ -15,15 +15,6 @@ interface ParticipantInfoProps {
 export function ParticipantInfo({ slug }: { slug: string }) {
   const { data } = useGetDetailUser(slug);
 
-  const getEducationText = () => {
-    const educationId = data?.testerProfile?.educationId;
-    if (educationId === "1") return "SMA IPA";
-    if (educationId === "2") return "SMA IPS";
-    if (educationId === "3") return "S1 IPA";
-    if (educationId === "4") return "S1 IPS";
-    return educationId || "-";
-  };
-
   return (
     <Card className="relative w-full overflow-hidden">
       {/* Add the geometric pattern overlay */}
@@ -64,13 +55,13 @@ export function ParticipantInfo({ slug }: { slug: string }) {
           <p className="text-sm">
             {data?.testerProfile?.dateOfBirth
               ? new Date(data.testerProfile.dateOfBirth).toLocaleDateString(
-                "id-ID",
-                {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                },
-              )
+                  "id-ID",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  },
+                )
               : "-"}
           </p>
         </div>
@@ -90,7 +81,7 @@ export function ParticipantInfo({ slug }: { slug: string }) {
           <Label className="text-muted-foreground text-sm font-medium">
             Education
           </Label>
-          <p className="text-sm">{getEducationText()}</p>
+          <p className="text-sm">{data?.testerProfile?.educationDescription}</p>
         </div>
       </CardContent>
     </Card>

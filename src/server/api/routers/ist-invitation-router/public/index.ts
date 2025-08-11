@@ -67,31 +67,15 @@ export const publicIstInvitationRouter = createTRPCRouter({
         dob: z.date(),
         pob: z.string(),
         education: z.string(),
-        educationDescription: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const {
-        id,
-        name,
-        phone,
-        address,
-        dob,
-        pob,
-        education,
-        educationDescription,
-      } = input;
+      const { id, name, phone, address, dob, pob, education } = input;
       const invitation = await ctx.db.istInvitation.findFirst({
         where: {
           id,
         },
       });
-      // if (!invitation || invitation.startAt !== null) {
-      //   throw new TRPCError({
-      //     code: "BAD_REQUEST",
-      //     message: "Invalid invitation!",
-      //   });
-      // }
       if (!invitation) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -114,9 +98,7 @@ export const publicIstInvitationRouter = createTRPCRouter({
               name,
               dateOfBirth: dob,
               placeOfBirth: pob,
-              educationId: education,
-              educationDescription: educationDescription,
-              educationName: "",
+              educationDescription: education,
             },
           },
         },
@@ -156,15 +138,15 @@ export const publicIstInvitationRouter = createTRPCRouter({
       });
       return { resultId: resultId.id };
     }),
-    getUserDetail: publicProcedure
-      .input(z.string())
-      .query(async ({ ctx, input }) => {
-        const istProfile = await ctx.db.istInvitation.findUnique({
-          where: { id: input },
-          include:{
-            testerProfile: true
-          }
-        })
-        return istProfile
-      })
+  getUserDetail: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const istProfile = await ctx.db.istInvitation.findUnique({
+        where: { id: input },
+        include: {
+          testerProfile: true,
+        },
+      });
+      return istProfile;
+    }),
 });

@@ -1,0 +1,88 @@
+import { Button } from "@/components/ui/button";
+import { ClockAlert, Eye } from "lucide-react";
+import React from "react";
+import { MemoizedTimerDisplay } from "./memoized-timer-display";
+import { MemoizedImageContent } from "./memoized-image-content";
+
+interface Subtest9MemorizationFeatureProps {
+  subtestType: string;
+  istInvitationId?: string;
+  hasViewedImage: boolean;
+  isMemorizing: boolean;
+  timeLeft: number;
+  formatTime: (seconds: number) => string;
+  startMemorization: () => void;
+  isCheckingAccess: boolean;
+  isMarkingAccess: boolean;
+}
+
+export const Subtest9MemorizationFeature = React.memo(function Subtest9MemorizationFeature({
+  subtestType,
+  istInvitationId,
+  hasViewedImage,
+  isMemorizing,
+  timeLeft,
+  formatTime,
+  startMemorization,
+  isCheckingAccess,
+  isMarkingAccess,
+}: Subtest9MemorizationFeatureProps) {
+  if (subtestType !== "9") return null;
+
+  return (
+    <div className="space-y-3">
+      {/* Loading states */}
+      {isCheckingAccess && (
+        <div className="text-muted-foreground text-sm">
+          Memeriksa status gambar...
+        </div>
+      )}
+      
+      {isMarkingAccess && (
+        <div className="text-muted-foreground text-sm">
+          Mencatat akses gambar...
+        </div>
+      )}
+
+      {/* Action buttons */}
+      {!hasViewedImage && !isMemorizing && (
+        <Button
+          variant="default"
+          onClick={startMemorization}
+          disabled={isMemorizing || isMarkingAccess}
+        >
+          <Eye />
+          Lihat gambar untuk dihafal
+        </Button>
+      )}
+
+      {/* Already viewed message */}
+      {!isMemorizing && hasViewedImage && (
+        <span className="text-muted-foreground inline-flex align-middle text-sm">
+          <ClockAlert className="mr-2" size={16} />
+          Gambar sudah pernah dilihat - tidak dapat melihat kembali
+        </span>
+      )}
+
+      {/* Show image during memorization */}
+      {isMemorizing && (
+        <div className="border-t pt-3">
+          <div className="flex flex-col items-center space-y-3">
+            <MemoizedTimerDisplay
+              timeLeft={timeLeft}
+              formatTime={formatTime}
+              isMemorizing={isMemorizing}
+            />
+            <MemoizedImageContent
+              isMemorizing={isMemorizing}
+              imageSrc="/images/instruction/9.jpeg"
+              alt="Gambar untuk dihafal"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+Subtest9MemorizationFeature.displayName = "Subtest9MemorizationFeature";
