@@ -18,13 +18,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useUpdateProfileIstInvitation } from "@/hooks/api/ist-invitation/use-update-profile-ist-invitation";
 import { PAGE_URLS } from "@/lib/page-url";
@@ -40,6 +33,7 @@ import {
   User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import TextArea from "node_modules/@uiw/react-md-editor/esm/components/TextArea/index.nohighlight";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { IstWrapper } from "../ist-wrapper";
@@ -56,8 +50,7 @@ const formProfileSchema = z.object({
     .min(10, "Silakan isi alamat dengan lebih lengkap"),
   dob: z.date(),
   pob: z.string().min(1, "Tempat lahir wajib diisi"),
-  education: z.string().min(1, "Silakan pilih tingkat pendidikan Anda"),
-  educationDescription: z.string().optional(),
+  education: z.string(),
 });
 type FormProfileType = z.infer<typeof formProfileSchema>;
 
@@ -73,7 +66,6 @@ export const IstProfileForm = ({ id }: { id: string }) => {
       dob: new Date(),
       pob: "",
       education: "",
-      educationDescription: "",
     },
   });
 
@@ -81,9 +73,8 @@ export const IstProfileForm = ({ id }: { id: string }) => {
     router.push(PAGE_URLS.IST_SUBTEST(id));
   };
 
-  const { mutate, isPending: isUpdatingProfile } = useUpdateProfileIstInvitation(
-    onSuccessUpdateProfile,
-  );
+  const { mutate, isPending: isUpdatingProfile } =
+    useUpdateProfileIstInvitation(onSuccessUpdateProfile);
 
   const onSubmit = async (data: FormProfileType) => {
     mutate({ id, ...data });
@@ -251,22 +242,7 @@ export const IstProfileForm = ({ id }: { id: string }) => {
                         <GraduationCap className="h-4 w-4" />
                         Pendidikan
                       </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="h-12 w-full border-gray-200 focus:border-blue-500 focus:ring-blue-500">
-                            <SelectValue placeholder="Pilih Pendidikan" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="w-full">
-                          <SelectItem value="1">SMA IPA</SelectItem>
-                          <SelectItem value="2">SMA IPS</SelectItem>
-                          <SelectItem value="3">S1 IPA</SelectItem>
-                          <SelectItem value="4">S1 IPS</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Textarea {...field} placeholder="Deskripsi Edukasi" />
                       <FormMessage className="text-xs" />
                     </FormItem>
                   )}
@@ -275,7 +251,9 @@ export const IstProfileForm = ({ id }: { id: string }) => {
                 {/* Submit Button */}
                 <div className="flex w-full flex-col space-y-3">
                   <Button isLoading={isUpdatingProfile} type="submit">
-                    <ArrowRight className={cn(isUpdatingProfile ? "hidden" : "")} />{" "}
+                    <ArrowRight
+                      className={cn(isUpdatingProfile ? "hidden" : "")}
+                    />{" "}
                     Lanjutkan
                   </Button>
                 </div>

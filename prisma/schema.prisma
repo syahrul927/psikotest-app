@@ -138,10 +138,8 @@ model IstTesterProfile {
     name                 String
     phone                String
     address              String
-    educationId          String
     placeOfBirth         String
     dateOfBirth          DateTime        @db.Timestamptz(3)
-    educationName        String
     educationDescription String?
     IstInvitation        IstInvitation[]
 }
