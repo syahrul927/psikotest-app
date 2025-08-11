@@ -4,7 +4,6 @@ import { buildMultiFieldBulkUpdateSQL } from "@/lib/prisma-utils";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import type { IstResult, IstResultDetail, Prisma } from "@prisma/client";
 import type { Pick } from "@prisma/client/runtime/library";
-import { isNumberArray } from "@tanstack/react-table";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -59,7 +58,7 @@ export const istReviewRouter = createTRPCRouter({
       return {
         placeOfBirth: invitation.testerProfile?.placeOfBirth,
         dayOfBirth: invitation.testerProfile?.dateOfBirth,
-        educationName: invitation.testerProfile?.educationName,
+        educationName: invitation.testerProfile?.educationDescription,
         name: invitation.testerProfile?.name,
         phone: invitation.testerProfile?.phone,
         startAt: invitation.updatedAt,
