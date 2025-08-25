@@ -4,6 +4,8 @@ import {
   getInvitationByIdSchema,
   papiKostickInvitationFormSchema,
 } from "../schema";
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 export const papiKostickInvitationProtectedRouter = createTRPCRouter({
   save: protectedProcedure
@@ -82,17 +84,63 @@ export const papiKostickInvitationProtectedRouter = createTRPCRouter({
       });
 
       if (!invitation) {
-        throw new Error("Invitation not found");
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid InvitationId",
+        });
       }
 
       if (invitation.status === "ONPROGRESS") {
-        throw new Error(
-          "Cannot delete invitation that is currently in progress",
-        );
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid InvitationId",
+        });
       }
 
       return await ctx.db.papiKostickInvitation.delete({
         where: { id: input.id },
       });
+    }),
+  getResult: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input: invitationId }) => {
+      const invitation = await ctx.db.papiKostickInvitation.findUnique({
+        where: {
+          id: invitationId,
+        },
+        include: {
+          PapiKostickResult: {
+            include: {
+              PapiKostickResultDetail: true,
+            },
+          },
+        },
+      });
+      if (!invitation?.PapiKostickResult) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid InvitationId",
+        });
+      }
+      const { PapiKostickResultDetail: details } = invitation.PapiKostickResult;
+      return details;
+    }),
+  getDetailAnswers: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input: invitationId }) => {
+      const invitation = await ctx.db.papiKostickInvitation.findUnique({
+        where: { id: invitationId },
+        include: {
+          PapiKostickAnswer: true,
+        },
+      });
+
+      if (!invitation) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid InvitationId",
+        });
+      }
+      return invitation.PapiKostickAnswer;
     }),
 });

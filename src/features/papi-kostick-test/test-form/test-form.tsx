@@ -26,13 +26,14 @@ const PapiKostickTestForm = ({ invitationId }: TestFormProps) => {
     useGetProfilePapiKostickInvitation(invitationId);
   const router = useRouter();
 
-  const { mutate: submitAnswers } = useSubmitAnswerPapiKostickTest(() =>
-    router.push(PAGE_URLS.PAPI_KOSTICK_THANKS),
-  );
+  const { mutate: submitAnswers, isPending: isSubmitting } =
+    useSubmitAnswerPapiKostickTest(() =>
+      router.push(PAGE_URLS.PAPI_KOSTICK_THANKS),
+    );
 
   const isLoading = useMemo(() => {
-    return [loadingGetQuestions, loadingGetProfile].every((b) => b);
-  }, [loadingGetProfile, loadingGetQuestions]);
+    return [loadingGetQuestions, loadingGetProfile].some((b) => b);
+  }, [loadingGetProfile, loadingGetQuestions, isSubmitting]);
 
   const questions: PapiKostickTestQuestionType[] = useMemo(() => {
     return data ?? [];

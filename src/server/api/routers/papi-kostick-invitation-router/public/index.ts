@@ -122,7 +122,7 @@ export const papiKostickInvitationPublicRouter = createTRPCRouter({
     .input(z.string())
     .query(async ({ ctx, input: invitationId }) => {
       const invitation = await ctx.db.papiKostickInvitation.findUnique({
-        where: { id: invitationId },
+        where: { id: invitationId, status: "PENDING" },
       });
 
       if (!invitation) {

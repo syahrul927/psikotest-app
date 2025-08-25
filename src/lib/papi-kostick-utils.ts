@@ -1,5 +1,5 @@
 // constanta of category
-type Scale =
+export type Scale =
   | "N"
   | "G"
   | "A"
@@ -482,9 +482,7 @@ const PAPI_KEY: DataSchema[] = [
 ];
 
 // Function to calculate the score
-export function calculatePAPIScores(
-  answers: ("A" | "B")[],
-): Record<Scale, number> {
+export function calculatePAPIScores(answers: string[]): Record<Scale, number> {
   if (answers.length !== 90) {
     throw new Error(`Jawaban harus 90 soal, diterima: ${answers.length}`);
   }
@@ -546,291 +544,253 @@ type Rule = {
   description: string;
 };
 
-const factorRules: Record<string, Rule[][]> = {
+const factorRules: Record<string, Rule[]> = {
   N: [
-    // Y5
-    [
-      {
-        min: 7,
-        description: "ketekunan, tanggung jawab, terhadap tugas tinggi",
-      },
-      { min: 5, description: "Cukup bertanggung jawab terhadap pekerjaan" },
-      { min: 3, description: "Berhati hati, cenderung ragu" },
-      {
-        min: 0,
-        description:
-          "Cenderung ragu dalam situasi pengambilan keputusan, menunda atau menghindari situasi pengambilan keputusan",
-      },
-    ],
-    // Y6
-    [
-      { min: 5, description: "kemauan bekerja keras tinggi" },
-      {
-        min: 0,
-        description:
-          "bekerja hanya untuk mengejar kesenangan saja bukan untuk memberikan suatu hasil yang baik",
-      },
-    ],
-    // Y7
-    [
-      {
-        min: 6,
-        description:
-          "tujuan-tujuan didefinisikan secara jelas: kebutuhan untuk sukses tinggi, ambisi pribadi tinggi",
-      },
-      {
-        min: 0,
-        description:
-          "Mencerminkan ketidakpuasan tujuan... kepuasan dalam suatu pekerjaan: tidak perlu melanjutkan usaha untuk sukses",
-      },
-    ],
-    // Y8
-    [
-      {
-        min: 5,
-        description:
-          "seseorang memproyeksikan dirinya sebagai pemimpin. suatu tingkat ia mencoba menggunakan orang lain untuk mencapai tujuannya...",
-      },
-      {
-        min: 0,
-        description:
-          "cenderung tidak secara aktif menggunakan orang lain dalam bekerja",
-      },
-    ],
-    // Y9
-    [
-      {
-        min: 5,
-        description:
-          "Tingkat kebutuhan untuk menerima tanggung jawab orang lain, menjadi orang yang bertanggung jawab",
-      },
-      {
-        min: 0,
-        description:
-          "Menurunnya keinginan untuk bertanggung jawab terhadap pekerjaan dan tindakan orang lain.",
-      },
-    ],
-    // Y10
-    [
-      { min: 8, description: "Tidak ragu2 dalam proses pembuatan keputusan" },
-      {
-        min: 5,
-        description:
-          "Mudah dan lancar sampai berhati-hati dalam membuat keputusan",
-      },
-      {
-        min: 3,
-        description: "Berhati-hati sampai ragu dalam membuat keputusan",
-      },
-      {
-        min: 0,
-        description:
-          "ragu2 sampai penundaan/menolak situasi pengambilan keputusan",
-      },
-    ],
-    // Y11
-    [
-      { min: 4, description: "Tergolong aktif secara internal dan mental" },
-      {
-        min: 0,
-        description: "Melakukan segala sesuatu menurut kemauannya sendiri",
-      },
-    ],
-    // Y12
-    [
-      {
-        min: 5,
-        description:
-          "keaktifan secara fisik tergolong agak baik, cenderung tipe orang sportif",
-      },
-      {
-        min: 0,
-        description:
-          "Keaktifannya tergolong rendah, cenderung pasif. Hanya duduk saja",
-      },
-    ],
-    // Y13
-    [
-      { min: 8, description: "Membutuhkan perhatian yang nyata" },
-      { min: 4, description: "khusus, memiliki perilaku yang unik" },
-      { min: 2, description: "Rendah hati, tulus" },
-      { min: 0, description: "Cenderung pemalu, suka menyendiri" },
-    ],
-    // Y14
-    [
-      {
-        min: 6,
-        description:
-          "Tingkat kepercayaan dalam hubungan sosial tinggi; menyukai interaksi sosial",
-      },
-      {
-        min: 0,
-        description:
-          "Memiliki penilaian yang rendah terhadap hubungan sosial cenderung kurang percaya pada orang lain",
-      },
-    ],
-    // Y15
-    [
-      {
-        min: 6,
-        description:
-          "Kebutuhan untuk disukai, diakui oleh semua orang. Mudah dipengaruhi kelompok",
-      },
-      {
-        min: 4,
-        description:
-          "Ada kebutuhan untuk diterima dan diakui tetapi tidak terlalu mudah dipengaruhi kelompok",
-      },
-      {
-        min: 0,
-        description: "Selektif, secara umum melepaskan diri dari kelompok",
-      },
-    ],
-    // Y16
-    [
-      {
-        min: 6,
-        description:
-          "Ketergantungan yang sangat besar akan pengakuan dan penerimaan diri",
-      },
-      {
-        min: 3,
-        description:
-          "Sadar akan kebutuhan antar pribadi tetapi melepaskan diri dari orang lain/tidak terlalu tergantung",
-      },
-      {
-        min: 0,
-        description:
-          "Tidak menyukai hubungan antar pribadi. Tidak menyukai interaksi perseorangan",
-      },
-    ],
-    // Y17
-    [
-      {
-        min: 5,
-        description: "Penekanan pada nilai penalaran tergolong tinggi",
-      },
-      { min: 0, description: "Kurang perhatian praktis" },
-    ],
-    // Y18
-    [
-      { min: 5, description: "Minat menangani hal2 detail cukup tinggi" },
-      {
-        min: 0,
-        description:
-          "menyadari kebutuhan akan kecermatan tetapi secara pribadi tidak berminat menangani hal detail",
-      },
-    ],
-    // Y19
-    [
-      {
-        min: 6,
-        description: "Memiliki keteraturan yang sangat tinggi, cenderung kaku",
-      },
-      { min: 3, description: "Tergolong teratur tetapi dengan fleksibilitas" },
-      { min: 0, description: "Fleksibilitas sampai ketidak teraturan" },
-    ],
-    // Y20
-    [
-      {
-        min: 8,
-        description:
-          "Mudah gelisah, mudah frustrasi mungkin karena segala sesuatu bergerak tidak cukup cepat",
-      },
-      {
-        min: 6,
-        description: "Pembuat perubahan yang selektif. Berpikir jauh ke depan",
-      },
-      { min: 5, description: "Mudah menyesuaikan diri" },
-      {
-        min: 3,
-        description: "Tidak suka akan perubahan jika dipaksakan padanya",
-      },
-      {
-        min: 0,
-        description:
-          "tidak menyukai dan menolak perubahan. Cenderung menggunakan pendekatan tradisional.",
-      },
-    ],
-    // Y21
-    [
-      {
-        min: 7,
-        description:
-          "Sangat menempatkan nilai2 dalam setiap aktivitasnya. Kebutuhan pengendalian diri yang berlebihan, mungkin digunakan sebagai defence mechanism",
-      },
-      {
-        min: 4,
-        description:
-          "memiliki pendekatan emosional yang seimbang. Mampu mengendalikan perasaannya",
-      },
-      { min: 2, description: "Terbuka" },
-      {
-        min: 0,
-        description:
-          "Terbuka, cepat bereaksi, tidak memikirkan nilai2 dalam pengendalian diri",
-      },
-    ],
-    // Y22
-    [
-      { min: 8, description: "Agresif, cenderung defensive" },
-      {
-        min: 6,
-        description:
-          "Agresi pribadi yang berkaitan dengan pekerjaan, dorongan dan semangat bersaing",
-      },
-      { min: 5, description: "Keras kepala" },
-      {
-        min: 3,
-        description:
-          "Lebih menyukai tempat yang tenang. Menghindari konflik. Cenderung menunda masalah",
-      },
-      {
-        min: 0,
-        description:
-          "Selalu menghindari masalah. Cenderung mengabaikan situasi atau menolak mengenali sesuatu sebagai sebuah masalah",
-      },
-    ],
-    // Y23
-    [
-      {
-        min: 6,
-        description:
-          "bersikap setia dan membantu secara pribadi; ada kemungkinan bantuannya bersifat politis",
-      },
-      { min: 4, description: "Setia terhadap perusahaan" },
-      { min: 2, description: "Mengurus kepentingan diri sendiri" },
-      {
-        min: 0,
-        description: "cenderung egois, kemungkinan bisa bersikap memberontak",
-      },
-    ],
-    // Y24
-    [
-      {
-        min: 6,
-        description:
-          "Meningkatnya orientasi terhadap tugas dan membutuhkan instruksi yang jelas",
-      },
-      {
-        min: 4,
-        description:
-          "kebutuhan akan pengarahan dan harapan yang dirumuskan untuknya",
-      },
-      { min: 0, description: "berorientasi pada tujuan, mandiri" },
-    ],
+    { min: 7, description: "ketekunan, tanggung jawab, terhadap tugas tinggi" },
+    { min: 5, description: "Cukup bertanggung jawab terhadap pekerjaan" },
+    { min: 3, description: "Berhati hati, cenderung ragu" },
+    {
+      min: 0,
+      description:
+        "Cenderung ragu dalam situasi pengambilan keputusan, menunda atau menghindari situasi pengambilan keputusan",
+    },
+  ],
+  G: [
+    { min: 5, description: "kemauan bekerja keras tinggi" },
+    {
+      min: 0,
+      description:
+        "bekerja hanya untuk mengejar kesenangan saja bukan untuk memberikan suatu hasil yang baik",
+    },
+  ],
+  A: [
+    {
+      min: 6,
+      description:
+        "tujuan-tujuan didefinisikan secara jelas: kebutuhan untuk sukses tinggi, ambisi pribadi tinggi",
+    },
+    {
+      min: 0,
+      description:
+        "Mencerminkan ketidakpuasan tujuan… kepuasan dalam suatu pekerjaan: tidak perlu melanjutkan usaha untuk sukses",
+    },
+  ],
+  L: [
+    {
+      min: 5,
+      description:
+        "seseorang memproyeksikan dirinya sebagai pemimpin. … demokratis atau diktator, otoriter",
+    },
+    {
+      min: 0,
+      description:
+        "cenderung tidak secara aktif menggunakan orang lain dalam bekerja",
+    },
+  ],
+  P: [
+    {
+      min: 5,
+      description:
+        "Tingkat kebutuhan untuk menerima tanggung jawab orang lain, menjadi orang yang bertanggung jawab",
+    },
+    {
+      min: 0,
+      description:
+        "Menurunnya keinginan untuk bertanggung jawab terhadap pekerjaan dan tindakan orang lain.",
+    },
+  ],
+  I: [
+    { min: 8, description: "Tidak ragu2 dalam proses pembuatan keputusan" },
+    {
+      min: 5,
+      description:
+        "Mudah dan lancar sampai berhati-hati dalam membuat keputusan",
+    },
+    { min: 3, description: "Berhati-hati sampai ragu dalam membuat keputusan" },
+    {
+      min: 0,
+      description:
+        "ragu2 sampai penundaan/menolak situasi pengambilan keputusan",
+    },
+  ],
+  T: [
+    { min: 4, description: "Tergolong aktif secara internal dan mental" },
+    {
+      min: 0,
+      description: "Melakukan segala sesuatu menurut kemauannya sendiri",
+    },
+  ],
+  V: [
+    {
+      min: 5,
+      description:
+        "keaktifan secara fisik tergolong agak baik, cenderung tipe orang sportif",
+    },
+    {
+      min: 0,
+      description:
+        "Keaktifannya tergolong rendah, cenderung pasif. Hanya duduk saja",
+    },
+  ],
+  X: [
+    { min: 8, description: "Membutuhkan perhatian yang nyata" },
+    { min: 4, description: "khusus, memiliki perilaku yang unik" },
+    { min: 2, description: "Rendah hati, tulus" },
+    { min: 0, description: "Cenderung pemalu, suka menyendiri" },
+  ],
+  S: [
+    {
+      min: 6,
+      description:
+        "Tingkat kepercayaan dalam hubungan sosial tinggi; menyukai interaksi sosial",
+    },
+    {
+      min: 0,
+      description:
+        "Memiliki penilaian yang rendah terhadap hubungan sosial cenderung kurang percaya pada orang lain",
+    },
+  ],
+  B: [
+    {
+      min: 6,
+      description:
+        "Kebutuhan untuk disukai, diakui oleh semua orang. Mudah dipengaruhi kelompok",
+    },
+    {
+      min: 4,
+      description:
+        "Ada kebutuhan untuk diterima dan diakui tetapi tidak terlalu mudah dipengaruhi kelompok",
+    },
+    {
+      min: 0,
+      description: "Selektif, secara umum melepaskan diri dari kelompok",
+    },
+  ],
+  O: [
+    {
+      min: 6,
+      description:
+        "Ketergantungan yang sangat besar akan pengakuan dan penerimaan diri",
+    },
+    {
+      min: 3,
+      description:
+        "Sadar akan kebutuhan antar pribadi tetapi melepaskan diri dari orang lain/tidak terlalu tergantung",
+    },
+    {
+      min: 0,
+      description:
+        "Tidak menyukai hubungan antar pribadi. Tidak menyukai interaksi perseorangan",
+    },
+  ],
+  R: [
+    { min: 5, description: "Penekanan pada nilai penalaran tergolong tinggi" },
+    { min: 0, description: "Kurang perhatian praktis" },
+  ],
+  D: [
+    { min: 5, description: "Minat menangani hal2 detail cukup tinggi" },
+    {
+      min: 0,
+      description:
+        "menyadari kebutuhan akan kecermatan tetapi secara pribadi tidak berminat menangani hal detail",
+    },
+  ],
+  C: [
+    {
+      min: 6,
+      description: "Memiliki keteraturan yang sangat tinggi, cenderung kaku",
+    },
+    { min: 3, description: "Tergolong teratur tetapi dengan fleksibilitas" },
+    { min: 0, description: "Fleksibilitas sampai ketidak teraturan" },
+  ],
+  Z: [
+    {
+      min: 8,
+      description:
+        "Mudah gelisah, mudah frustrasi mungkin karena segala sesuatu bergerak tidak cukup cepat",
+    },
+    {
+      min: 6,
+      description: "Pembuat perubahan yang selektif. Berpikir jauh ke depan",
+    },
+    { min: 5, description: "Mudah menyesuaikan diri" },
+    {
+      min: 3,
+      description: "Tidak suka akan perubahan jika dipaksakan padanya",
+    },
+    {
+      min: 0,
+      description:
+        "tidak menyukai dan menolak perubahan. Cenderung menggunakan pendekatan tradisional",
+    },
+  ],
+  E: [
+    {
+      min: 7,
+      description:
+        "Sangat menempatkan nilai2 dalam setiap aktivitasnya. Kebutuhan pengendalian diri yang berlebihan, mungkin digunakan sebagai defence mechanism",
+    },
+    {
+      min: 4,
+      description:
+        "memiliki pendekatan emosional yang seimbang. Mampu mengendalikan perasaannya",
+    },
+    { min: 2, description: "Terbuka" },
+    {
+      min: 0,
+      description:
+        "Terbuka, cepat bereaksi, tidak memikirkan nilai2 dalam pengendalian diri",
+    },
+  ],
+  K: [
+    { min: 8, description: "Agresif, cenderung defensive" },
+    {
+      min: 6,
+      description:
+        "Agresi pribadi yang berkaitan dengan pekerjaan, dorongan dan semangat bersaing",
+    },
+    { min: 5, description: "Keras kepala" },
+    {
+      min: 3,
+      description:
+        "Lebih menyukai tempat yang tenang. Menghindari konflik. Cenderung menunda masalah",
+    },
+    {
+      min: 0,
+      description:
+        "Selalu menghindari masalah. Cenderung mengabaikan situasi atau menolak mengenali sesuatu sebagai sebuah masalah",
+    },
+  ],
+  F: [
+    {
+      min: 6,
+      description:
+        "bersikap setia dan membantu secara pribadi; ada kemungkinan bantuannya bersifat politis",
+    },
+    { min: 4, description: "Setia terhadap perusahaan" },
+    { min: 2, description: "Mengurus kepentingan diri sendiri" },
+    {
+      min: 0,
+      description: "cenderung egois, kemungkinan bisa bersikap memberontak",
+    },
+  ],
+  W: [
+    {
+      min: 6,
+      description:
+        "Meningkatnya orientasi terhadap tugas dan membutuhkan instruksi yang jelas",
+    },
+    {
+      min: 4,
+      description:
+        "kebutuhan akan pengarahan dan harapan yang dirumuskan untuknya",
+    },
+    { min: 0, description: "berorientasi pada tujuan, mandiri" },
   ],
 };
 
-export function papiKostickDescription(
-  factor: string,
-  index: number,
-  value: number,
-): string {
-  const rulesGroup = factorRules[factor];
-  if (!rulesGroup) return "";
-
-  const rules = rulesGroup[index];
+export function papiKostickDescription(factor: string, value: number): string {
+  const rules = factorRules[factor];
   if (!rules) return "";
 
   for (const rule of rules) {
@@ -838,6 +798,65 @@ export function papiKostickDescription(
       return rule.description;
     }
   }
-
   return "";
 }
+
+export type MasterCategoryScaleType = {
+  category: string;
+  aspect: string;
+  scale: string;
+};
+export const MasterCategoryScale: Record<Scale, MasterCategoryScaleType> = {
+  N: {
+    category: "Arah Kerja",
+    aspect: "Penyelesaian secara prestasi",
+    scale: "N",
+  },
+  G: {
+    category: "Arah Kerja",
+    aspect: "Peran sebagai pekerja keras",
+    scale: "G",
+  },
+  A: { category: "Arah Kerja", aspect: "Hasrat untuk berprestasi", scale: "A" },
+  L: { category: "Kepemimpinan", aspect: "Peran sebagai pemimpin", scale: "L" },
+  P: {
+    category: "Kepemimpinan",
+    aspect: "Pengendalian orang lain",
+    scale: "P",
+  },
+  I: {
+    category: "Kepemimpinan",
+    aspect: "Mudah dalam mengambil keputusan",
+    scale: "I",
+  },
+  T: { category: "Aktifitas", aspect: "Tipe selalu sibuk", scale: "T" },
+  V: { category: "Aktifitas", aspect: "Tipe yang bersemangat", scale: "V" },
+  X: {
+    category: "Pergaulan",
+    aspect: "Kebutuhan untuk mendapatkan perhatian",
+    scale: "X",
+  },
+  S: { category: "Pergaulan", aspect: "Pergaulan luas", scale: "S" },
+  B: { category: "Pergaulan", aspect: "Kebutuhan berkelompok", scale: "B" },
+  O: {
+    category: "Pergaulan",
+    aspect: "Kebutuhan untuk dekat dan menyayangi",
+    scale: "O",
+  },
+  R: { category: "Gaya Kerja", aspect: "Tipe teoritikal", scale: "R" },
+  D: {
+    category: "Gaya Kerja",
+    aspect: "Suka pekerjaan yang terperinci",
+    scale: "D",
+  },
+  C: { category: "Gaya Kerja", aspect: "Tipe teratur", scale: "C" },
+  Z: { category: "Sifat", aspect: "Hasrat untuk berubah", scale: "Z" },
+  E: { category: "Sifat", aspect: "Pengendalian emosi", scale: "E" },
+  K: { category: "Sifat", aspect: "Agresi", scale: "K" },
+  F: { category: "Ketaatan", aspect: "Dukungan terhadap atasan", scale: "F" },
+  W: {
+    category: "Ketaatan",
+    aspect: "Kebutuhan taat pada aturan dan pengarahan",
+    scale: "W",
+  },
+};

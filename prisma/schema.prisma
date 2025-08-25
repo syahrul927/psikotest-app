@@ -302,7 +302,7 @@ model PapiKostickInvitation {
   createdAt         DateTime                    @default(now()) @db.Timestamptz(3)
   updatedAt         DateTime                    @updatedAt @db.Timestamptz(3)
   PapiKostickAnswer PapiKostickAnswer[]
-  PapiKostickResult PapiKostickResult[]
+  PapiKostickResult PapiKostickResult?
 }
 
 model PapiKostickQuestion {
@@ -329,28 +329,27 @@ model PapiKostickAnswer {
 }
 
 model PapiKostickResult {
-  id           String                @id @default(cuid())
-  invitationId String                @unique
-  invitation   PapiKostickInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
-  completedAt  DateTime              @default(now()) @db.Timestamptz(3)
-  createdAt    DateTime              @default(now()) @db.Timestamptz(3)
-  updatedAt    DateTime              @updatedAt @db.Timestamptz(3)
-
+  id                      String                    @id @default(cuid())
+  invitationId            String                    @unique
+  invitation              PapiKostickInvitation     @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  completedAt             DateTime                  @default(now()) @db.Timestamptz(3)
+  createdAt               DateTime                  @default(now()) @db.Timestamptz(3)
+  updatedAt               DateTime                  @updatedAt @db.Timestamptz(3)
   PapiKostickResultDetail PapiKostickResultDetail[]
 
   @@index([invitationId])
 }
 
 model PapiKostickResultDetail {
-  id              String            @id @default(cuid())
-  resultId        String
-  result          PapiKostickResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
-  factor          String
-  rawScore        Float
-  normalizedScore Float
-  percentile      Float?
-  interpretation  String?           @db.Text
-  createdAt       DateTime          @default(now()) @db.Timestamptz(3)
+  id             String            @id @default(cuid())
+  resultId       String
+  result         PapiKostickResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+  score          Int
+  factor         String
+  interpretation String?           @db.Text
+  category       String?
+  aspect         String?
+  createdAt      DateTime          @default(now()) @db.Timestamptz(3)
 
   @@unique([resultId, factor])
   @@index([resultId])
