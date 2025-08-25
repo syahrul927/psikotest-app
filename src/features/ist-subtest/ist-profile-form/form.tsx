@@ -33,7 +33,6 @@ import {
   User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import TextArea from "node_modules/@uiw/react-md-editor/esm/components/TextArea/index.nohighlight";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { IstWrapper } from "../ist-wrapper";

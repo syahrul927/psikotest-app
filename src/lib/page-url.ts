@@ -35,4 +35,17 @@ export const PAGE_URLS = {
   KRAEPELIN_TEST_CONFIRMATION: (id: string) =>
     `/guest/kraepelin/${id}/confirmation`,
   KRAEPELIN_TEST_PROFILE: (id: string) => `/guest/kraepelin/${id}/profile`,
+
+  // Papi Kostick
+  PAPI_KOSTICK_INVITATION: "/papi-kostick-invitation",
+  PAPI_KOSTICK_INVITATION_RESULT: (id: string) =>
+    `/papi-kostick-invitation/${id}`,
+
+  // public Papi Kostick
+  PAPI_KOSTICK_TEST_CONFIRMATION: (id: string) =>
+    `/guest/papi-kostick/${id}/confirmation`,
+  PAPI_KOSTICK_TEST_PROFILE: (id: string) =>
+    `/guest/papi-kostick/${id}/profile`,
+  PAPI_KOSTICK_TEST: (id: string) => `/guest/papi-kostick/${id}/test`,
+  PAPI_KOSTICK_THANKS: "/guest/papi-kostick/thanks",
 } as const;

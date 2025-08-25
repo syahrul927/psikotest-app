@@ -17,11 +17,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { useGetDetailIstInvitation } from "@/hooks/api/ist-invitation/use-get-detail-ist-invitation";
 import { useSaveIstInvitation } from "@/hooks/api/ist-invitation/use-save-ist-invitation";
+import { useFormDialog } from "@/hooks/use-dialog-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useIstInvFormDialogController } from "./dialog-controller";
 import { IstInvitationFormSkeleton } from "./form-skeleton";
 
 const istInvFormSchema = z.object({
@@ -42,7 +42,7 @@ interface IstInvFormProps {
 }
 
 export function IstInvitationForm({ onSuccessCallback }: IstInvFormProps) {
-  const { open, setOpen, istInvitationId } = useIstInvFormDialogController();
+  const { open, handleCloseDialog, id: istInvitationId } = useFormDialog();
   const isEditMode = Boolean(istInvitationId);
 
   // Fetch user detail if editing
@@ -51,7 +51,7 @@ export function IstInvitationForm({ onSuccessCallback }: IstInvFormProps) {
 
   const { mutate, isPending } = useSaveIstInvitation(() => {
     onSuccessCallback();
-    setOpen(false);
+    handleCloseDialog();
   });
 
   const form = useForm<IstInvFormType>({
@@ -85,7 +85,7 @@ export function IstInvitationForm({ onSuccessCallback }: IstInvFormProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleCloseDialog}>
       {isLoadingInvitation ? (
         <IstInvitationFormSkeleton />
       ) : (

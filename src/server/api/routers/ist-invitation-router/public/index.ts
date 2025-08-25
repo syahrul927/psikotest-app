@@ -23,11 +23,9 @@ export const publicIstInvitationRouter = createTRPCRouter({
           id: input,
         },
       });
-      //   if (invitation?.startAt) {
-      //     if (!compareDates(new Date(), invitation.startAt)) {
-      //       return undefined;
-      //     }
-      //   }
+      if (!invitation) {
+        throw new Error("Invitation not found");
+      }
       return {
         invitationName: invitation?.name,
       };

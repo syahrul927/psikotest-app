@@ -6,6 +6,7 @@ import {
   HomeIcon,
   Settings,
   UsersIcon,
+  BarChartHorizontalIcon,
 } from "lucide-react";
 
 export const NavigationMainConstant: NavigationType[] = [
@@ -23,6 +24,11 @@ export const NavigationMainConstant: NavigationType[] = [
     title: "Psikotest IST",
     url: PAGE_URLS.IST_INVITATION,
     icon: BrainCogIcon,
+  },
+  {
+    title: "Psikotest Papi Kostik",
+    url: PAGE_URLS.PAPI_KOSTICK_INVITATION,
+    icon: BarChartHorizontalIcon,
   },
 ];
 export const NavigationSecondaryConstant: NavigationType[] = [

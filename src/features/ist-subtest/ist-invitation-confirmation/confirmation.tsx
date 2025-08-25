@@ -23,7 +23,7 @@ import {
   useConfirmationIstInvitation,
   type ConfirmationIstInvitationResponseType,
 } from "@/hooks/api/ist-invitation/use-confirmation-ist-invitation";
-import { useAccessIstInvitation } from "@/hooks/use-access-ist-test";
+import { useAccessTestInvitation } from "@/hooks/use-access-test";
 import { PAGE_URLS } from "@/lib/page-url";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,7 +46,7 @@ export const IstInvitationConfirmation = ({
   invitationName,
 }: IstInvitationConfirmationProps) => {
   const router = useRouter();
-  const { grantAccess, resetAccess } = useAccessIstInvitation();
+  const { grantAccess, resetAccess } = useAccessTestInvitation();
   const form = useForm<FormType>({
     defaultValues: {
       secretKey: "",

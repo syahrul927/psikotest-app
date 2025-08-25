@@ -1,291 +1,370 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    expires      DateTime
-    userId       String
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  expires      DateTime
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    password      String
-    accounts      Account[]
-    sessions      Session[]
-    createdAt     DateTime  @default(now()) @db.Timestamptz(3)
-    updatedAt     DateTime  @updatedAt @db.Timestamptz(3)
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime  @updatedAt @db.Timestamptz(3)
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
 model TesterProfile {
-    id                   String       @id @default(cuid())
-    name                 String
-    phone                String
-    address              String
-    educationId          String
-    educationName        String
-    educationDescription String?
-    Invitation           Invitation[]
+  id                   String       @id @default(cuid())
+  name                 String
+  phone                String
+  address              String
+  educationId          String
+  educationName        String
+  educationDescription String?
+  Invitation           Invitation[]
 }
 
 model KraepelinTemplate {
-    id      String @id @default(cuid())
-    version String
-    x       Int
-    y       Int
-    value   Int
+  id      String @id @default(cuid())
+  version String
+  x       Int
+  y       Int
+  value   Int
 
-    @@index([version, x, y])
+  @@index([version, x, y])
 }
 
 model Invitation {
-    id              String         @id @default(cuid())
-    name            String?
-    secretKey       String
-    startAt         DateTime?      @db.Timestamptz(3)
-    testerProfileId String?
-    testerProfile   TesterProfile? @relation(fields: [testerProfileId], references: [id])
-    createdAt       DateTime       @db.Timestamptz(3)
-    updatedAt       DateTime       @updatedAt @db.Timestamptz(3)
+  id              String         @id @default(cuid())
+  name            String?
+  secretKey       String
+  startAt         DateTime?      @db.Timestamptz(3)
+  testerProfileId String?
+  testerProfile   TesterProfile? @relation(fields: [testerProfileId], references: [id])
+  createdAt       DateTime       @db.Timestamptz(3)
+  updatedAt       DateTime       @updatedAt @db.Timestamptz(3)
 }
 
 model KraepelinResult {
-    id                     String                   @id @default(cuid())
-    invitationId           String
-    panker                 Float?
-    highestJanker          Int?
-    lowestJanker           Int?
-    janker                 Int?
-    tianker                Int?
-    hanker                 Float?
-    totalAnswered          Int?
-    totalIncorrect         Int?
-    totalNotAnswered       Int?
-    highestFilled          Int?
-    lowestFilled           Int?
-    deciel                 Float?
-    KraepelinResultSummary KraepelinResultSummary[]
-    KraepelinResultDetail  KraepelinResultDetail[]
-    generated              Boolean?
+  id                     String                   @id @default(cuid())
+  invitationId           String
+  panker                 Float?
+  highestJanker          Int?
+  lowestJanker           Int?
+  janker                 Int?
+  tianker                Int?
+  hanker                 Float?
+  totalAnswered          Int?
+  totalIncorrect         Int?
+  totalNotAnswered       Int?
+  highestFilled          Int?
+  lowestFilled           Int?
+  deciel                 Float?
+  KraepelinResultSummary KraepelinResultSummary[]
+  KraepelinResultDetail  KraepelinResultDetail[]
+  generated              Boolean?
 
-    @@index([invitationId])
+  @@index([invitationId])
 }
 
 // 1 Baris berapa yang terjawab ada di table ini, misalkan baris ke (x) terjawab berapa
 model KraepelinResultSummary {
-    id                String          @id @default(cuid())
-    kraepelinResult   KraepelinResult @relation(fields: [kraepelinResultId], references: [id])
-    kraepelinResultId String
-    x                 Int
-    answered          Int
-    correct           Int?
-    wrong             Int?
+  id                String          @id @default(cuid())
+  kraepelinResult   KraepelinResult @relation(fields: [kraepelinResultId], references: [id])
+  kraepelinResultId String
+  x                 Int
+  answered          Int
+  correct           Int?
+  wrong             Int?
 }
 
 model KraepelinResultDetail {
-    id                String          @id @default(cuid())
-    kraepelinResult   KraepelinResult @relation(fields: [kraepelinResultId], references: [id])
-    kraepelinResultId String
-    xA                Int
-    yA                Int
-    xB                Int
-    yB                Int
-    a                 Int
-    b                 Int
-    value             Int
-    createdAt         DateTime        @default(now()) @db.Timestamptz(3)
+  id                String          @id @default(cuid())
+  kraepelinResult   KraepelinResult @relation(fields: [kraepelinResultId], references: [id])
+  kraepelinResultId String
+  xA                Int
+  yA                Int
+  xB                Int
+  yB                Int
+  a                 Int
+  b                 Int
+  value             Int
+  createdAt         DateTime        @default(now()) @db.Timestamptz(3)
 }
 
 model IstTesterProfile {
-    id                   String          @id @default(cuid())
-    name                 String
-    phone                String
-    address              String
-    placeOfBirth         String
-    dateOfBirth          DateTime        @db.Timestamptz(3)
-    educationDescription String?
-    IstInvitation        IstInvitation[]
+  id                   String          @id @default(cuid())
+  name                 String
+  phone                String
+  address              String
+  placeOfBirth         String
+  dateOfBirth          DateTime        @db.Timestamptz(3)
+  educationDescription String?
+  IstInvitation        IstInvitation[]
 }
 
 model IstInvitation {
-    id                String              @id @default(cuid())
-    name              String?
-    secretKey         String
-    status            StatusIstInvitation @default(PENDING)
-    testerProfileId   String?
-    testerProfile     IstTesterProfile?   @relation(fields: [testerProfileId], references: [id])
-    createdAt         DateTime            @db.Timestamptz(3)
-    updatedAt         DateTime            @updatedAt @db.Timestamptz(3)
-    IstSubtestSession IstSubtestSession[]
-    IstResult         IstResult[]
-    IstResultSummary  IstResultSummary[]
+  id                String              @id @default(cuid())
+  name              String?
+  secretKey         String
+  status            StatusIstInvitation @default(PENDING)
+  testerProfileId   String?
+  testerProfile     IstTesterProfile?   @relation(fields: [testerProfileId], references: [id])
+  createdAt         DateTime            @db.Timestamptz(3)
+  updatedAt         DateTime            @updatedAt @db.Timestamptz(3)
+  IstSubtestSession IstSubtestSession[]
+  IstResult         IstResult[]
+  IstResultSummary  IstResultSummary[]
 }
 
 model IstSubtestSession {
-    id            String    @id @default(cuid())
-    startedAt     DateTime? @db.Timestamptz(3)
-    submittedAt   DateTime? @db.Timestamptz(3)
-    questionOrder String[] // Array of Question IDs (ordered as shown to user)
+  id            String    @id @default(cuid())
+  startedAt     DateTime? @db.Timestamptz(3)
+  submittedAt   DateTime? @db.Timestamptz(3)
+  questionOrder String[] // Array of Question IDs (ordered as shown to user)
 
-    // Tracking for Subtest 9 memorization
-    subtest9ImageViewedAt DateTime? @map("subtest_9_image_viewed_at") @db.Timestamptz(3)
+  // Tracking for Subtest 9 memorization
+  subtest9ImageViewedAt DateTime? @map("subtest_9_image_viewed_at") @db.Timestamptz(3)
 
-    IstSubtestTemplate IstSubtestTemplate? @relation(fields: [subtestTemplateId], references: [id])
-    subtestTemplateId  String
-    istInvitationId    String
-    IstInvitation      IstInvitation       @relation(fields: [istInvitationId], references: [id], onDelete: Cascade)
+  IstSubtestTemplate IstSubtestTemplate? @relation(fields: [subtestTemplateId], references: [id])
+  subtestTemplateId  String
+  istInvitationId    String
+  IstInvitation      IstInvitation       @relation(fields: [istInvitationId], references: [id], onDelete: Cascade)
 }
 
 model IstResultSummary {
-    id                     String        @id @default(cuid())
-    istInvitationId        String        @unique
-    IstInvitation          IstInvitation @relation(fields: [istInvitationId], references: [id])
-    thinkingFlexibility    Float
-    attentionFlexibility   Float
-    reasoningLogic         Float
-    memoryAndConcentration Float
-    analyticalSynthesis    Float
-    numericalAbility       Float
-    sumRawScore            Float
-    sumStandarizedScore    Float
-    totalIQ                Float
+  id                     String        @id @default(cuid())
+  istInvitationId        String        @unique
+  IstInvitation          IstInvitation @relation(fields: [istInvitationId], references: [id])
+  thinkingFlexibility    Float
+  attentionFlexibility   Float
+  reasoningLogic         Float
+  memoryAndConcentration Float
+  analyticalSynthesis    Float
+  numericalAbility       Float
+  sumRawScore            Float
+  sumStandarizedScore    Float
+  totalIQ                Float
 }
 
 model IstResult {
-    id                 String             @id @default(cuid())
-    istInvitationId    String
-    IstInvitation      IstInvitation      @relation(fields: [istInvitationId], references: [id])
-    IstSubtestTemplate IstSubtestTemplate @relation(fields: [subtestTemplateId], references: [id])
-    subtestTemplateId  String
-    answered           Int?
-    missed             Int?
-    answeredCorrectly  Int? // RW (raw score)
-    answeredWrong      Int?
-    standarizedScore   Int? // SW
-    IstResultDetail    IstResultDetail[]
-    createdAt          DateTime           @default(now()) @db.Timestamptz(3)
-    updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
+  id                 String             @id @default(cuid())
+  istInvitationId    String
+  IstInvitation      IstInvitation      @relation(fields: [istInvitationId], references: [id])
+  IstSubtestTemplate IstSubtestTemplate @relation(fields: [subtestTemplateId], references: [id])
+  subtestTemplateId  String
+  answered           Int?
+  missed             Int?
+  answeredCorrectly  Int? // RW (raw score)
+  answeredWrong      Int?
+  standarizedScore   Int? // SW
+  IstResultDetail    IstResultDetail[]
+  createdAt          DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
 }
 
 model IstResultDetail {
-    id          String              @id @default(cuid())
-    istResultId String
-    IstResult   IstResult           @relation(fields: [istResultId], references: [id])
-    question    IstQuestionTemplate @relation(fields: [questionId], references: [id])
-    questionId  String
-    answer      String
-    isCorrect   Boolean?
-    score       Int?
-    createdAt   DateTime            @default(now()) @db.Timestamptz(3)
+  id          String              @id @default(cuid())
+  istResultId String
+  IstResult   IstResult           @relation(fields: [istResultId], references: [id])
+  question    IstQuestionTemplate @relation(fields: [questionId], references: [id])
+  questionId  String
+  answer      String
+  isCorrect   Boolean?
+  score       Int?
+  createdAt   DateTime            @default(now()) @db.Timestamptz(3)
 
-    @@index([questionId], name: "user_question_unique")
+  @@index([questionId], name: "user_question_unique")
 }
 
 // Template
 model IstSubtestTemplate {
-    id                String                @id @default(cuid())
-    name              String
-    description       String                @db.Text // markdown
-    instruction       String?               @db.Text
-    videos            String[] // Array of video URLs (optional)
-    timeLimit         Int // in  minutes
-    questions         IstQuestionTemplate[]
-    createdAt         DateTime              @default(now()) @db.Timestamptz(3)
-    updatedAt         DateTime              @updatedAt @db.Timestamptz(3)
-    IstSubtestSession IstSubtestSession[]
-    IstResult         IstResult[]
-    IstStandardScore  IstStandardScore[]
+  id                String                @id @default(cuid())
+  name              String
+  description       String                @db.Text // markdown
+  instruction       String?               @db.Text
+  videos            String[] // Array of video URLs (optional)
+  timeLimit         Int // in  minutes
+  questions         IstQuestionTemplate[]
+  createdAt         DateTime              @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime              @updatedAt @db.Timestamptz(3)
+  IstSubtestSession IstSubtestSession[]
+  IstResult         IstResult[]
+  IstStandardScore  IstStandardScore[]
 }
 
 model IstQuestionTemplate {
-    id                 String              @id @default(cuid())
-    IstSubtestTemplate IstSubtestTemplate  @relation(fields: [subtestTemplateId], references: [id])
-    subtestTemplateId  String
-    text               String? // Nullable for image-based questions
-    imageUrl           String? // For type 7/8
-    options            IstOptionTemplate[] // ABCDE options (text or image URL)
-    correctAnswer      String? // Only for template logic, not user input
-    order              Int // For sorting questions
-    createdAt          DateTime            @default(now()) @db.Timestamptz(3)
-    updatedAt          DateTime            @updatedAt @db.Timestamptz(3)
-    UserAnswer         IstResultDetail[]
+  id                 String              @id @default(cuid())
+  IstSubtestTemplate IstSubtestTemplate  @relation(fields: [subtestTemplateId], references: [id])
+  subtestTemplateId  String
+  text               String? // Nullable for image-based questions
+  imageUrl           String? // For type 7/8
+  options            IstOptionTemplate[] // ABCDE options (text or image URL)
+  correctAnswer      String? // Only for template logic, not user input
+  order              Int // For sorting questions
+  createdAt          DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime            @updatedAt @db.Timestamptz(3)
+  UserAnswer         IstResultDetail[]
 }
 
 model IstOptionTemplate {
-    id          String              @id @default(cuid())
-    IstQuestion IstQuestionTemplate @relation(fields: [questionId], references: [id])
-    questionId  String
-    label       String // A/B/C/D/E
-    text        String? // Nullable for image option
-    imageUrl    String? // Nullable for text option
+  id          String              @id @default(cuid())
+  IstQuestion IstQuestionTemplate @relation(fields: [questionId], references: [id])
+  questionId  String
+  label       String // A/B/C/D/E
+  text        String? // Nullable for image option
+  imageUrl    String? // Nullable for text option
 }
 
 model IstStandardScore {
-    id                 String             @id @default(cuid())
-    age                Int
-    IstSubtestTemplate IstSubtestTemplate @relation(fields: [subtestTemplateId], references: [id])
-    subtestTemplateId  String
-    rawScore           Int
-    standarizedScore   Int
-    description        String
-    createdAt          DateTime           @default(now()) @db.Timestamptz(3)
-    updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
+  id                 String             @id @default(cuid())
+  age                Int
+  IstSubtestTemplate IstSubtestTemplate @relation(fields: [subtestTemplateId], references: [id])
+  subtestTemplateId  String
+  rawScore           Int
+  standarizedScore   Int
+  description        String
+  createdAt          DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime           @updatedAt @db.Timestamptz(3)
 
-    @@index([age])
+  @@index([age])
 }
 
 model IstStandardIqScore {
-    id               String   @id @default(cuid())
-    age              Int
-    from             Int
-    to               Int
-    standarizedScore Int
-    createdAt        DateTime @default(now()) @db.Timestamptz(3)
-    updatedAt        DateTime @updatedAt @db.Timestamptz(3)
+  id               String   @id @default(cuid())
+  age              Int
+  from             Int
+  to               Int
+  standarizedScore Int
+  createdAt        DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt        DateTime @updatedAt @db.Timestamptz(3)
 
-    @@index([age])
+  @@index([age])
+}
+
+model PapiKostickTesterProfile {
+  id                    String                  @id @default(cuid())
+  name                  String
+  phone                 String
+  dateOfBirth           DateTime                @db.Timestamptz(3)
+  createdAt             DateTime                @default(now()) @db.Timestamptz(3)
+  PapiKostickInvitation PapiKostickInvitation[]
+}
+
+model PapiKostickInvitation {
+  id                String                      @id @default(cuid())
+  name              String?
+  secretKey         String
+  status            StatusPapiKostickInvitation @default(PENDING)
+  testerProfileId   String?
+  testerProfile     PapiKostickTesterProfile?   @relation(fields: [testerProfileId], references: [id])
+  createdAt         DateTime                    @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime                    @updatedAt @db.Timestamptz(3)
+  PapiKostickAnswer PapiKostickAnswer[]
+  PapiKostickResult PapiKostickResult[]
+}
+
+model PapiKostickQuestion {
+  id                String              @id @default(cuid())
+  descriptionA      String              @db.Text
+  descriptionB      String              @db.Text
+  createdAt         DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt         DateTime            @updatedAt @db.Timestamptz(3)
+  PapiKostickAnswer PapiKostickAnswer[]
+}
+
+model PapiKostickAnswer {
+  id           String                @id @default(cuid())
+  invitationId String
+  invitation   PapiKostickInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     PapiKostickQuestion   @relation(fields: [questionId], references: [id])
+  answer       String                @db.VarChar(1) // 'A' or 'B'
+  createdAt    DateTime              @default(now()) @db.Timestamptz(3)
+
+  @@unique([invitationId, questionId])
+  @@index([invitationId])
+  @@index([questionId])
+}
+
+model PapiKostickResult {
+  id           String                @id @default(cuid())
+  invitationId String                @unique
+  invitation   PapiKostickInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  completedAt  DateTime              @default(now()) @db.Timestamptz(3)
+  createdAt    DateTime              @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime              @updatedAt @db.Timestamptz(3)
+
+  PapiKostickResultDetail PapiKostickResultDetail[]
+
+  @@index([invitationId])
+}
+
+model PapiKostickResultDetail {
+  id              String            @id @default(cuid())
+  resultId        String
+  result          PapiKostickResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+  factor          String
+  rawScore        Float
+  normalizedScore Float
+  percentile      Float?
+  interpretation  String?           @db.Text
+  createdAt       DateTime          @default(now()) @db.Timestamptz(3)
+
+  @@unique([resultId, factor])
+  @@index([resultId])
 }
 
 enum StatusIstInvitation {
-    PENDING
-    ONPROGRESS
-    AWAITING_REVIEW
-    DONE
+  PENDING
+  ONPROGRESS
+  AWAITING_REVIEW
+  DONE
+}
+
+enum StatusPapiKostickInvitation {
+  PENDING
+  ONPROGRESS
+  DONE
 }

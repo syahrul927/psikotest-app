@@ -1,14 +1,13 @@
 "use client";
 
 import {
-  KraepelinInvFormDialogProvider,
   KraepelinInvitationForm,
   KraepelinInvitationSummary,
   KraepelinInvitationTable,
 } from "@/features/kraepelin-invitation";
 import { useDeleteKraepelinInvitation } from "@/hooks/api/kraepelin-invitation/use-delete-kraepelin-invitation";
 import { useGetAllKraepelinInvitation } from "@/hooks/api/kraepelin-invitation/use-get-all-kraepelin-invitation";
-import { notFound } from "next/navigation";
+import { FormDialogProvider } from "@/hooks/use-dialog-form";
 
 export default function KraepelinInvitationPage() {
   const { data, isLoading, refetch } = useGetAllKraepelinInvitation();
@@ -18,11 +17,8 @@ export default function KraepelinInvitationPage() {
   const onDelete = (id: string) => {
     void deleteKraepelin(id);
   };
-  if (!data && !isLoading) {
-    return notFound();
-  }
   return (
-    <KraepelinInvFormDialogProvider>
+    <FormDialogProvider>
       <KraepelinInvitationSummary
         isLoading={isLoading}
         total={data?.total}
@@ -47,6 +43,6 @@ export default function KraepelinInvitationPage() {
         }
       />
       <KraepelinInvitationForm onSuccessCallback={refetch} />
-    </KraepelinInvFormDialogProvider>
+    </FormDialogProvider>
   );
 }

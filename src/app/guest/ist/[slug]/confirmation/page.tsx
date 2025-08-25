@@ -1,16 +1,18 @@
-import { notFound } from "next/navigation";
-import type { PageType } from "@/types/page-type";
-import { Logo } from "@/components/ui/logo";
 import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
-import { findIstInvitation } from "@/hooks/api/ist-invitation/user-find-ist-invitation";
+import { Logo } from "@/components/ui/logo";
 import { IstInvitationConfirmation } from "@/features/ist-subtest/ist-invitation-confirmation";
+import { findIstInvitation } from "@/hooks/api/ist-invitation/user-find-ist-invitation";
+import type { PageType } from "@/types/page-type";
+import { notFound } from "next/navigation";
 
 const IstConfirmationPage = async ({ params }: PageType) => {
   const { slug } = await params;
   if (!slug) {
     notFound();
   }
-  const data = await findIstInvitation(slug);
+  const data = await findIstInvitation(slug).catch((_e) => {
+    notFound();
+  });
   if (!data) notFound();
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-3 md:p-10">
