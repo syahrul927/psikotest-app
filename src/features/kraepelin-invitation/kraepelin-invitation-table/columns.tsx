@@ -22,13 +22,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { useKraepelinInvFormDialogController } from "../kraepelin-invitation-form";
 import {
   KraepelinInvitationStatus,
   type KraepelinInvitationTableProps,
 } from "./schema";
 import { cn } from "@/lib/utils";
-import { useDeleteDialog } from "./delete-dialog-context";
+import { useDeleteConfirmation } from "@/components/alert/dialog-delete";
+import { useState } from "react";
+import { useFormDialog } from "@/hooks/use-dialog-form";
 
 export const columnsInvitation: ColumnDef<KraepelinInvitationTableProps>[] = [
   {
@@ -90,10 +91,27 @@ export const columnsInvitation: ColumnDef<KraepelinInvitationTableProps>[] = [
   },
 ];
 const CellAction = ({ row }: { row: Row<KraepelinInvitationTableProps> }) => {
-  const { openDialog } = useKraepelinInvFormDialogController();
-  const { openDeleteDialog } = useDeleteDialog();
   const { name, id, onDelete, status } = row.original;
 
+  const { confirmationDelete } = useDeleteConfirmation();
+  const [open, setOpen] = useState<boolean>(false);
+
+  const { handleOpenDialog } = useFormDialog();
+  const copyToClipBoard = () => {
+    const base = process.env.NEXT_PUBLIC_BASE_URL;
+    const text = `Undangan Psikotest:\n${base}${PAGE_URLS.KRAEPELIN_TEST_CONFIRMATION(id)}\n\nSecret Key:\n${row.original.secretKey}`;
+    toast.success("Berhasil Copy Link ke Clipboard");
+    return navigator.clipboard.writeText(text);
+  };
+
+  const handleEdit = () => {
+    setOpen(false);
+    handleOpenDialog(id);
+  };
+  const handleDelete = () => {
+    setOpen(false);
+    confirmationDelete(() => onDelete(id));
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -114,32 +132,23 @@ const CellAction = ({ row }: { row: Row<KraepelinInvitationTableProps> }) => {
             </Link>
           </DropdownMenuGroup>
         ) : null}
-        <DropdownMenuItem
-          onClick={async () => {
-            const base = process.env.NEXT_PUBLIC_BASE_URL;
-            const text = `Undangan Psikotest:\n${base}${PAGE_URLS.KRAEPELIN_TEST_CONFIRMATION(id)}\n\nSecret Key:\n${row.original.secretKey}`;
-            toast.success("Berhasil Copy Link ke Clipboard");
-            return navigator.clipboard.writeText(text);
-          }}
-        >
+        <DropdownMenuItem onClick={copyToClipBoard}>
           <CopyIcon size={16} className="mr-2" />
           <span>Share</span>
         </DropdownMenuItem>
         <DropdownMenuGroup>
           {status === "PENDING" ? (
-            <DropdownMenuItem onClick={() => openDialog(row.original.id)}>
+            <DropdownMenuItem onClick={handleEdit}>
               <Settings2 size={16} className="mr-2" />
-              <span>Ubah Undangan</span>
+              <span>Edit</span>
             </DropdownMenuItem>
           ) : null}
           {status !== "DONE" ? (
             <DropdownMenuItem
-              className="text-destructive"
-              onClick={() =>
-                openDeleteDialog({ id, name: name ?? "", onDelete })
-              }
+              className="text-destructive bg-destructive/5"
+              onClick={handleDelete}
             >
-              <TrashIcon size={16} className="text-destructive mr-2" />
+              <TrashIcon className="mr-2 text-current hover:text-current" />
               <span>Hapus</span>
             </DropdownMenuItem>
           ) : null}

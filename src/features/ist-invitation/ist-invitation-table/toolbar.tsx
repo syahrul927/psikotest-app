@@ -6,18 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MailPlusIcon, XIcon } from "lucide-react";
 import { IstInvitationStatus } from "./schema";
-import { useIstInvFormDialogController } from "../ist-invitation-form";
+import { useFormDialog } from "@/hooks/use-dialog-form";
 
 export function DataTableToolbarIstInvitation<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-  const { setOpen } = useIstInvFormDialogController();
+  const { handleOpenDialog } = useFormDialog();
   return (
     <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter tasks..."
+          placeholder="Filter Undangan..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -43,8 +43,8 @@ export function DataTableToolbarIstInvitation<TData>({
           </Button>
         )}
       </div>
-      <Button onClick={() => setOpen(true)}>
-        Buat Invitation
+      <Button onClick={() => handleOpenDialog()}>
+        Buat Undangan
         <MailPlusIcon />
       </Button>
     </div>

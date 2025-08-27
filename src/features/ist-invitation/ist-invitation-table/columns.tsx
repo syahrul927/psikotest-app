@@ -1,5 +1,6 @@
 "use client";
 
+import { useDeleteConfirmation } from "@/components/alert/dialog-delete";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { localDate } from "@/lib/date-utils";
 import { PAGE_URLS } from "@/lib/page-url";
+import { cn } from "@/lib/utils";
 import { type ColumnDef, type Row } from "@tanstack/react-table";
 import {
   CheckCheck,
@@ -25,9 +27,8 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 import { IstInvitationStatus, type IstInvitationTableProps } from "./schema";
-import { useIstInvFormDialogController } from "../ist-invitation-form";
-import { cn } from "@/lib/utils";
-import { useDeleteDialog } from "./delete-dialog-context";
+import { useState } from "react";
+import { useFormDialog } from "@/hooks/use-dialog-form";
 
 export const columnsIstInvitation: ColumnDef<IstInvitationTableProps>[] = [
   {
@@ -90,43 +91,52 @@ export const columnsIstInvitation: ColumnDef<IstInvitationTableProps>[] = [
 ];
 
 const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
-  const { openDialog } = useIstInvFormDialogController();
-  const { openDeleteDialog } = useDeleteDialog();
-  const { name, id, onDelete, status } = row.original;
+  const { id, onDelete, status } = row.original;
+  const { confirmationDelete } = useDeleteConfirmation();
+  const [open, setOpen] = useState<boolean>(false);
 
+  const { handleOpenDialog } = useFormDialog();
+  const copyToClipBoard = () => {
+    const base = process.env.NEXT_PUBLIC_BASE_URL;
+    const text = `Undangan Psikotest:\n${base}${PAGE_URLS.IST_TEST_CONFIRMATION(id)}\n\nSecret Key:\n${row.original.secretKey}`;
+    toast.success("Berhasil Copy Link ke Clipboard");
+    return navigator.clipboard.writeText(text);
+  };
+
+  const handleEdit = () => {
+    setOpen(false);
+    handleOpenDialog(id);
+  };
+  const handleDelete = () => {
+    setOpen(false);
+    confirmationDelete(() => onDelete(id));
+  };
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant={"ghost"}>
           <MoreHorizontalIcon size={16} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Information</DropdownMenuLabel>
+        <DropdownMenuLabel>Opsi</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {status === "DONE" ? (
           <DropdownMenuGroup>
             <Link href={PAGE_URLS.IST_INVITATION_RESULT(id)}>
               <DropdownMenuItem>
                 <EyeIcon size={16} className="mr-2" />
-                <span>Hasil Test</span>
+                <span>Hasil Tes</span>
               </DropdownMenuItem>
             </Link>
           </DropdownMenuGroup>
         ) : null}
-        <DropdownMenuItem
-          onClick={async () => {
-            const base = process.env.NEXT_PUBLIC_BASE_URL;
-            const text = `Undangan Psikotest:\n${base}${PAGE_URLS.IST_TEST_CONFIRMATION(id)}\n\nSecret Key:\n${row.original.secretKey}`;
-            toast.success("Berhasil Copy Link ke Clipboard");
-            return navigator.clipboard.writeText(text);
-          }}
-        >
+        <DropdownMenuItem onClick={copyToClipBoard}>
           <CopyIcon size={16} className="mr-2" />
-          <span>Share</span>
+          <span>Salin Link</span>
         </DropdownMenuItem>
         {(status === "AWAITING_REVIEW" || status === "DONE") && (
-          <DropdownMenuLabel>Action</DropdownMenuLabel>
+          <DropdownMenuLabel>Aksi</DropdownMenuLabel>
         )}
         {status === "AWAITING_REVIEW" && (
           <>
@@ -148,23 +158,18 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
         )}
         <DropdownMenuGroup>
           {status === "PENDING" ? (
-            <DropdownMenuItem onClick={() => openDialog(row.original.id)}>
+            <DropdownMenuItem onClick={handleEdit}>
               <Settings2 size={16} className="mr-2" />
-              <span>Update Invitation</span>
+              <span>Edit</span>
             </DropdownMenuItem>
           ) : null}
           {status !== "DONE" ? (
             <DropdownMenuItem
-              className="text-destructive"
-              onClick={() =>
-                openDeleteDialog({ id, name: name ?? "", onDelete })
-              }
+              className="text-destructive bg-destructive/5"
+              onClick={handleDelete}
             >
-              <TrashIcon
-                size={16}
-                className="mr-2 text-current hover:text-current"
-              />
-              <span>Delete</span>
+              <TrashIcon className="mr-2 text-current hover:text-current" />
+              <span>Hapus</span>
             </DropdownMenuItem>
           ) : null}
         </DropdownMenuGroup>

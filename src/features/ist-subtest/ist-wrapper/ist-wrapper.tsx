@@ -1,13 +1,13 @@
 "use client";
 import { LoaderSpinner } from "@/components/ui/loading-spinner";
-import { useAccessIstInvitation } from "@/hooks/use-access-ist-test";
+import { useAccessTestInvitation } from "@/hooks/use-access-test";
 import { PAGE_URLS } from "@/lib/page-url";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
-import { toast } from "sonner";    
+import { toast } from "sonner";
 
 export const IstWrapper = ({ children }: { children: ReactNode }) => {
-  const { access } = useAccessIstInvitation();
+  const { access } = useAccessTestInvitation();
   const router = useRouter();
   const { slug } = useParams<{ slug: string }>();
 
@@ -19,7 +19,7 @@ export const IstWrapper = ({ children }: { children: ReactNode }) => {
 
       const timeout = setTimeout(() => {
         router.replace(PAGE_URLS.IST_TEST_CONFIRMATION(slug));
-      }, 5000);
+      }, 1000);
       return () => clearTimeout(timeout);
     }
   }, [access, router, slug]);

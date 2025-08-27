@@ -1,7 +1,9 @@
-import { AccessIstInvitationProvider } from "@/hooks/use-access-ist-test";
+import { AccessTestInvitationProvider } from "@/hooks/use-access-test";
 import { type ReactNode } from "react";
 
 const LayoutTraining = ({ children }: { children: ReactNode }) => {
-  return <AccessIstInvitationProvider>{children}</AccessIstInvitationProvider>;
+  return (
+    <AccessTestInvitationProvider>{children}</AccessTestInvitationProvider>
+  );
 };
 export default LayoutTraining;

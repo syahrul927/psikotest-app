@@ -17,12 +17,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { useGetDetailKraepelinInvitation } from "@/hooks/api/kraepelin-invitation/use-get-detail-kraepelin-invitation";
 import { useSaveKraepelinInvitation } from "@/hooks/api/kraepelin-invitation/use-save-kraepelin-invitation";
+import { useFormDialog } from "@/hooks/use-dialog-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { KraepelinInvitationFormSkeleton } from "./form-skeleton";
-import { useKraepelinInvFormDialogController } from "./dialog-controller";
 
 const kraepelinInvFormSchema = z.object({
   id: z.string().optional(),
@@ -44,8 +44,11 @@ interface KraepelinInvFormProps {
 export function KraepelinInvitationForm({
   onSuccessCallback,
 }: KraepelinInvFormProps) {
-  const { open, setOpen, kraepelinInvitationId } =
-    useKraepelinInvFormDialogController();
+  const {
+    open,
+    handleCloseDialog,
+    id: kraepelinInvitationId,
+  } = useFormDialog();
   const isEditMode = Boolean(kraepelinInvitationId);
 
   // Fetch user detail if editing
@@ -54,7 +57,7 @@ export function KraepelinInvitationForm({
 
   const { mutate, isPending } = useSaveKraepelinInvitation(() => {
     onSuccessCallback();
-    setOpen(false);
+    handleCloseDialog();
   });
 
   const form = useForm<KraepelinInvFormType>({
@@ -88,7 +91,7 @@ export function KraepelinInvitationForm({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleCloseDialog}>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
