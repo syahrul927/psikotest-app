@@ -12,10 +12,8 @@ export const useSavePapiKostickInvitation = ({
   onSuccessCallback,
   onErrorCallback,
 }: UseSavePapiKostickInvitationProps = {}) => {
-  const utils = api.useUtils();
   return api.papiKostickInvitation.save.useMutation({
     onSuccess: () => {
-      utils.papiKostickInvitation.getAll.invalidate();
       onSuccessCallback?.();
       toast.success("Invitation created successfully");
     },

@@ -1,5 +1,4 @@
 import { useDeleteConfirmation } from "@/components/alert/dialog-delete";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,18 +8,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useFormDialog } from "@/hooks/use-dialog-form";
+import { localDate } from "@/lib/date-utils";
 import { PAGE_URLS } from "@/lib/page-url";
+import { cn } from "@/lib/utils";
 import { type ColumnDef, type Row } from "@tanstack/react-table";
 import { CheckCheck, Copy, Edit3, MoreHorizontal, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
   PapiKostickInvitationStatus,
   type PapiKostickInvitationTableProps,
 } from "./schema";
-import { localDate } from "@/lib/date-utils";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 export const ColumnsPapiKostickInvitation: ColumnDef<PapiKostickInvitationTableProps>[] =
   [
@@ -28,7 +27,7 @@ export const ColumnsPapiKostickInvitation: ColumnDef<PapiKostickInvitationTableP
       accessorKey: "name",
       header: "Nama",
       cell: ({ row }) => {
-        const name = row.getValue("name") as string;
+        const name: string = row.getValue("name");
         return name || "-";
       },
     },

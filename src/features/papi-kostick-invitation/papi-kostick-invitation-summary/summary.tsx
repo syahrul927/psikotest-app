@@ -68,7 +68,7 @@ export function PapiKostickInvitationSummary() {
 export function PapiKostickInvitationSummarySkeleton() {
   return (
     <div className="grid gap-4 md:grid-cols-4">
-      {[...Array(4)].map((_, i) => (
+      {[...Array<string>(4)].map((_, i) => (
         <Card key={i}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <Skeleton className="h-4 w-[100px]" />

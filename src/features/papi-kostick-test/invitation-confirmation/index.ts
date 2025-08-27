@@ -1,1 +1,1 @@
-export * from "./form-confirmation.tsx";
+export * from "./form-confirmation";

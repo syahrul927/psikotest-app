@@ -56,7 +56,17 @@ const PapiKostickTestForm = ({ invitationId }: TestFormProps) => {
   useEffect(() => {
     const savedResponses = localStorage.getItem("papi-kostick-responses");
     if (savedResponses) {
-      setResponses(new Map(JSON.parse(savedResponses)));
+      try {
+        // parse with type assertion
+        const parsed = JSON.parse(savedResponses) as [string, "A" | "B"][];
+
+        // validate that it’s actually an array of tuples
+        if (Array.isArray(parsed)) {
+          setResponses(new Map(parsed));
+        }
+      } catch (e) {
+        console.error("Failed to parse saved responses", e);
+      }
     }
   }, []);
 

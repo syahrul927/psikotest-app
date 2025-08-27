@@ -10,7 +10,10 @@ import { FormDialogProvider } from "@/hooks/use-dialog-form";
 
 export default function PapiKostickInvitationPage() {
   const { data, isLoading, refetch } = useGetAllPapiKostickInvitation();
-  const deleteMutation = useDeletePapiKostickInvitation();
+  const onSuccessCallback = () => {
+    void refetch();
+  };
+  const deleteMutation = useDeletePapiKostickInvitation({ onSuccessCallback });
 
   const invitations = data?.items ?? [];
   const handleDelete = (id: string) => {
