@@ -48,7 +48,9 @@ export const istInvitationRouter = createTRPCRouter({
               data: istTypes.map((type) => ({
                 subtestTemplateId: type.id,
                 // questionOrder: _.shuffle(type.questions.map((q) => q.id)),
-                questionOrder: _.sortBy(type.questions, "id").map((q) => q.id),
+                questionOrder: _.sortBy(type.questions, "order").map(
+                  (q) => q.id,
+                ),
               })),
             },
           },
