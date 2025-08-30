@@ -38,6 +38,10 @@ const chartConfig = {
     label: "Kraepelin",
     color: "hsl(var(--chart-2))",
   },
+  papiKostick: {
+    label: "PapiKostick",
+    color: "hsl(var(--chart-4))",
+  },
   total: {
     label: "Total",
     color: "hsl(var(--chart-3))",
@@ -71,7 +75,7 @@ export function ChartActivity() {
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle>Tren Penyelesaian Tes</CardTitle>
           <CardDescription>
-            Menampilkan penyelesaian tes IST dan Kraepelin dalam {days} hari terakhir
+            Menampilkan penyelesaian tes IST, PapiKostick, dan Kraepelin dalam {days} hari terakhir
           </CardDescription>
         </div>
         {isMobile ? (
@@ -146,6 +150,18 @@ export function ChartActivity() {
                   stopOpacity={0.1}
                 />
               </linearGradient>
+              <linearGradient id="fillPapiKostick" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--color-papiKostick)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--color-papiKostick)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -182,6 +198,13 @@ export function ChartActivity() {
               type="natural"
               fill="url(#fillKraepelin)"
               stroke="var(--color-kraepelin)"
+              stackId="a"
+            />
+            <Area
+              dataKey="papiKostick"
+              type="natural"
+              fill="url(#fillPapiKostick)"
+              stroke="var(--color-papiKostick)"
               stackId="a"
             />
             <Area

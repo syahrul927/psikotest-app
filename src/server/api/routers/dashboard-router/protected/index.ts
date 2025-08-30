@@ -15,6 +15,14 @@ export const dashboardRouter = createTRPCRouter({
       },
     });
 
+    // Get PapiKostick invitation counts
+    const papiKostickInvitations = await ctx.db.papiKostickInvitation.groupBy({
+      by: ["status"],
+      _count: {
+        id: true,
+      },
+    });
+
     // Get Kraepelin invitation counts (simple count without relationships)
     const kraepelinTotal = await ctx.db.invitation.count();
 
@@ -35,6 +43,7 @@ export const dashboardRouter = createTRPCRouter({
         },
       });
 
+
     // Calculate metrics
     const istPending =
       istInvitations.find((i) => i.status === "PENDING")?._count.id || 0;
@@ -45,6 +54,14 @@ export const dashboardRouter = createTRPCRouter({
       0;
     const istDone =
       istInvitations.find((i) => i.status === "DONE")?._count.id || 0;
+
+    const papiKostickPending =
+      papiKostickInvitations.find((i) => i.status === "PENDING")?._count.id || 0;
+    const papiKostickOnProgress =
+      papiKostickInvitations.find((i) => i.status === "ONPROGRESS")?._count.id || 0;
+    const papiKostickDone =
+      papiKostickInvitations.find((i) => i.status === "DONE")?._count.id || 0;
+    const papiKostickAwaitingReview = 0; // PapiKostick does not have AWAITING_REVIEW status
 
     // Kraepelin metrics - using simple field-based logic
     const kraepelinSummaryResultIds = kraepelinResultSummaries.map(
@@ -71,6 +88,15 @@ export const dashboardRouter = createTRPCRouter({
       },
     });
 
+    const papiKostickCompletedThisMonth = await ctx.db.papiKostickInvitation.count({
+      where: {
+        status: "DONE",
+        updatedAt: {
+          gte: startOfMonth,
+        },
+      },
+    });
+
     const kraepelinCompletedThisMonth = await ctx.db.kraepelinResult.count({
       where: {
         generated: true,
@@ -80,22 +106,29 @@ export const dashboardRouter = createTRPCRouter({
     });
 
     return {
-      totalActiveTests: istPending + istOnProgress + kraepelinActive,
-      testsAwaitingReview: istAwaitingReview + kraepelinAwaitingReview,
-      completedThisMonth: istCompletedThisMonth + kraepelinCompletedThisMonth,
+      totalActiveTests: istPending + istOnProgress + kraepelinActive + papiKostickPending + papiKostickOnProgress,
+      testsAwaitingReview: istAwaitingReview + kraepelinAwaitingReview + papiKostickAwaitingReview,
+      completedThisMonth: istCompletedThisMonth + kraepelinCompletedThisMonth + papiKostickCompletedThisMonth,
       totalTests:
         istPending +
         istOnProgress +
         istAwaitingReview +
         istDone +
-        kraepelinTotal,
+        kraepelinTotal +
+        papiKostickPending +
+        papiKostickOnProgress +
+        papiKostickAwaitingReview +
+        papiKostickDone,
       completionRate:
-        ((istDone + kraepelinCompleted) /
+        ((istDone + kraepelinCompleted + papiKostickDone) /
           (istDone +
             kraepelinCompleted +
+            papiKostickDone +
             istPending +
             istOnProgress +
-            kraepelinActive)) *
+            kraepelinActive +
+            papiKostickPending +
+            papiKostickOnProgress)) *
         100,
       breakdown: {
         ist: {
@@ -109,6 +142,12 @@ export const dashboardRouter = createTRPCRouter({
           awaitingReview: kraepelinAwaitingReview,
           completed: kraepelinCompleted,
           total: kraepelinTotal,
+        },
+        papiKostick: {
+          pending: papiKostickPending,
+          onProgress: papiKostickOnProgress,
+          awaitingReview: papiKostickAwaitingReview,
+          done: papiKostickDone,
         },
       },
     };
@@ -128,6 +167,20 @@ export const dashboardRouter = createTRPCRouter({
       startDate.setDate(endDate.getDate() - days);
       // Get IST completions by day (when status changed to DONE)
       const istCompletions = await ctx.db.istInvitation.findMany({
+        where: {
+          status: "DONE",
+          updatedAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        select: {
+          updatedAt: true,
+        },
+      });
+
+      // Get PapiKostick completions by day
+      const papiKostickCompletions = await ctx.db.papiKostickInvitation.findMany({
         where: {
           status: "DONE",
           updatedAt: {
@@ -177,7 +230,7 @@ export const dashboardRouter = createTRPCRouter({
       );
 
       // Group by date
-      const dateMap = new Map<string, { ist: number; kraepelin: number }>();
+      const dateMap = new Map<string, { ist: number; kraepelin: number; papiKostick: number }>();
 
       // Initialize all dates in range
       for (
@@ -186,7 +239,7 @@ export const dashboardRouter = createTRPCRouter({
         d.setDate(d.getDate() + 1)
       ) {
         const dateKey = d.toISOString().split("T")[0];
-        dateMap.set(dateKey!, { ist: 0, kraepelin: 0 });
+        dateMap.set(dateKey!, { ist: 0, kraepelin: 0, papiKostick: 0 });
       }
 
       // Count IST completions by date
@@ -195,6 +248,15 @@ export const dashboardRouter = createTRPCRouter({
         if (dateKey && dateMap.has(dateKey)) {
           const current = dateMap.get(dateKey)!;
           dateMap.set(dateKey, { ...current, ist: current.ist + 1 });
+        }
+      });
+
+      // Count PapiKostick completions by date
+      papiKostickCompletions.forEach((completion) => {
+        const dateKey = completion.updatedAt.toISOString().split("T")[0];
+        if (dateKey && dateMap.has(dateKey)) {
+          const current = dateMap.get(dateKey)!;
+          dateMap.set(dateKey, { ...current, papiKostick: current.papiKostick + 1 });
         }
       });
 
@@ -214,7 +276,8 @@ export const dashboardRouter = createTRPCRouter({
         date,
         ist: counts.ist,
         kraepelin: counts.kraepelin,
-        total: counts.ist + counts.kraepelin,
+        papiKostick: counts.papiKostick,
+        total: counts.ist + counts.kraepelin + counts.papiKostick,
       }));
 
       return result;
@@ -232,7 +295,20 @@ export const dashboardRouter = createTRPCRouter({
 
       // Get recent IST invitations
       const recentIstTests = await ctx.db.istInvitation.findMany({
-        take: Math.ceil(limit / 2),
+        take: Math.ceil(limit / 3),
+        orderBy: { updatedAt: "desc" },
+        include: {
+          testerProfile: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+
+      // Get recent PapiKostick invitations
+      const recentPapiKostickTests = await ctx.db.papiKostickInvitation.findMany({
+        take: Math.ceil(limit / 3),
         orderBy: { updatedAt: "desc" },
         include: {
           testerProfile: {
@@ -245,7 +321,7 @@ export const dashboardRouter = createTRPCRouter({
 
       // Get recent Kraepelin invitations
       const recentKraepelinTests = await ctx.db.invitation.findMany({
-        take: Math.ceil(limit / 2),
+        take: Math.ceil(limit / 3),
         orderBy: { updatedAt: "desc" },
         include: {
           testerProfile: {
@@ -262,6 +338,15 @@ export const dashboardRouter = createTRPCRouter({
           id: test.id,
           name: test.name || "Unnamed Test",
           type: "IST" as const,
+          status: test.status,
+          participantName: test.testerProfile?.name || "-",
+          updatedAt: test.updatedAt,
+          secretKey: test.secretKey,
+        })),
+        ...recentPapiKostickTests.map((test) => ({
+          id: test.id,
+          name: test.name || "Unnamed Test",
+          type: "PAPI_KOSTICK" as const,
           status: test.status,
           participantName: test.testerProfile?.name || "-",
           updatedAt: test.updatedAt,
@@ -287,6 +372,13 @@ export const dashboardRouter = createTRPCRouter({
   // Get status distribution for pie chart
   getStatusDistribution: protectedProcedure.query(async ({ ctx }) => {
     const istInvitations = await ctx.db.istInvitation.groupBy({
+      by: ["status"],
+      _count: {
+        id: true,
+      },
+    });
+
+    const papiKostickInvitations = await ctx.db.papiKostickInvitation.groupBy({
       by: ["status"],
       _count: {
         id: true,
@@ -325,26 +417,30 @@ export const dashboardRouter = createTRPCRouter({
         status: "Pending",
         count:
           (istInvitations.find((i) => i.status === "PENDING")?._count.id || 0) +
+          (papiKostickInvitations.find((i) => i.status === "PENDING")?._count.id || 0) +
           kraepelinPending,
         color: "#f59e0b",
       },
       {
         status: "In Progress",
         count:
-          istInvitations.find((i) => i.status === "ONPROGRESS")?._count.id || 0,
+          (istInvitations.find((i) => i.status === "ONPROGRESS")?._count.id || 0) +
+          (papiKostickInvitations.find((i) => i.status === "ONPROGRESS")?._count.id || 0),
         color: "#3b82f6",
       },
       {
         status: "Awaiting Review",
         count:
           (istInvitations.find((i) => i.status === "AWAITING_REVIEW")?._count
-            .id || 0) + kraepelinAwaitingReview,
+            .id || 0) +
+          kraepelinAwaitingReview,
         color: "#f97316",
       },
       {
         status: "Completed",
         count:
           (istInvitations.find((i) => i.status === "DONE")?._count.id || 0) +
+          (papiKostickInvitations.find((i) => i.status === "DONE")?._count.id || 0) +
           kraepelinCompleted,
         color: "#10b981",
       },

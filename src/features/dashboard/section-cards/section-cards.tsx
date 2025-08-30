@@ -25,30 +25,71 @@ export function SectionCards() {
   const completionRate = metrics.completionRate || 0;
   const isCompletionRateGood = completionRate >= 70;
 
+  const TestTypeBadge = ({ type, count, colorVariant }: { 
+    type: string; 
+    count: number; 
+    colorVariant: "violet" | "blue" | "emerald" 
+  }) => {
+    const colorClasses = {
+      violet: "bg-violet-50 text-violet-700 border-violet-200 hover:bg-violet-100",
+      blue: "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100", 
+      emerald: "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+    };
+
+    const grayClasses = "bg-gray-50 text-gray-400 border-gray-200 opacity-60";
+
+    return (
+      <Badge 
+        variant="outline" 
+        className={`select-none px-2.5 py-0.5 text-xs font-medium ${
+          count > 0 ? colorClasses[colorVariant] : grayClasses
+        }`}
+        title={count === 0 ? `Tidak ada tes ${type}` : undefined}
+      >
+        <span className="mr-1 font-semibold">{type}</span>
+        <span className="font-bold">{count}</span>
+      </Badge>
+    );
+  };
+
+  const activeCounts = {
+    ist: metrics.breakdown.ist.pending + metrics.breakdown.ist.onProgress,
+    papiKostick: metrics.breakdown.papiKostick.pending + metrics.breakdown.papiKostick.onProgress,
+    kraepelin: metrics.breakdown.kraepelin.active
+  };
+
+  const reviewCounts = {
+    ist: metrics.breakdown.ist.awaitingReview,
+    papiKostick: metrics.breakdown.papiKostick.awaitingReview,
+    kraepelin: metrics.breakdown.kraepelin.awaitingReview
+  };
+
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Total Tes Aktif</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {metrics.totalActiveTests}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="positiveBlue">
-              <ClockIcon />
-              Aktif
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            IST: {metrics.breakdown.ist.pending + metrics.breakdown.ist.onProgress} | Kraepelin: {metrics.breakdown.kraepelin.active}
-          </div>
-          <div className="text-muted-foreground">
-            Tes yang sedang berjalan atau menunggu
-          </div>
-        </CardFooter>
-      </Card>
+        <Card className="@container/card">
+          <CardHeader>
+            <CardDescription>Total Tes Aktif</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              {metrics.totalActiveTests}
+            </CardTitle>
+            <CardAction>
+              <Badge variant="positiveBlue">
+                <ClockIcon />
+                Aktif
+              </Badge>
+            </CardAction>
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1.5 text-sm">
+            <div className="flex flex-wrap items-center gap-1.5 font-medium">
+              <TestTypeBadge type="IST" count={activeCounts.ist} colorVariant="violet" />
+              <TestTypeBadge type="PapiKostick" count={activeCounts.papiKostick} colorVariant="blue" />
+              <TestTypeBadge type="Kraepelin" count={activeCounts.kraepelin} colorVariant="emerald" />
+            </div>
+            <div className="text-muted-foreground">
+              Tes yang sedang berjalan atau menunggu
+            </div>
+          </CardFooter>
+        </Card>
       
       <Card className="@container/card">
         <CardHeader>
@@ -64,8 +105,10 @@ export function SectionCards() {
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            IST: {metrics.breakdown.ist.awaitingReview} | Kraepelin: {metrics.breakdown.kraepelin.awaitingReview}
+          <div className="flex flex-wrap items-center gap-1.5 font-medium">
+            <TestTypeBadge type="IST" count={reviewCounts.ist} colorVariant="violet" />
+            <TestTypeBadge type="PapiKostick" count={reviewCounts.papiKostick} colorVariant="blue" />
+            <TestTypeBadge type="Kraepelin" count={reviewCounts.kraepelin} colorVariant="emerald" />
           </div>
           <div className="text-muted-foreground">
             Tes yang memerlukan review admin
