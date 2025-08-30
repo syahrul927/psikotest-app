@@ -6,7 +6,10 @@
       "mcp__shadcn-ui__get_component_metadata",
       "mcp__shadcn-ui__get_component",
       "mcp__shadcn-ui__list_blocks",
-      "mcp__shadcn-ui__get_block"
+      "mcp__shadcn-ui__get_block",
+      "Bash(npm run typecheck)",
+      "Bash(npm run build)",
+      "Read(/src/features/dashboard/**)"
     ],
     "deny": [],
     "ask": []

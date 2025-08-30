@@ -15,10 +15,13 @@ import QuestionCard from "./question-card";
 import type { PapiKostickTestQuestionType } from "./schema";
 import TestHeader from "./test-header";
 import TestNavigation from "./test-navigation";
+import { scrollToElement } from "@/lib/utils";
 
 interface TestFormProps {
   invitationId: string;
 }
+
+const ID_TOP_WRAPPER = "top-wrapper";
 
 const PapiKostickTestForm = ({ invitationId }: TestFormProps) => {
   const { data, isLoading: loadingGetQuestions } = useFindAllQuestions();
@@ -111,6 +114,10 @@ const PapiKostickTestForm = ({ invitationId }: TestFormProps) => {
     }
   };
 
+  useEffect(() => {
+    scrollToElement(ID_TOP_WRAPPER);
+  }, [currentPage]);
+
   if (isLoading) {
     <div className="flex h-screen w-screen flex-row items-center justify-center gap-x-4 text-xl">
       <LoaderSpinner />
@@ -118,7 +125,7 @@ const PapiKostickTestForm = ({ invitationId }: TestFormProps) => {
   }
   return (
     <PapiKostickWrapper>
-      <div className="bg-background min-h-screen">
+      <div className="bg-background min-h-screen" id={ID_TOP_WRAPPER}>
         <TestHeader
           participantName={participantName ?? ""}
           currentPage={currentPage}
