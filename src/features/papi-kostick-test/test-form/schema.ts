@@ -1,5 +1,5 @@
 export interface PapiKostickTestQuestionType {
-  id: string;
+  id: number;
   descriptionA: string;
   descriptionB: string;
 }

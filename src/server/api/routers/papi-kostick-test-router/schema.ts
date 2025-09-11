@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const AnswersPapiKostickRequest = z.array(
   z.object({
-    questionId: z.string(),
+    questionId: z.number(),
     answer: z.string(),
   }),
 );

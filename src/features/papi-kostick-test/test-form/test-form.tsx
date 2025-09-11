@@ -44,7 +44,7 @@ const PapiKostickTestForm = ({ invitationId }: TestFormProps) => {
 
   const participantName = profileTester?.name;
   const [currentPage, setCurrentPage] = useState(0);
-  const [responses, setResponses] = useState<Map<string, "A" | "B">>(new Map());
+  const [responses, setResponses] = useState<Map<number, "A" | "B">>(new Map());
 
   const questionsPerPage = 10;
   const totalPages = Math.ceil(questions.length / questionsPerPage);
@@ -61,7 +61,7 @@ const PapiKostickTestForm = ({ invitationId }: TestFormProps) => {
     if (savedResponses) {
       try {
         // parse with type assertion
-        const parsed = JSON.parse(savedResponses) as [string, "A" | "B"][];
+        const parsed = JSON.parse(savedResponses) as [number, "A" | "B"][];
 
         // validate that it’s actually an array of tuples
         if (Array.isArray(parsed)) {
@@ -80,7 +80,7 @@ const PapiKostickTestForm = ({ invitationId }: TestFormProps) => {
     );
   }, [responses]);
 
-  const handleResponse = (questionId: string, option: "A" | "B") => {
+  const handleResponse = (questionId: number, option: "A" | "B") => {
     setResponses((prev) => new Map(prev.set(questionId, option)));
   };
 
