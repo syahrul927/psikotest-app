@@ -11,13 +11,16 @@ import { SubmitAnswerPapiKostickRequest } from "../schema";
 
 export const papiKostickTestPublicRouter = createTRPCRouter({
   findAllQuestions: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.papiKostickQuestion.findMany({
+    const questions = await ctx.db.papiKostickQuestion.findMany({
       select: {
         id: true,
         descriptionA: true,
         descriptionB: true,
       },
     });
+    return questions
+      .map((q) => ({ ...q, id: Number(q.id) }))
+      .sort((a, b) => a.id - b.id);
   }),
   submitAnswers: publicProcedure
     .input(SubmitAnswerPapiKostickRequest)
@@ -31,7 +34,7 @@ export const papiKostickTestPublicRouter = createTRPCRouter({
       const insertBatchAnswer = ctx.db.papiKostickAnswer.createMany({
         data: input.data.map((i) => ({
           invitationId: input.invitationId,
-          questionId: i.questionId,
+          questionId: String(i.questionId),
           answer: i.answer,
         })),
       });
