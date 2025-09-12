@@ -141,6 +141,7 @@ model IstTesterProfile {
   placeOfBirth         String
   dateOfBirth          DateTime        @db.Timestamptz(3)
   educationDescription String?
+  createdAt            DateTime        @default(now()) @db.Timestamptz(3)
   IstInvitation        IstInvitation[]
 }
 

@@ -34,6 +34,7 @@ export default function IstInvitationPage() {
               name,
               status,
               profileName: testerProfile?.name,
+              startAt: testerProfile?.createdAt,
               secretKey,
               onDelete,
             }),
