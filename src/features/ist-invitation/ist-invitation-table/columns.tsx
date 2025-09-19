@@ -21,6 +21,7 @@ import {
   EyeIcon,
   ListCheck,
   MoreHorizontalIcon,
+  RotateCcw,
   Settings2,
   TrashIcon,
 } from "lucide-react";
@@ -29,6 +30,7 @@ import { toast } from "sonner";
 import { IstInvitationStatus, type IstInvitationTableProps } from "./schema";
 import { useState } from "react";
 import { useFormDialog } from "@/hooks/use-dialog-form";
+import { ResetSubtestDialog } from "@/features/ist-invitation/reset-subtest-dialog/reset-subtest-dialog";
 
 export const columnsIstInvitation: ColumnDef<IstInvitationTableProps>[] = [
   {
@@ -94,6 +96,7 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
   const { id, onDelete, status } = row.original;
   const { confirmationDelete } = useDeleteConfirmation();
   const [open, setOpen] = useState<boolean>(false);
+  const [resetDialogOpen, setResetDialogOpen] = useState<boolean>(false);
 
   const { handleOpenDialog } = useFormDialog();
   const copyToClipBoard = () => {
@@ -111,69 +114,89 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
     setOpen(false);
     confirmationDelete(() => onDelete(id));
   };
+
+  const handleReset = () => {
+    setOpen(false);
+    setResetDialogOpen(true);
+  };
+
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild>
-        <Button variant={"ghost"}>
-          <MoreHorizontalIcon size={16} />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>Opsi</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {status === "DONE" ? (
-          <DropdownMenuGroup>
-            <Link href={PAGE_URLS.IST_INVITATION_RESULT(id)}>
-              <DropdownMenuItem>
-                <EyeIcon size={16} className="mr-2" />
-                <span>Hasil Tes</span>
+    <>
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant={"ghost"}>
+            <MoreHorizontalIcon size={16} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Opsi</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {status === "DONE" ? (
+            <DropdownMenuGroup>
+              <Link href={PAGE_URLS.IST_INVITATION_RESULT(id)}>
+                <DropdownMenuItem>
+                  <EyeIcon size={16} className="mr-2" />
+                  <span>Hasil Tes</span>
+                </DropdownMenuItem>
+              </Link>
+            </DropdownMenuGroup>
+          ) : null}
+          <DropdownMenuItem onClick={copyToClipBoard}>
+            <CopyIcon size={16} className="mr-2" />
+            <span>Salin Link</span>
+          </DropdownMenuItem>
+          {(status === "AWAITING_REVIEW" || status === "DONE") && (
+            <DropdownMenuLabel>Aksi</DropdownMenuLabel>
+          )}
+          {status === "AWAITING_REVIEW" && (
+            <>
+              <DropdownMenuItem asChild>
+                <Link href={PAGE_URLS.IST_INVITATION_REVIEW(row.original.id)}>
+                  <ListCheck size={16} className="mr-2" />
+                  <span>Review</span>
+                </Link>
               </DropdownMenuItem>
-            </Link>
-          </DropdownMenuGroup>
-        ) : null}
-        <DropdownMenuItem onClick={copyToClipBoard}>
-          <CopyIcon size={16} className="mr-2" />
-          <span>Salin Link</span>
-        </DropdownMenuItem>
-        {(status === "AWAITING_REVIEW" || status === "DONE") && (
-          <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-        )}
-        {status === "AWAITING_REVIEW" && (
-          <>
+              {/*
+            <DropdownMenuItem onClick={handleReset}>
+              <RotateCcw size={16} className="mr-2" />
+              <span>Reset Subtest</span>
+            </DropdownMenuItem>
+              */}
+            </>
+          )}
+          {status === "DONE" && (
             <DropdownMenuItem asChild>
-              <Link href={PAGE_URLS.IST_INVITATION_REVIEW(row.original.id)}>
-                <ListCheck size={16} className="mr-2" />
-                <span>Review</span>
+              <Link href={PAGE_URLS.IST_INVITATION_RESULT(row.original.id)}>
+                <CheckCheck size={16} className="mr-2" />
+                <span>Hasil Test</span>
               </Link>
             </DropdownMenuItem>
-          </>
-        )}
-        {status === "DONE" && (
-          <DropdownMenuItem asChild>
-            <Link href={PAGE_URLS.IST_INVITATION_RESULT(row.original.id)}>
-              <CheckCheck size={16} className="mr-2" />
-              <span>Hasil Test</span>
-            </Link>
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuGroup>
-          {status === "PENDING" ? (
-            <DropdownMenuItem onClick={handleEdit}>
-              <Settings2 size={16} className="mr-2" />
-              <span>Edit</span>
-            </DropdownMenuItem>
-          ) : null}
-          {status !== "DONE" ? (
-            <DropdownMenuItem
-              className="text-destructive bg-destructive/5"
-              onClick={handleDelete}
-            >
-              <TrashIcon className="mr-2 text-current hover:text-current" />
-              <span>Hapus</span>
-            </DropdownMenuItem>
-          ) : null}
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          )}
+          <DropdownMenuGroup>
+            {status === "PENDING" ? (
+              <DropdownMenuItem onClick={handleEdit}>
+                <Settings2 size={16} className="mr-2" />
+                <span>Edit</span>
+              </DropdownMenuItem>
+            ) : null}
+            {status !== "DONE" ? (
+              <DropdownMenuItem
+                className="text-destructive bg-destructive/5"
+                onClick={handleDelete}
+              >
+                <TrashIcon className="mr-2 text-current hover:text-current" />
+                <span>Hapus</span>
+              </DropdownMenuItem>
+            ) : null}
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <ResetSubtestDialog
+        invitationId={id}
+        open={resetDialogOpen}
+        onOpenChange={setResetDialogOpen}
+      />
+    </>
   );
 };

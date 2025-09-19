@@ -1,12 +1,6 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
@@ -14,14 +8,7 @@ import {
 } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIstResultDetailInfo } from "@/hooks/use-ist-result-detail";
-import { localDate } from "@/lib/date-utils";
-import {
-  categorizeIq,
-  classificationCriteriaByIQ,
-  getBadgeVariant,
-} from "@/lib/ist-utils";
-import { StandardSchemaV1Error } from "@trpc/server";
-import { Fullscreen } from "lucide-react";
+import { categorizeIq, getBadgeVariant } from "@/lib/ist-utils";
 import { useMemo } from "react";
 import {
   PolarAngleAxis,
@@ -30,7 +17,6 @@ import {
   Radar,
   RadarChart,
 } from "recharts";
-import type { map } from "underscore";
 
 interface RadarDataItem {
   subtest: string;
@@ -44,7 +30,7 @@ interface SummaryScoreCardProps {
 
 const chartConfig = {
   score: {
-    label: "Score",
+    label: "Skor",
     color: "var(--primary)",
   },
 } satisfies ChartConfig;

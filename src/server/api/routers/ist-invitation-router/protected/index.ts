@@ -3,7 +3,6 @@ import { TRPCError } from "@trpc/server";
 import _ from "underscore";
 import { z } from "zod";
 import { SaveIstInvitationRouterSchema } from "./type";
-import { QuestionMarkIcon } from "@radix-ui/react-icons";
 
 export const istInvitationRouter = createTRPCRouter({
   save: protectedProcedure

@@ -7,6 +7,7 @@ import {
 import { useDeleteIstInvitation } from "@/hooks/api/ist-invitation/use-delete-ist-invitation";
 import { useGetAllIstInvitation } from "@/hooks/api/ist-invitation/use-get-all-ist-invitation";
 import { FormDialogProvider } from "@/hooks/use-dialog-form";
+import { ResetConfirmationProvider } from "@/components/alert/dialog-reset";
 
 export default function IstInvitationPage() {
   const { data, isLoading, refetch } = useGetAllIstInvitation();
@@ -16,32 +17,34 @@ export default function IstInvitationPage() {
     await refetch();
   };
   return (
-    <FormDialogProvider>
-      <IstInvitationSummary
-        isLoading={isLoading}
-        total={data?.total}
-        done={data?.done}
-        awaitingReview={data?.awaitingreview}
-        pending={data?.pending}
-        onprogress={data?.onprogress}
-      />
-      <IstInvitationTable
-        isLoading={isLoading}
-        data={
-          data?.invitations?.map(
-            ({ id, name, status, secretKey, testerProfile }) => ({
-              id,
-              name,
-              status,
-              profileName: testerProfile?.name,
-              startAt: testerProfile?.createdAt,
-              secretKey,
-              onDelete,
-            }),
-          ) ?? []
-        }
-      />
-      <IstInvitationForm onSuccessCallback={refetch} />
-    </FormDialogProvider>
+    <ResetConfirmationProvider>
+      <FormDialogProvider>
+        <IstInvitationSummary
+          isLoading={isLoading}
+          total={data?.total}
+          done={data?.done}
+          awaitingReview={data?.awaitingreview}
+          pending={data?.pending}
+          onprogress={data?.onprogress}
+        />
+        <IstInvitationTable
+          isLoading={isLoading}
+          data={
+            data?.invitations?.map(
+              ({ id, name, status, secretKey, testerProfile }) => ({
+                id,
+                name,
+                status,
+                profileName: testerProfile?.name,
+                startAt: testerProfile?.createdAt,
+                secretKey,
+                onDelete,
+              }),
+            ) ?? []
+          }
+        />
+        <IstInvitationForm onSuccessCallback={refetch} />
+      </FormDialogProvider>
+    </ResetConfirmationProvider>
   );
 }

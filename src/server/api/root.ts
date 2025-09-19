@@ -5,8 +5,6 @@ import {
   publicKraepelinInvitationRouter,
 } from "./routers/kraepelin-invitation-router";
 import { kraepelinTestRouter } from "./routers/kraepelin-test-router";
-import { istInvitationRouter } from "./routers/ist-invitation-router/protected";
-import { publicIstInvitationRouter } from "./routers/ist-invitation-router/public";
 import { istSubtestRouter } from "./routers/ist-test-router";
 import { istReviewRouter } from "./routers/ist-review-router";
 import { istResultRouter } from "./routers/ist-result-router";
@@ -17,6 +15,10 @@ import {
   papiKostickInvitationProtectedRouter,
   papiKostickInvitationPublicRouter,
 } from "./routers/papi-kostick-invitation-router";
+import {
+  istInvitationRouter,
+  publicIstInvitationRouter,
+} from "./routers/ist-invitation-router";
 
 /**
  * This is the primary router for your server.

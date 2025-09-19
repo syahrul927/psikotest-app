@@ -546,9 +546,9 @@ type Rule = {
 
 const factorRules: Record<string, Rule[]> = {
   N: [
-    { min: 7, description: "ketekunan, tanggung jawab, terhadap tugas tinggi" },
+    { min: 7, description: "Ketekunan, tanggung jawab terhadap tugas tinggi" },
     { min: 5, description: "Cukup bertanggung jawab terhadap pekerjaan" },
-    { min: 3, description: "Berhati hati, cenderung ragu" },
+    { min: 3, description: "Berhati-hati, cenderung ragu" },
     {
       min: 0,
       description:
@@ -556,18 +556,18 @@ const factorRules: Record<string, Rule[]> = {
     },
   ],
   G: [
-    { min: 5, description: "kemauan bekerja keras tinggi" },
+    { min: 5, description: "Kemauan bekerja keras tinggi" },
     {
       min: 0,
       description:
-        "bekerja hanya untuk mengejar kesenangan saja bukan untuk memberikan suatu hasil yang baik",
+        "Bekerja hanya untuk mengejar kesenangan saja, bukan untuk memberikan suatu hasil yang baik",
     },
   ],
   A: [
     {
       min: 6,
       description:
-        "tujuan-tujuan didefinisikan secara jelas: kebutuhan untuk sukses tinggi, ambisi pribadi tinggi",
+        "Tujuan-tujuan didefinisikan secara jelas: kebutuhan untuk sukses tinggi, ambisi pribadi tinggi",
     },
     {
       min: 0,
@@ -579,12 +579,12 @@ const factorRules: Record<string, Rule[]> = {
     {
       min: 5,
       description:
-        "seseorang memproyeksikan dirinya sebagai pemimpin. … demokratis atau diktator, otoriter",
+        "Seseorang memproyeksikan dirinya sebagai pemimpin … demokratis atau diktator, otoriter",
     },
     {
       min: 0,
       description:
-        "cenderung tidak secara aktif menggunakan orang lain dalam bekerja",
+        "Cenderung tidak secara aktif menggunakan orang lain dalam bekerja",
     },
   ],
   P: [
@@ -596,11 +596,11 @@ const factorRules: Record<string, Rule[]> = {
     {
       min: 0,
       description:
-        "Menurunnya keinginan untuk bertanggung jawab terhadap pekerjaan dan tindakan orang lain.",
+        "Menurunnya keinginan untuk bertanggung jawab terhadap pekerjaan dan tindakan orang lain",
     },
   ],
   I: [
-    { min: 8, description: "Tidak ragu2 dalam proses pembuatan keputusan" },
+    { min: 8, description: "Tidak ragu-ragu dalam proses pembuatan keputusan" },
     {
       min: 5,
       description:
@@ -610,7 +610,7 @@ const factorRules: Record<string, Rule[]> = {
     {
       min: 0,
       description:
-        "ragu2 sampai penundaan/menolak situasi pengambilan keputusan",
+        "Ragu-ragu sampai penundaan/menolak situasi pengambilan keputusan",
     },
   ],
   T: [
@@ -624,7 +624,7 @@ const factorRules: Record<string, Rule[]> = {
     {
       min: 5,
       description:
-        "keaktifan secara fisik tergolong agak baik, cenderung tipe orang sportif",
+        "Keaktifan secara fisik tergolong agak baik, cenderung tipe orang sportif",
     },
     {
       min: 0,
@@ -634,7 +634,7 @@ const factorRules: Record<string, Rule[]> = {
   ],
   X: [
     { min: 8, description: "Membutuhkan perhatian yang nyata" },
-    { min: 4, description: "khusus, memiliki perilaku yang unik" },
+    { min: 4, description: "Khusus, memiliki perilaku yang unik" },
     { min: 2, description: "Rendah hati, tulus" },
     { min: 0, description: "Cenderung pemalu, suka menyendiri" },
   ],
@@ -647,7 +647,7 @@ const factorRules: Record<string, Rule[]> = {
     {
       min: 0,
       description:
-        "Memiliki penilaian yang rendah terhadap hubungan sosial cenderung kurang percaya pada orang lain",
+        "Memiliki penilaian yang rendah terhadap hubungan sosial, cenderung kurang percaya pada orang lain",
     },
   ],
   B: [
@@ -659,7 +659,7 @@ const factorRules: Record<string, Rule[]> = {
     {
       min: 4,
       description:
-        "Ada kebutuhan untuk diterima dan diakui tetapi tidak terlalu mudah dipengaruhi kelompok",
+        "Ada kebutuhan untuk diterima dan diakui, tetapi tidak terlalu mudah dipengaruhi kelompok",
     },
     {
       min: 0,
@@ -675,12 +675,12 @@ const factorRules: Record<string, Rule[]> = {
     {
       min: 3,
       description:
-        "Sadar akan kebutuhan antar pribadi tetapi melepaskan diri dari orang lain/tidak terlalu tergantung",
+        "Sadar akan kebutuhan antarpersonal, tetapi melepaskan diri dari orang lain/tidak terlalu tergantung",
     },
     {
       min: 0,
       description:
-        "Tidak menyukai hubungan antar pribadi. Tidak menyukai interaksi perseorangan",
+        "Tidak menyukai hubungan antarpersonal. Tidak menyukai interaksi perseorangan",
     },
   ],
   R: [
@@ -688,11 +688,11 @@ const factorRules: Record<string, Rule[]> = {
     { min: 0, description: "Kurang perhatian praktis" },
   ],
   D: [
-    { min: 5, description: "Minat menangani hal2 detail cukup tinggi" },
+    { min: 5, description: "Minat menangani hal-hal detail cukup tinggi" },
     {
       min: 0,
       description:
-        "menyadari kebutuhan akan kecermatan tetapi secara pribadi tidak berminat menangani hal detail",
+        "Menyadari kebutuhan akan kecermatan, tetapi secara pribadi tidak berminat menangani hal detail",
     },
   ],
   C: [
@@ -701,7 +701,7 @@ const factorRules: Record<string, Rule[]> = {
       description: "Memiliki keteraturan yang sangat tinggi, cenderung kaku",
     },
     { min: 3, description: "Tergolong teratur tetapi dengan fleksibilitas" },
-    { min: 0, description: "Fleksibilitas sampai ketidak teraturan" },
+    { min: 0, description: "Fleksibilitas sampai ketidakteraturan" },
   ],
   Z: [
     {
@@ -721,33 +721,33 @@ const factorRules: Record<string, Rule[]> = {
     {
       min: 0,
       description:
-        "tidak menyukai dan menolak perubahan. Cenderung menggunakan pendekatan tradisional",
+        "Tidak menyukai dan menolak perubahan. Cenderung menggunakan pendekatan tradisional",
     },
   ],
   E: [
     {
       min: 7,
       description:
-        "Sangat menempatkan nilai2 dalam setiap aktivitasnya. Kebutuhan pengendalian diri yang berlebihan, mungkin digunakan sebagai defence mechanism",
+        "Sangat menempatkan nilai-nilai dalam setiap aktivitasnya. Kebutuhan pengendalian diri yang berlebihan, mungkin digunakan sebagai mekanisme pertahanan",
     },
     {
       min: 4,
       description:
-        "memiliki pendekatan emosional yang seimbang. Mampu mengendalikan perasaannya",
+        "Memiliki pendekatan emosional yang seimbang. Mampu mengendalikan perasaannya",
     },
     { min: 2, description: "Terbuka" },
     {
       min: 0,
       description:
-        "Terbuka, cepat bereaksi, tidak memikirkan nilai2 dalam pengendalian diri",
+        "Terbuka, cepat bereaksi, tidak memikirkan nilai-nilai dalam pengendalian diri",
     },
   ],
   K: [
-    { min: 8, description: "Agresif, cenderung defensive" },
+    { min: 8, description: "Agresif, cenderung defensif" },
     {
       min: 6,
       description:
-        "Agresi pribadi yang berkaitan dengan pekerjaan, dorongan dan semangat bersaing",
+        "Agresi pribadi yang berkaitan dengan pekerjaan, dorongan, dan semangat bersaing",
     },
     { min: 5, description: "Keras kepala" },
     {
@@ -765,13 +765,13 @@ const factorRules: Record<string, Rule[]> = {
     {
       min: 6,
       description:
-        "bersikap setia dan membantu secara pribadi; ada kemungkinan bantuannya bersifat politis",
+        "Bersikap setia dan membantu secara pribadi; ada kemungkinan bantuannya bersifat politis",
     },
     { min: 4, description: "Setia terhadap perusahaan" },
     { min: 2, description: "Mengurus kepentingan diri sendiri" },
     {
       min: 0,
-      description: "cenderung egois, kemungkinan bisa bersikap memberontak",
+      description: "Cenderung egois, kemungkinan bisa bersikap memberontak",
     },
   ],
   W: [
@@ -783,9 +783,9 @@ const factorRules: Record<string, Rule[]> = {
     {
       min: 4,
       description:
-        "kebutuhan akan pengarahan dan harapan yang dirumuskan untuknya",
+        "Kebutuhan akan pengarahan dan harapan yang dirumuskan untuknya",
     },
-    { min: 0, description: "berorientasi pada tujuan, mandiri" },
+    { min: 0, description: "Berorientasi pada tujuan, mandiri" },
   ],
 };
 
