@@ -17,6 +17,7 @@ import {
   CopyIcon,
   EyeIcon,
   MoreHorizontalIcon,
+  RotateCcw,
   Settings2,
   TrashIcon,
 } from "lucide-react";
@@ -113,47 +114,49 @@ const CellAction = ({ row }: { row: Row<KraepelinInvitationTableProps> }) => {
     confirmationDelete(() => onDelete(id));
   };
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant={"ghost"}>
-          <MoreHorizontalIcon size={16} />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>Informasi</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        {status === "DONE" ? (
+    <>
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant={"ghost"}>
+            <MoreHorizontalIcon size={16} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Informasi</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          {status === "DONE" ? (
+            <DropdownMenuGroup>
+              <Link href={PAGE_URLS.KRAEPELIN_INVITATION_RESULT(id)}>
+                <DropdownMenuItem>
+                  <EyeIcon size={16} className="mr-2" />
+                  <span>Hasil Test</span>
+                </DropdownMenuItem>
+              </Link>
+            </DropdownMenuGroup>
+          ) : null}
+          <DropdownMenuItem onClick={copyToClipBoard}>
+            <CopyIcon size={16} className="mr-2" />
+            <span>Share</span>
+          </DropdownMenuItem>
           <DropdownMenuGroup>
-            <Link href={PAGE_URLS.KRAEPELIN_INVITATION_RESULT(id)}>
-              <DropdownMenuItem>
-                <EyeIcon size={16} className="mr-2" />
-                <span>Hasil Test</span>
+            {status === "PENDING" ? (
+              <DropdownMenuItem onClick={handleEdit}>
+                <Settings2 size={16} className="mr-2" />
+                <span>Edit</span>
               </DropdownMenuItem>
-            </Link>
+            ) : null}
+            {status !== "DONE" ? (
+              <DropdownMenuItem
+                className="text-destructive bg-destructive/5"
+                onClick={handleDelete}
+              >
+                <TrashIcon className="mr-2 text-current hover:text-current" />
+                <span>Hapus</span>
+              </DropdownMenuItem>
+            ) : null}
           </DropdownMenuGroup>
-        ) : null}
-        <DropdownMenuItem onClick={copyToClipBoard}>
-          <CopyIcon size={16} className="mr-2" />
-          <span>Share</span>
-        </DropdownMenuItem>
-        <DropdownMenuGroup>
-          {status === "PENDING" ? (
-            <DropdownMenuItem onClick={handleEdit}>
-              <Settings2 size={16} className="mr-2" />
-              <span>Edit</span>
-            </DropdownMenuItem>
-          ) : null}
-          {status !== "DONE" ? (
-            <DropdownMenuItem
-              className="text-destructive bg-destructive/5"
-              onClick={handleDelete}
-            >
-              <TrashIcon className="mr-2 text-current hover:text-current" />
-              <span>Hapus</span>
-            </DropdownMenuItem>
-          ) : null}
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 };

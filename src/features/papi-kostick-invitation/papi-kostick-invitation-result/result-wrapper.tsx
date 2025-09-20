@@ -19,7 +19,7 @@ export const PapiKostickInvitationResultWrapper = () => {
         }))}
         isLoading={isLoading}
       />
-      <div className="col-span-2">
+      <div className="col-span-2 hidden">
         <PapiKostickResultBarChart data={results} isLoading={isLoading} />
       </div>
       <div className="col-span-2">

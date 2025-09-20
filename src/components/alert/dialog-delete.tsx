@@ -20,6 +20,7 @@ interface DeleteConfirmationConfig {
   onDelete: () => void | Promise<void>;
   title?: string;
   description?: string;
+  actionText?: string; // Allow custom button text (e.g., "Reset" instead of "Hapus")
 }
 
 interface DeleteConfirmationContextType {
@@ -27,6 +28,7 @@ interface DeleteConfirmationContextType {
     onDelete: () => void | Promise<void>,
     title?: string,
     description?: string,
+    actionText?: string,
   ) => void;
 }
 
@@ -45,8 +47,9 @@ export function DeleteConfirmationProvider({
     onDelete: () => void | Promise<void>,
     title?: string,
     description?: string,
+    actionText?: string,
   ) => {
-    setConfig({ onDelete, title, description });
+    setConfig({ onDelete, title, description, actionText });
     setIsOpen(true);
   };
 
@@ -77,7 +80,7 @@ export function DeleteConfirmationProvider({
           <AlertDialogFooter>
             <AlertDialogCancel onClick={handleClose}>Batal</AlertDialogCancel>
             <AlertDialogAction variant="destructive" onClick={handleConfirm}>
-              Hapus
+              {config?.actionText || "Hapus"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

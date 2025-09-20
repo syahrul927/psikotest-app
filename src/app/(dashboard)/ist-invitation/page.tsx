@@ -16,31 +16,34 @@ export default function IstInvitationPage() {
     await refetch();
   };
   return (
-    <FormDialogProvider>
-      <IstInvitationSummary
-        isLoading={isLoading}
-        total={data?.total}
-        done={data?.done}
-        awaitingReview={data?.awaitingreview}
-        pending={data?.pending}
-        onprogress={data?.onprogress}
-      />
-      <IstInvitationTable
-        isLoading={isLoading}
-        data={
-          data?.invitations?.map(
-            ({ id, name, status, secretKey, testerProfile }) => ({
-              id,
-              name,
-              status,
-              profileName: testerProfile?.name,
-              secretKey,
-              onDelete,
-            }),
-          ) ?? []
-        }
-      />
-      <IstInvitationForm onSuccessCallback={refetch} />
-    </FormDialogProvider>
+    <>
+      <FormDialogProvider>
+        <IstInvitationSummary
+          isLoading={isLoading}
+          total={data?.total}
+          done={data?.done}
+          awaitingReview={data?.awaitingreview}
+          pending={data?.pending}
+          onprogress={data?.onprogress}
+        />
+        <IstInvitationTable
+          isLoading={isLoading}
+          data={
+            data?.invitations?.map(
+              ({ id, name, status, secretKey, testerProfile }) => ({
+                id,
+                name,
+                status,
+                profileName: testerProfile?.name,
+                startAt: testerProfile?.createdAt,
+                secretKey,
+                onDelete,
+              }),
+            ) ?? []
+          }
+        />
+        <IstInvitationForm onSuccessCallback={refetch} />
+      </FormDialogProvider>
+    </>
   );
 }

@@ -106,8 +106,8 @@ export function PapiKostickResultTable({ data, isLoading }: Props) {
                     </span>
                   </TableCell>
 
-                  <TableCell className="px-4 py-4 text-left">
-                    <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">
+                  <TableCell className="w-3/4 px-4 py-4 text-left">
+                    <span className="font-mono font-semibold text-wrap text-gray-900 dark:text-gray-100">
                       {item.interpretation}
                     </span>
                   </TableCell>

@@ -7,14 +7,8 @@ import { useState } from "react";
 
 import { LoaderSpinner } from "@/components/ui/loading-spinner";
 import { Footer, Header, IstTestQuestionWrapper } from "@/features/ist-subtest";
-import {
-  useGetQuestionAndOptions,
-  type QuestionAndOptionsResponseType,
-} from "@/hooks/api/ist-test/use-ist-test";
-import {
-  useSubmitIstAnswers,
-  type CompletionSubtestResponseType,
-} from "@/hooks/api/ist-test/use-submit-answer-ist";
+import { useGetQuestionAndOptions } from "@/hooks/api/ist-test/use-ist-test";
+import { useSubmitIstAnswers } from "@/hooks/api/ist-test/use-submit-answer-ist";
 import { PAGE_URLS } from "@/lib/page-url";
 import { testData } from "@/lib/test-data";
 import { AlertCircle } from "lucide-react";

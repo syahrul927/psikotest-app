@@ -21,7 +21,7 @@ export function formatHour(element: Date) {
 export function localDate(date: Date) {
   const formatted = moment(date);
   formatted.locale("id");
-  return formatted.format("LLLL");
+  return formatted.format("lll");
 }
 
 export function getAge(birthDate: Date) {

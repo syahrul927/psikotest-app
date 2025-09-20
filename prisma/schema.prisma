@@ -141,6 +141,7 @@ model IstTesterProfile {
   placeOfBirth         String
   dateOfBirth          DateTime        @db.Timestamptz(3)
   educationDescription String?
+  createdAt            DateTime        @default(now()) @db.Timestamptz(3)
   IstInvitation        IstInvitation[]
 }
 
@@ -207,7 +208,7 @@ model IstResult {
 model IstResultDetail {
   id          String              @id @default(cuid())
   istResultId String
-  IstResult   IstResult           @relation(fields: [istResultId], references: [id])
+  IstResult   IstResult           @relation(fields: [istResultId], references: [id], onDelete: Cascade)
   question    IstQuestionTemplate @relation(fields: [questionId], references: [id])
   questionId  String
   answer      String
