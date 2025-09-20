@@ -145,7 +145,7 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
             <CopyIcon size={16} className="mr-2" />
             <span>Salin Link</span>
           </DropdownMenuItem>
-          {(status === "AWAITING_REVIEW" || status === "DONE") && (
+          {(status === "AWAITING_REVIEW" || status === "ONPROGRESS" || status === "DONE") && (
             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
           )}
           {status === "AWAITING_REVIEW" && (
@@ -156,13 +156,17 @@ const CellAction = ({ row }: { row: Row<IstInvitationTableProps> }) => {
                   <span>Review</span>
                 </Link>
               </DropdownMenuItem>
-              {/*
+              <DropdownMenuItem onClick={handleReset}>
+                <RotateCcw size={16} className="mr-2" />
+                <span>Reset Subtest</span>
+              </DropdownMenuItem>
+            </>
+          )}
+          {status === "ONPROGRESS" && (
             <DropdownMenuItem onClick={handleReset}>
               <RotateCcw size={16} className="mr-2" />
               <span>Reset Subtest</span>
             </DropdownMenuItem>
-              */}
-            </>
           )}
           {status === "DONE" && (
             <DropdownMenuItem asChild>

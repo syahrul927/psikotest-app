@@ -7,7 +7,6 @@ import {
 import { useDeleteIstInvitation } from "@/hooks/api/ist-invitation/use-delete-ist-invitation";
 import { useGetAllIstInvitation } from "@/hooks/api/ist-invitation/use-get-all-ist-invitation";
 import { FormDialogProvider } from "@/hooks/use-dialog-form";
-import { ResetConfirmationProvider } from "@/components/alert/dialog-reset";
 
 export default function IstInvitationPage() {
   const { data, isLoading, refetch } = useGetAllIstInvitation();
@@ -17,7 +16,7 @@ export default function IstInvitationPage() {
     await refetch();
   };
   return (
-    <ResetConfirmationProvider>
+    <>
       <FormDialogProvider>
         <IstInvitationSummary
           isLoading={isLoading}
@@ -45,6 +44,6 @@ export default function IstInvitationPage() {
         />
         <IstInvitationForm onSuccessCallback={refetch} />
       </FormDialogProvider>
-    </ResetConfirmationProvider>
+    </>
   );
 }
