@@ -30,6 +30,11 @@ export const NavigationMainConstant: NavigationType[] = [
     url: PAGE_URLS.PAPI_KOSTICK_INVITATION,
     icon: BarChartHorizontalIcon,
   },
+  {
+    title: "Psikotest WWQ",
+    url: PAGE_URLS.WWQ_INVITATION,
+    icon: BarChartHorizontalIcon,
+  },
 ];
 export const NavigationSecondaryConstant: NavigationType[] = [
   {
