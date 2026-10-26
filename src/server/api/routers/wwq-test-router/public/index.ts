@@ -49,7 +49,10 @@ export const wwqTestPublicRouter = createTRPCRouter({
       const questions = await ctx.db.wwqQuestion.findMany({
         select: { id: true, order: true },
       });
-      if (questions.length !== WWQ_TOTAL_QUESTIONS) {
+      if (
+        questions.length !== WWQ_TOTAL_QUESTIONS ||
+        !questions.every((q) => q.order >= 1 && q.order <= WWQ_TOTAL_QUESTIONS)
+      ) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "WWQ question seed is invalid",
