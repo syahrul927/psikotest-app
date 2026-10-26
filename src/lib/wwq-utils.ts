@@ -25,7 +25,7 @@ export const WWQ_TOTAL_QUESTIONS = 75;
 
 // [questionOrder, aspectNo, inverted]
 // inverted=true means the score-1 answer is TIDAK (false).
-const WWQ_KEY: [number, WwqAspectNo, boolean][] = [
+export const WWQ_KEY: [number, WwqAspectNo, boolean][] = [
   [1, 1, false],
   [1, 4, false],
   [2, 1, false],

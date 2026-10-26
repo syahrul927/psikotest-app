@@ -1,4 +1,9 @@
-import { calculateWWQScores, wwqCategory } from "../src/lib/wwq-utils";
+import {
+  calculateWWQScores,
+  wwqCategory,
+  WWQ_ASPECTS,
+  WWQ_KEY,
+} from "../src/lib/wwq-utils";
 import assert from "node:assert";
 import fs from "node:fs";
 
@@ -32,16 +37,39 @@ assert.strictEqual(r.category, "Normal");
 const pctSum = r.aspects.reduce((s, a) => s + a.percent, 0);
 assert.ok(Math.abs(pctSum - 100) < 1e-9, `percents sum ${pctSum}`);
 
-// zero-ish edge case: all TIDAK answers must not crash and stay finite
+// all-TIDAK: not near-zero — 17 inverted key entries score on TIDAK.
+// Aspect 4 (Tendensi Paranoid) lands exactly on the 120 boundary.
+const tidak = new Map<number, boolean>();
+for (let i = 1; i <= 75; i++) tidak.set(i, false);
+const z = calculateWWQScores(tidak);
+assert.strictEqual(z.totalWeighted, 504);
+assert.strictEqual(z.category, "Normal");
+assert.strictEqual(
+  z.aspects.find((a) => a.aspectNo === 4)?.category,
+  "Kecendrungan Pathologis",
+);
+
+// true-zero scores: answer every question so no key entry matches
+// (YA for inverted entries, TIDAK for normal ones) -> percent guard branch.
 const zero = new Map<number, boolean>();
 for (let i = 1; i <= 75; i++) zero.set(i, false);
-const z = calculateWWQScores(zero);
-assert.ok(Number.isFinite(z.overallValue));
-assert.ok(
-  z.aspects.every(
-    (a) => a.category === "Normal" || a.category === "Kecendrungan Pathologis",
-  ),
-);
+for (const [questionOrder, , inverted] of WWQ_KEY)
+  if (inverted) zero.set(questionOrder, true);
+const t = calculateWWQScores(zero);
+assert.strictEqual(t.totalWeighted, 0);
+assert.strictEqual(t.overallValue, 0);
+assert.ok(t.aspects.every((a) => a.percent === 0 && a.category === "Normal"));
+
+// key-entry transcription cross-check: per-aspect entry counts === maxItems
+const perAspect = new Map<number, number>();
+for (const [, aspectNo] of WWQ_KEY)
+  perAspect.set(aspectNo, (perAspect.get(aspectNo) ?? 0) + 1);
+for (const a of WWQ_ASPECTS)
+  assert.strictEqual(
+    perAspect.get(a.no) ?? 0,
+    a.maxItems,
+    `aspect ${a.no} (${a.name}) key count`,
+  );
 
 // category thresholds
 assert.strictEqual(wwqCategory(119), "Normal");
