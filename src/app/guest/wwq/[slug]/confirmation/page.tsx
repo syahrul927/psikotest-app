@@ -1,7 +1,7 @@
 import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
 import { Logo } from "@/components/ui/logo";
 import { WwqInvitationFormConfirmation } from "@/features/wwq-test";
-import { api } from "@/trpc/server";
+import { findWwqInvitation } from "@/hooks/api/wwq-invitation/use-find-wwq-invitation";
 import type { PageType } from "@/types/page-type";
 import { notFound } from "next/navigation";
 
@@ -10,11 +10,9 @@ const WwqConfirmationPage = async ({ params }: PageType) => {
 
   if (!slug) notFound();
 
-  const data = await api.publicWwqInvitation
-    .findWwqInvitation(slug)
-    .catch((_e) => {
-      notFound();
-    });
+  const data = await findWwqInvitation(slug).catch((_e) => {
+    notFound();
+  });
 
   if (!data) notFound();
 
