@@ -59,7 +59,7 @@ export const wwqInvitationPublicRouter = createTRPCRouter({
       if (!invitation?.testerProfile) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Invalid Invitation",
+          message: "Undangan tidak valid!",
         });
       }
       return { ...invitation.testerProfile };
@@ -77,7 +77,7 @@ export const wwqInvitationPublicRouter = createTRPCRouter({
       if (!invitation) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Invalid Invitation",
+          message: "Undangan tidak valid!",
         });
       }
 

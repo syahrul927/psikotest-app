@@ -54,7 +54,7 @@ export const wwqInvitationProtectedRouter = createTRPCRouter({
           });
         }
 
-        return await ctx.db.wwqInvitation.findUnique({
+        return await ctx.db.wwqInvitation.findUniqueOrThrow({
           where: { id },
         });
       } else {
@@ -113,7 +113,7 @@ export const wwqInvitationProtectedRouter = createTRPCRouter({
       if (!invitation) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Invalid InvitationId",
+          message: "Undangan tidak ditemukan",
         });
       }
 
@@ -125,7 +125,7 @@ export const wwqInvitationProtectedRouter = createTRPCRouter({
       if (count === 0) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Cannot delete an invitation that has been started",
+          message: "Undangan tidak dapat dihapus setelah tes dimulai.",
         });
       }
 
@@ -147,7 +147,7 @@ export const wwqInvitationProtectedRouter = createTRPCRouter({
       if (!invitation?.WwqResult) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Invalid InvitationId",
+          message: "Hasil tes belum tersedia.",
         });
       }
       return {
@@ -173,7 +173,7 @@ export const wwqInvitationProtectedRouter = createTRPCRouter({
       if (!invitation) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Invalid InvitationId",
+          message: "Undangan tidak ditemukan",
         });
       }
       return invitation.WwqAnswer;
