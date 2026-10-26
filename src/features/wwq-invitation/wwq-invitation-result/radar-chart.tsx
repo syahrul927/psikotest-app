@@ -108,7 +108,7 @@ export function WwqRadarChart({ chartData, isLoading }: Props) {
       <CardHeader className="items-center pb-4">
         <CardTitle>Skor Penilaian</CardTitle>
         <CardDescription>
-          Persentase skor dihitung berdasarkan hasil jawaban peserta
+          {`Persentase skor dihitung berdasarkan hasil jawaban peserta (skala 0–${radiusDomainMax}%)`}
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-0">

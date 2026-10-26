@@ -13,13 +13,13 @@ export function WwqParticipantInfoCard({ slug }: { slug: string }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Not found profile</CardTitle>
+          <CardTitle>Profil tidak ditemukan</CardTitle>
         </CardHeader>
       </Card>
     );
   }
   const { name, phone, dateOfBirth, createdAt } = data;
-  const age = dateOfBirth ? getAge(dateOfBirth) : 0;
+  const age = getAge(dateOfBirth);
   return (
     <Card>
       <CardHeader className="border-b">
@@ -44,7 +44,7 @@ export function WwqParticipantInfoCard({ slug }: { slug: string }) {
               <td className="text-muted-foreground py-2 font-medium">
                 Tanggal Lahir
               </td>
-              <td className="py-2">{dateOfBirth && formatDate(dateOfBirth)}</td>
+              <td className="py-2">{formatDate(dateOfBirth)}</td>
             </tr>
             <tr className="border-b">
               <td className="text-muted-foreground py-2 font-medium">Usia</td>

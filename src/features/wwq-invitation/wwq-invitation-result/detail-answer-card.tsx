@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useFindAllQuestions } from "@/hooks/api/wwq-test/use-find-all-questions";
 import type { WwqAnswersResultType } from "@/hooks/use-wwq-result-context";
 
-interface AnswerDetailsProps {
+interface WwqDetailAnswerCardProps {
   answers: WwqAnswersResultType[];
   isLoading?: boolean;
 }
@@ -20,7 +20,7 @@ interface AnswerDetailsProps {
 export function WwqDetailAnswerCard({
   answers,
   isLoading,
-}: AnswerDetailsProps) {
+}: WwqDetailAnswerCardProps) {
   // Answers store the DB question id (cuid), so map it back to the question order
   const { data: questions, isLoading: isLoadingQuestions } =
     useFindAllQuestions();
@@ -30,9 +30,15 @@ export function WwqDetailAnswerCard({
     return answers
       .map((answer) => ({
         ...answer,
-        order: orderById.get(answer.questionId) ?? 0,
+        // undefined when the question can't be resolved (e.g. lookup failed);
+        // keep it undefined so the UI can show a dash instead of "Pertanyaan 0"
+        order: orderById.get(answer.questionId),
       }))
-      .sort((a, b) => a.order - b.order);
+      .sort(
+        (a, b) =>
+          (a.order ?? Number.POSITIVE_INFINITY) -
+          (b.order ?? Number.POSITIVE_INFINITY),
+      );
   }, [answers, questions]);
 
   if (isLoading || isLoadingQuestions) {
@@ -57,7 +63,7 @@ export function WwqDetailAnswerCard({
               className="flex items-center justify-between gap-2 rounded border border-slate-200 p-2 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
             >
               <span className="text-slate-700 dark:text-slate-300">
-                Pertanyaan {answer.order}
+                Pertanyaan {answer.order ?? "—"}
               </span>
               <Badge
                 variant={answer.answer ? "default" : "secondary"}

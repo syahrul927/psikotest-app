@@ -13,32 +13,7 @@ import type {
   WwqOverallResultType,
 } from "@/hooks/use-wwq-result-context";
 import { Skeleton } from "@/components/ui/skeleton";
-
-// Kategori badge style per WWQ category (Normal / Kecendrungan / Gangguan)
-const categoryBadgeStyles: Record<
-  string,
-  { variant: "positive" | "secondary" | "destructive"; className: string }
-> = {
-  Normal: { variant: "positive", className: "" },
-  "Kecendrungan Pathologis": {
-    variant: "secondary",
-    className:
-      "border-2 border-amber-500 bg-amber-500/10 text-amber-600 dark:text-amber-400",
-  },
-  "Gangguan Pathologis": { variant: "destructive", className: "" },
-};
-
-export function WwqCategoryBadge({ category }: { category: string }) {
-  const style = categoryBadgeStyles[category];
-  if (!style) {
-    return <Badge variant="outline">{category}</Badge>;
-  }
-  return (
-    <Badge variant={style.variant} className={style.className}>
-      {category}
-    </Badge>
-  );
-}
+import { WwqCategoryBadge } from "./category-badge";
 
 interface Props {
   isLoading?: boolean;
@@ -138,8 +113,9 @@ export function WwqResultTable({ data, overall, isLoading }: Props) {
                 </TableRow>
               )}
 
-              {/* Rekap nilai keseluruhan */}
-              {overall && (
+              {/* Rekap nilai keseluruhan — totals are always computed from the
+                  aspect rows so the row mixes no sources (0 is a valid total) */}
+              {data.length > 0 && (
                 <TableRow className="bg-gray-50 hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-800">
                   <TableCell className="px-4 py-4 text-center" />
                   <TableCell className="px-4 py-4 font-semibold text-gray-900 dark:text-gray-100">
@@ -155,7 +131,7 @@ export function WwqResultTable({ data, overall, isLoading }: Props) {
                   </TableCell>
                   <TableCell className="px-4 py-4 text-center">
                     <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">
-                      {overall.totalWeighted || totalWeighted}
+                      {totalWeighted}
                     </span>
                   </TableCell>
                   <TableCell className="px-4 py-4 text-center">
@@ -164,7 +140,11 @@ export function WwqResultTable({ data, overall, isLoading }: Props) {
                     </span>
                   </TableCell>
                   <TableCell className="px-4 py-4 text-left">
-                    <WwqCategoryBadge category={overall.category} />
+                    {overall ? (
+                      <WwqCategoryBadge category={overall.category} />
+                    ) : (
+                      <span className="text-muted-foreground">-</span>
+                    )}
                   </TableCell>
                 </TableRow>
               )}

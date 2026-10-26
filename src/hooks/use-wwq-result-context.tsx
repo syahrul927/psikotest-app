@@ -8,7 +8,6 @@ import React, {
 import { useGetResultWwqInvitation } from "./api/wwq-invitation/use-get-result-wwq-invitation";
 import { useGetAnswersWwq } from "./api/wwq-invitation/use-get-answers-wwq";
 
-// Define your type
 export interface WwqAspectResultType {
   aspectNo: number;
   aspect: string;
@@ -29,24 +28,28 @@ export interface WwqAnswersResultType {
   answer: boolean;
 }
 
-// Context type
 interface WwqContextType {
   results: WwqAspectResultType[];
   overall: WwqOverallResultType | null;
   answers: WwqAnswersResultType[];
   isLoading: boolean;
+  isError: boolean;
+  error: string | null;
   invitationId: string;
 }
 
-// Create context
 const WwqContext = createContext<WwqContextType | undefined>(undefined);
 
-// Provider component
 export const WwqResultProvider: React.FC<{
   children: ReactNode;
   slug: string;
 }> = ({ children, slug }) => {
-  const { data, isLoading: isLoadingResult } = useGetResultWwqInvitation(slug);
+  const {
+    data,
+    isLoading: isLoadingResult,
+    isError: isErrorResult,
+    error: resultError,
+  } = useGetResultWwqInvitation(slug);
   const { data: answerRows, isLoading: isLoadingAnswer } =
     useGetAnswersWwq(slug);
   const isLoading = useMemo(
@@ -72,22 +75,32 @@ export const WwqResultProvider: React.FC<{
     [answerRows],
   );
 
+  // getResult throws when the invitation has no saved result yet (non-DONE),
+  // surface it so the page can render a single empty state instead of halves
+  const isError = isErrorResult;
+  const error: string | null = useMemo(
+    () => resultError?.message ?? null,
+    [resultError],
+  );
+
+  const value = useMemo<WwqContextType>(
+    () => ({
+      results,
+      overall,
+      answers,
+      isLoading,
+      isError,
+      error,
+      invitationId: slug,
+    }),
+    [results, overall, answers, isLoading, isError, error, slug],
+  );
+
   return (
-    <WwqContext.Provider
-      value={{
-        results,
-        overall,
-        answers,
-        isLoading,
-        invitationId: slug,
-      }}
-    >
-      {children}
-    </WwqContext.Provider>
+    <WwqContext.Provider value={value}>{children}</WwqContext.Provider>
   );
 };
 
-// Custom hook
 export const useWwqResult = () => {
   const context = useContext(WwqContext);
   if (!context) {
