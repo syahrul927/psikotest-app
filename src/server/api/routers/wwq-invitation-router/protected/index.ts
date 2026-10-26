@@ -13,6 +13,21 @@ export const wwqInvitationProtectedRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
 
+      // Secret key is used by the guest link and must stay unique
+      const duplicate = await ctx.db.wwqInvitation.findFirst({
+        where: {
+          secretKey: data.secretKey,
+          ...(id ? { id: { not: id } } : {}),
+        },
+      });
+
+      if (duplicate) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Secret key sudah digunakan oleh undangan lain",
+        });
+      }
+
       if (id) {
         // Update existing invitation
         const existing = await ctx.db.wwqInvitation.findUnique({
@@ -20,18 +35,27 @@ export const wwqInvitationProtectedRouter = createTRPCRouter({
         });
 
         if (!existing) {
-          throw new Error("Invitation not found");
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Undangan tidak ditemukan",
+          });
         }
 
-        if (existing.status !== "PENDING") {
-          throw new Error(
-            "Cannot edit invitation that is currently in progress or already done",
-          );
-        }
-
-        return await ctx.db.wwqInvitation.update({
-          where: { id },
+        // Atomic guard: only PENDING invitations can be edited
+        const { count } = await ctx.db.wwqInvitation.updateMany({
+          where: { id, status: "PENDING" },
           data,
+        });
+
+        if (count === 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Undangan tidak dapat diedit setelah tes dimulai.",
+          });
+        }
+
+        return await ctx.db.wwqInvitation.findUnique({
+          where: { id },
         });
       } else {
         // Create new invitation
@@ -70,7 +94,10 @@ export const wwqInvitationProtectedRouter = createTRPCRouter({
       });
 
       if (!invitation) {
-        throw new Error("Invitation not found");
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Undangan tidak ditemukan",
+        });
       }
 
       return invitation;
@@ -90,16 +117,19 @@ export const wwqInvitationProtectedRouter = createTRPCRouter({
         });
       }
 
-      if (invitation.status !== "PENDING") {
+      // Atomic guard: only PENDING invitations can be deleted
+      const { count } = await ctx.db.wwqInvitation.deleteMany({
+        where: { id: input.id, status: "PENDING" },
+      });
+
+      if (count === 0) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Cannot delete an invitation that has been started",
         });
       }
 
-      return await ctx.db.wwqInvitation.delete({
-        where: { id: input.id },
-      });
+      return invitation;
     }),
   getResult: protectedProcedure
     .input(z.string())

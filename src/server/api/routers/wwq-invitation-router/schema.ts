@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { StatusWwqInvitation } from "@prisma/client";
 
 export const wwqInvitationFormSchema = z.object({
   id: z.string().optional(),
@@ -10,7 +11,8 @@ export const invitationDetailSchema = z.object({
   id: z.string(),
   name: z.string().nullable(),
   secretKey: z.string(),
-  status: z.enum(["PENDING", "ONPROGRESS", "DONE"]),
+  status: z.nativeEnum(StatusWwqInvitation),
+  testerProfileId: z.string().nullable(),
   testerProfile: z
     .object({
       id: z.string(),

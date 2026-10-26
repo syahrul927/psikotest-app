@@ -11,13 +11,22 @@ export const wwqInvitationPublicRouter = createTRPCRouter({
 
       const invitation = await ctx.db.wwqInvitation.findFirst({
         where: { secretKey, status: "PENDING" },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          status: true,
+          testerProfileId: true,
+          createdAt: true,
+          updatedAt: true,
           testerProfile: true,
         },
       });
 
       if (!invitation) {
-        throw new Error("Invitation not found or already started");
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Undangan tidak ditemukan atau sudah dimulai",
+        });
       }
 
       // Update status to ONPROGRESS if first access
@@ -60,7 +69,7 @@ export const wwqInvitationPublicRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { invitationId, ...profileData } = input;
 
-      // Check if invitation exists and is on progress
+      // Check if invitation exists and is not already finished
       const invitation = await ctx.db.wwqInvitation.findUnique({
         where: { id: invitationId },
       });
@@ -69,6 +78,13 @@ export const wwqInvitationPublicRouter = createTRPCRouter({
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Invalid Invitation",
+        });
+      }
+
+      if (invitation.status === "DONE") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Undangan sudah selesai!",
         });
       }
 
@@ -88,11 +104,20 @@ export const wwqInvitationPublicRouter = createTRPCRouter({
       const updatedInvitation = await ctx.db.wwqInvitation.update({
         where: { id: invitationId },
         data: { testerProfileId: testerProfile.id, status: "ONPROGRESS" },
+        select: {
+          id: true,
+          name: true,
+          status: true,
+          testerProfileId: true,
+          createdAt: true,
+          updatedAt: true,
+        },
       });
 
       return { success: true, invitation: updatedInvitation };
     }),
-  // Check invitation access for testing
+  // Guest entry gate: validates invitation id + secret key and tells the
+  // guest UI whether the profile form (step 0) or the test (step 1) comes next
   confirmationSecretKey: publicProcedure
     .input(
       z.object({
@@ -126,7 +151,10 @@ export const wwqInvitationPublicRouter = createTRPCRouter({
       });
 
       if (!invitation) {
-        throw new Error("Invitation not found");
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Undangan tidak ditemukan",
+        });
       }
 
       return {
