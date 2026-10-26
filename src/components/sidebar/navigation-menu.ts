@@ -4,6 +4,7 @@ import {
   BrainCogIcon,
   CalculatorIcon,
   HomeIcon,
+  HelpCircleIcon,
   Settings,
   UsersIcon,
   BarChartHorizontalIcon,
@@ -33,7 +34,7 @@ export const NavigationMainConstant: NavigationType[] = [
   {
     title: "Psikotest WWQ",
     url: PAGE_URLS.WWQ_INVITATION,
-    icon: BarChartHorizontalIcon,
+    icon: HelpCircleIcon,
   },
 ];
 export const NavigationSecondaryConstant: NavigationType[] = [
