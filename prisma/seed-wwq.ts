@@ -1,5 +1,9 @@
 // Seeds WwqQuestion from docs/wwq-data/wwq-questions.json (extracted from docs/WWQ.xlsx).
-// Idempotent: upserts by `order`. Run manually: node via tsc build, or tsx if available.
+// Idempotent: upserts by `order` in one transaction. Run from repo root:
+//   ./node_modules/.bin/tsc --strict --target es2022 --module commonjs \
+//     --moduleResolution node --esModuleInterop --skipLibCheck \
+//     --outDir /tmp/wwqseed prisma/seed-wwq.ts \
+//   && NODE_PATH="$PWD/node_modules" node /tmp/wwqseed/seed-wwq.js
 import { PrismaClient } from "@prisma/client";
 import fs from "node:fs";
 import path from "node:path";
@@ -24,21 +28,25 @@ async function main() {
   if (questions.length !== 75) {
     throw new Error(`Expected 75 questions, got ${questions.length}`);
   }
-
-  for (const q of questions) {
-    await prisma.wwqQuestion.upsert({
-      where: { order: q.no },
-      create: { order: q.no, description: q.text },
-      update: { description: q.text },
-    });
+  if (new Set(questions.map((q) => q.no)).size !== 75) {
+    throw new Error("Fixture has duplicate question numbers");
   }
-  const count = await prisma.wwqQuestion.count();
-  console.log(`Seeded wwq questions: ${count}`);
+
+  await prisma.$transaction(
+    questions.map((q) =>
+      prisma.wwqQuestion.upsert({
+        where: { order: q.no },
+        create: { order: q.no, description: q.text },
+        update: { description: q.text },
+      }),
+    ),
+  );
+  console.log(`Seeded wwq questions: ${questions.length}`);
 }
 
 main()
   .catch((e) => {
     console.error(e);
-    process.exit(1);
+    process.exitCode = 1;
   })
   .finally(() => prisma.$disconnect());
