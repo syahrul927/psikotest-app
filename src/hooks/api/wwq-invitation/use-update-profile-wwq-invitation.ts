@@ -9,5 +9,8 @@ export const useUpdateProfileWwqInvitation = (
       toast.success("Data berhasil disimpan, silahkan mengerjakan test");
       onSuccessCallback();
     },
+    onError: (e) => {
+      toast.error("Oops..", { description: e.message });
+    },
   });
 };

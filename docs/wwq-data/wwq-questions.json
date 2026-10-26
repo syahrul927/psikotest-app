@@ -2,15 +2,6 @@
  {
   "no": 1,
   "text": "Apa sdr. selalu takut bahwa orang akan membentak sdr.?",
-  "scales": [
-   1,
-   2,
-   3,
-   4,
-   6,
-   7,
-   8
-  ],
   "items": [
    {
     "scale": 1,
@@ -25,15 +16,6 @@
  {
   "no": 2,
   "text": "Apakah sdr. Takut jika berada dalam gelap?",
-  "scales": [
-   1,
-   2,
-   3,
-   4,
-   6,
-   7,
-   8
-  ],
   "items": [
    {
     "scale": 1,
@@ -44,15 +26,6 @@
  {
   "no": 3,
   "text": "Apakah sdr. Takut akan bunyi gledek?",
-  "scales": [
-   1,
-   2,
-   3,
-   4,
-   6,
-   7,
-   8
-  ],
   "items": [
    {
     "scale": 2,
@@ -63,15 +36,6 @@
  {
   "no": 4,
   "text": "Apakah sdr. Takut air?",
-  "scales": [
-   1,
-   2,
-   3,
-   4,
-   6,
-   7,
-   8
-  ],
   "items": [
    {
     "scale": 2,
@@ -82,15 +46,6 @@
  {
   "no": 5,
   "text": "Apakah sdr. Takut melalui sebuah terowongan?",
-  "scales": [
-   1,
-   2,
-   3,
-   4,
-   6,
-   7,
-   8
-  ],
   "items": [
    {
     "scale": 2,
@@ -101,15 +56,6 @@
  {
   "no": 6,
   "text": "Apakah sdr. Takut juga apabila sdr. Melewati sebuah sungai?",
-  "scales": [
-   1,
-   2,
-   3,
-   4,
-   6,
-   7,
-   8
-  ],
   "items": [
    {
     "scale": 2,
@@ -120,15 +66,6 @@
  {
   "no": 7,
   "text": "Pernahkah timbul keinginan pada sdr. Untuk melompat kedalam air jika sdr. Melalui sebuah jembatan?",
-  "scales": [
-   1,
-   2,
-   3,
-   4,
-   6,
-   7,
-   8
-  ],
   "items": [
    {
     "scale": 2,
@@ -139,15 +76,6 @@
  {
   "no": 8,
   "text": "Jika dibandingkan dengan orang-orang lain apakah saudara sering mengalami rasa takut?",
-  "scales": [
-   1,
-   2,
-   3,
-   4,
-   6,
-   7,
-   8
-  ],
   "items": [
    {
     "scale": 1,
@@ -158,10 +86,6 @@
  {
   "no": 9,
   "text": "Apakah sdr. Merasa takut pada waktu tengah malam?",
-  "scales": [
-   1,
-   6
-  ],
   "items": [
    {
     "scale": 1,
@@ -176,10 +100,6 @@
  {
   "no": 10,
   "text": "Apakah sdr. Pada malam hari mendengarkan bunyi-bunyi yang menakutkan?",
-  "scales": [
-   1,
-   6
-  ],
   "items": [
    {
     "scale": 1,
@@ -194,9 +114,6 @@
  {
   "no": 11,
   "text": "Apakah sdr. Kadang-kadang mimpi tentang orang-orang yang mati?",
-  "scales": [
-   1
-  ],
   "items": [
    {
     "scale": 1,
@@ -207,9 +124,6 @@
  {
   "no": 12,
   "text": "pernahkah sdr. Mengigit jari kuku sdr. Sedemikian rupa sehingga sdr. Merasa kesakitan?",
-  "scales": [
-   1
-  ],
   "items": [
    {
     "scale": 1,
@@ -220,9 +134,6 @@
  {
   "no": 13,
   "text": "Apakah sdr. Kadang-kadang menganggap bila sdr. Sedang meluap atau marah?",
-  "scales": [
-   1
-  ],
   "items": [
    {
     "scale": 1,
@@ -233,9 +144,6 @@
  {
   "no": 14,
   "text": "Dapatkah sdr. Lama duduk dengan tenang?",
-  "scales": [
-   7
-  ],
   "items": [
    {
     "scale": 7,
@@ -246,9 +154,6 @@
  {
   "no": 15,
   "text": "Apakah sdr. Mempunyai kebiasaan untuk menggerak-gerakan kepala, leher, bahu sdr.?",
-  "scales": [
-   7
-  ],
   "items": [
    {
     "scale": 7,
@@ -259,9 +164,6 @@
  {
   "no": 16,
   "text": "Apakah anda senang mengganti-ganti pekerjaan/sekolah?",
-  "scales": [
-   7
-  ],
   "items": [
    {
     "scale": 7,
@@ -272,9 +174,6 @@
  {
   "no": 17,
   "text": "Seringkah orang mengatakan kepada sdr. Bahwa saudara orang pelupa?",
-  "scales": [
-   7
-  ],
   "items": [
    {
     "scale": 7,
@@ -285,9 +184,6 @@
  {
   "no": 18,
   "text": "Sukakah saudara untuk waktu yang agak lama memainkan permainan yang sama?",
-  "scales": [
-   7
-  ],
   "items": [
    {
     "scale": 7,
@@ -298,10 +194,6 @@
  {
   "no": 19,
   "text": "Adakah orang yang kadang-kadang demikian menganggu sdr. Hingga sdr. Menangis?",
-  "scales": [
-   1,
-   5
-  ],
   "items": [
    {
     "scale": 1,
@@ -316,10 +208,6 @@
  {
   "no": 20,
   "text": "Sanggupkah sdr. Menahan sakit seperti orang lain lamanya?",
-  "scales": [
-   1,
-   8
-  ],
   "items": [
    {
     "scale": 1,
@@ -334,9 +222,6 @@
  {
   "no": 21,
   "text": "cukup tahankah sdr. Melihat darah?",
-  "scales": [
-   1
-  ],
   "items": [
    {
     "scale": 1,
@@ -347,9 +232,6 @@
  {
   "no": 22,
   "text": "Seringkah sdr. Merasa sakit?",
-  "scales": [
-   5
-  ],
   "items": [
    {
     "scale": 5,
@@ -360,9 +242,6 @@
  {
   "no": 23,
   "text": "Seringkah sdr. Mempunyai perasaan bahwa sdr. Tak dapat bernafas lagi?",
-  "scales": [
-   5
-  ],
   "items": [
    {
     "scale": 5,
@@ -373,9 +252,6 @@
  {
   "no": 24,
   "text": "Apakah sdr. Pada umumnya merasa sungguh-sungguh sehat?",
-  "scales": [
-   5
-  ],
   "items": [
    {
     "scale": 5,
@@ -386,10 +262,6 @@
  {
   "no": 25,
   "text": "Apakah sdr. Masih merasa salah setiap kali sdr. Bangun pada pagi hari?",
-  "scales": [
-   2,
-   5
-  ],
   "items": [
    {
     "scale": 2,
@@ -404,10 +276,6 @@
  {
   "no": 26,
   "text": "apakah sdr. Selalu merasa lelah?",
-  "scales": [
-   2,
-   5
-  ],
   "items": [
    {
     "scale": 2,
@@ -422,10 +290,6 @@
  {
   "no": 27,
   "text": "seringkah sdr. Merasa jemu?",
-  "scales": [
-   3,
-   5
-  ],
   "items": [
    {
     "scale": 3,
@@ -440,9 +304,6 @@
  {
   "no": 28,
   "text": "Seringkah sdr. Merasa sakit kepala?",
-  "scales": [
-   5
-  ],
   "items": [
    {
     "scale": 5,
@@ -453,9 +314,6 @@
  {
   "no": 29,
   "text": "Adakah makanan yang sdr. Tidak dapat memakannya",
-  "scales": [
-   5
-  ],
   "items": [
    {
     "scale": 5,
@@ -466,9 +324,6 @@
  {
   "no": 30,
   "text": "apakah makanan tersebut sdr. Benci hingga sdr. Tak dapat memakannya?",
-  "scales": [
-   5
-  ],
   "items": [
    {
     "scale": 5,
@@ -479,10 +334,6 @@
  {
   "no": 31,
   "text": "Apakah sdr. Umumnya nyenyak tidur?",
-  "scales": [
-   5,
-   6
-  ],
   "items": [
    {
     "scale": 5,
@@ -497,9 +348,6 @@
  {
   "no": 32,
   "text": "Apakah sdr. Selalu tahu pasti apa  yang sdr. Kehendaki?",
-  "scales": [
-   2
-  ],
   "items": [
    {
     "scale": 2,
@@ -510,9 +358,6 @@
  {
   "no": 33,
   "text": "Sukarkah bagi sdr. Untuk memutuskan sesuatu?",
-  "scales": [
-   2
-  ],
   "items": [
    {
     "scale": 2,
@@ -523,10 +368,6 @@
  {
   "no": 34,
   "text": "Apakah sdr. Percahaya pada tahayul?",
-  "scales": [
-   1,
-   2
-  ],
   "items": [
    {
     "scale": 1,
@@ -541,11 +382,6 @@
  {
   "no": 35,
   "text": "Pernahkah sdr. Mempunyai keinginan untuk lari dari rumah?",
-  "scales": [
-   3,
-   4,
-   7
-  ],
   "items": [
    {
     "scale": 3,
@@ -564,9 +400,6 @@
  {
   "no": 36,
   "text": "Pernahkah sdr. Mempunyai perasaan seakan-akan ada yang mendorong anda untuk melarikan diri?",
-  "scales": [
-   6
-  ],
   "items": [
    {
     "scale": 6,
@@ -577,9 +410,6 @@
  {
   "no": 37,
   "text": "Pernahkah sdr. Lari dari rumah?",
-  "scales": [
-   5
-  ],
   "items": [
    {
     "scale": 5,
@@ -590,9 +420,6 @@
  {
   "no": 38,
   "text": "Pernahkah sdr. Takut untuk menyeberang jalan atau melalui lapangan yang luas?",
-  "scales": [
-   2
-  ],
   "items": [
    {
     "scale": 2,
@@ -603,9 +430,6 @@
  {
   "no": 39,
   "text": "Apakah sdr. Kadang-kadang merasa takut untuk duduk dalam suatu ruangan yang tertutup?",
-  "scales": [
-   2
-  ],
   "items": [
    {
     "scale": 2,
@@ -616,10 +440,6 @@
  {
   "no": 40,
   "text": "Apakah sdr. Takut sekali dengan api?",
-  "scales": [
-   1,
-   2
-  ],
   "items": [
    {
     "scale": 1,
@@ -634,9 +454,6 @@
  {
   "no": 41,
   "text": "Apakah sdr. Kadang-kadang takut menyalakan api?",
-  "scales": [
-   2
-  ],
   "items": [
    {
     "scale": 2,
@@ -647,9 +464,6 @@
  {
   "no": 42,
   "text": "Apakah sdr. Biasanya melihat dahulu kekolong tempat tidur sebelum sdr. Pergi untuk tidur?",
-  "scales": [
-   2
-  ],
   "items": [
    {
     "scale": 2,
@@ -660,10 +474,6 @@
  {
   "no": 43,
   "text": "Senangkah sdr. Bermain-main dengan orang lain?",
-  "scales": [
-   3,
-   4
-  ],
   "items": [
    {
     "scale": 3,
@@ -678,10 +488,6 @@
  {
   "no": 44,
   "text": "Apakah sdr. Lebih suka bermain sendiri daripada dengan orang lain?",
-  "scales": [
-   3,
-   4
-  ],
   "items": [
    {
     "scale": 3,
@@ -696,9 +502,6 @@
  {
   "no": 45,
   "text": "Apakah orang lain setuju jika sdr. Bermain dengan mereka?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -709,10 +512,6 @@
  {
   "no": 46,
   "text": "Seringkah sdr. Menjadi marah?",
-  "scales": [
-   3,
-   6
-  ],
   "items": [
    {
     "scale": 3,
@@ -727,9 +526,6 @@
  {
   "no": 47,
   "text": "Pada waktu bermain-main apakah sdr. Selalu memerintah?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -740,9 +536,6 @@
  {
   "no": 48,
   "text": "Pada umumnya apakah sdr. Merasa bahagia?",
-  "scales": [
-   3
-  ],
   "items": [
    {
     "scale": 3,
@@ -753,9 +546,6 @@
  {
   "no": 49,
   "text": "adakah kalanya merasa tidak sama dengan orang-orang lain?",
-  "scales": [
-   3
-  ],
   "items": [
    {
     "scale": 3,
@@ -766,9 +556,6 @@
  {
   "no": 50,
   "text": "Adakah kalanya anda merasa bahwa tidak ada orang yang mengerti dengan kondisi anda?",
-  "scales": [
-   3
-  ],
   "items": [
    {
     "scale": 3,
@@ -779,9 +566,6 @@
  {
   "no": 51,
   "text": "Apakah sdr. Mempunyai idaman untuk mempunyai penghidupan yang lain disamping penghidupan sehari-hari?",
-  "scales": [
-   3
-  ],
   "items": [
    {
     "scale": 3,
@@ -792,9 +576,6 @@
  {
   "no": 52,
   "text": "pernahkah sdr. Membayangkan diri sdr. Sebagai anak pungut, dan sukarkah bagi sdr.untuk melepaskan diri dari bayangan ini?",
-  "scales": [
-   3
-  ],
   "items": [
    {
     "scale": 3,
@@ -805,10 +586,6 @@
  {
   "no": 53,
   "text": "Adakah bayangan-bayangan lain yang serupa ini?",
-  "scales": [
-   3,
-   4
-  ],
   "items": [
    {
     "scale": 3,
@@ -823,10 +600,6 @@
  {
   "no": 54,
   "text": "Seringkah sdr. Diganggu oleh bayangan-bayangan bahwa benda-benda yang ada disekitar sdr. Dalam kenyataannya tidak ada?",
-  "scales": [
-   3,
-   5
-  ],
   "items": [
    {
     "scale": 3,
@@ -841,9 +614,6 @@
  {
   "no": 55,
   "text": "Mudahkah sdr. Mendapatkan teman?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -854,9 +624,6 @@
  {
   "no": 56,
   "text": "Seringkah sdr. Merasa akan melakukan tindakan-tindakan yang buruk?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -867,9 +634,6 @@
  {
   "no": 57,
   "text": "Apakah sdr. Yakin bahwa sdr. Disukai orang-orang  sebagaimana orang lain?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -880,9 +644,6 @@
  {
   "no": 58,
   "text": "Adakah kalanya sdr. Merasa yakin bahwa sdr. Tak mencintai seorangpun?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -893,9 +654,6 @@
  {
   "no": 59,
   "text": "Apakah sdr. Sukar mengikuti keadaan di tempat kerja/sekolah?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -906,9 +664,6 @@
  {
   "no": 60,
   "text": "Apakah keluarga sdr. Bijaksana terhadap sdr.?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -919,9 +674,6 @@
  {
   "no": 61,
   "text": "Apakah guru/atasan sdr. Bijaksana terhadap anda?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -932,9 +684,6 @@
  {
   "no": 62,
   "text": "Apakah sdr. Sering diganggu oleh bayangan bahwa sdr. Diikuti orang?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -945,9 +694,6 @@
  {
   "no": 63,
   "text": "Seringkah sdr. Mempunyai bayangan bahwa ada orang yang hendak berbuat jahat terhadap sdr.?",
-  "scales": [
-   4
-  ],
   "items": [
    {
     "scale": 4,
@@ -958,10 +704,6 @@
  {
   "no": 64,
   "text": "Apakah sdr. Jadi gusar jika orang tak melakukan apa yang sdr. Kehendaki?",
-  "scales": [
-   4,
-   6
-  ],
   "items": [
    {
     "scale": 4,
@@ -976,9 +718,6 @@
  {
   "no": 65,
   "text": "Pernahkah sdr. Merusak barang-barang pada waktu sdr. Marah?",
-  "scales": [
-   6
-  ],
   "items": [
    {
     "scale": 6,
@@ -989,9 +728,6 @@
  {
   "no": 66,
   "text": "Seringkah sdr. Marah-marah tanpa alasan?",
-  "scales": [
-   6
-  ],
   "items": [
    {
     "scale": 6,
@@ -1002,9 +738,6 @@
  {
   "no": 67,
   "text": "Pernahkah sdr. Jatuh pingsan?",
-  "scales": [
-   6
-  ],
   "items": [
    {
     "scale": 6,
@@ -1015,9 +748,6 @@
  {
   "no": 68,
   "text": "seringkah sdr. Jatuh pingsan?",
-  "scales": [
-   6
-  ],
   "items": [
    {
     "scale": 6,
@@ -1028,9 +758,6 @@
  {
   "no": 69,
   "text": "Adakah kalanya sdr. Tak dapat melihat sesuatu dengan baik?",
-  "scales": [
-   6
-  ],
   "items": [
    {
     "scale": 6,
@@ -1041,9 +768,6 @@
  {
   "no": 70,
   "text": "Sukakah sdr. Pada suatu pekerjaan dimana dilakukan pembunuhan binatang?",
-  "scales": [
-   8
-  ],
   "items": [
    {
     "scale": 8,
@@ -1054,9 +778,6 @@
  {
   "no": 71,
   "text": "Pernahkah sdr. Mempunyai keinginan untuk membuat orang marah?",
-  "scales": [
-   8
-  ],
   "items": [
    {
     "scale": 8,
@@ -1067,9 +788,6 @@
  {
   "no": 72,
   "text": "senangkah sdr. Menganggu orang lain sedemikian hingga ia menangis?",
-  "scales": [
-   8
-  ],
   "items": [
    {
     "scale": 8,
@@ -1080,9 +798,6 @@
  {
   "no": 73,
   "text": "Pernahkah timbul perasaan senang pada sdr. Jika sdr. Dapat menyakiti orang lain?",
-  "scales": [
-   8
-  ],
   "items": [
    {
     "scale": 8,
@@ -1093,9 +808,6 @@
  {
   "no": 74,
   "text": "Pernahkah sdr.merasa senang jika sdr. Menyiksa seekor binatang?",
-  "scales": [
-   8
-  ],
   "items": [
    {
     "scale": 8,
@@ -1106,9 +818,6 @@
  {
   "no": 75,
   "text": "Pernahkah sdr. Mempunyai keinginan untuk mencuri?",
-  "scales": [
-   8
-  ],
   "items": [
    {
     "scale": 8,
