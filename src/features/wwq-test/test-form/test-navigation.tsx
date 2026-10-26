@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 interface TestNavigationProps {
   canGoPrevious: boolean;
   canGoNext: boolean;
+  isSubmitting: boolean;
   currentPageAnswered: boolean;
   currentQuestionsAnswered: number;
   currentQuestionsTotal: number;
@@ -16,6 +17,7 @@ interface TestNavigationProps {
 const WwqTestNavigation = ({
   canGoPrevious,
   canGoNext,
+  isSubmitting,
   currentPageAnswered,
   currentQuestionsAnswered,
   currentQuestionsTotal,
@@ -49,7 +51,7 @@ const WwqTestNavigation = ({
 
           <Button
             onClick={onNext}
-            disabled={!currentPageAnswered}
+            disabled={!currentPageAnswered || isSubmitting}
             className="group flex items-center gap-2"
           >
             {canGoNext ? "Selanjutnya" : "Selesai"}

@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle, Clock, Mail, Phone } from "lucide-react";
+import { CheckCircle, Clock, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function WwqThanksPage() {

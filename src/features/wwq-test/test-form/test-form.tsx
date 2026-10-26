@@ -21,19 +21,52 @@ interface TestFormProps {
 
 const ID_TOP_WRAPPER = "top-wrapper";
 
+const readStoredAnswers = (key: string): Map<string, boolean> => {
+  // Guard for SSR: localStorage only exists in the browser
+  if (typeof window === "undefined") return new Map();
+  const savedAnswers = localStorage.getItem(key);
+  if (!savedAnswers) return new Map();
+  try {
+    // parse with type assertion
+    const parsed = JSON.parse(savedAnswers) as Record<string, boolean>;
+
+    // validate that it's actually an object of question id -> answer
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      !Array.isArray(parsed) &&
+      Object.values(parsed).every((v) => typeof v === "boolean")
+    ) {
+      return new Map(Object.entries(parsed));
+    }
+  } catch (e) {
+    console.error("Failed to parse saved answers", e);
+  }
+  return new Map();
+};
+
 const WwqTestForm = ({ invitationId }: TestFormProps) => {
   const { data, isLoading: loadingGetQuestions } = useFindAllQuestions();
   const { data: profileTester, isLoading: loadingGetProfile } =
     useGetProfileWwqInvitation(invitationId);
   const router = useRouter();
 
-  const { mutate: submitAnswers } = useSubmitAnswerWwqTest(() =>
-    router.push(PAGE_URLS.WWQ_THANKS),
-  );
+  // Drafts are scoped per invitation: WWQ question cuids are identical across
+  // invitations, so a shared lab browser must not restore another tester's
+  // answers under the current invitation.
+  const storageKey = `wwq-responses-${invitationId}`;
+
+  const { mutate: submitAnswers, isPending: isSubmitting } =
+    useSubmitAnswerWwqTest(() => {
+      localStorage.removeItem(storageKey);
+      router.push(PAGE_URLS.WWQ_THANKS);
+    });
 
   const isLoading = useMemo(() => {
-    return [loadingGetQuestions, loadingGetProfile].some((b) => b);
-  }, [loadingGetProfile, loadingGetQuestions]);
+    return [loadingGetQuestions, loadingGetProfile, isSubmitting].some(
+      (b) => b,
+    );
+  }, [isSubmitting, loadingGetProfile, loadingGetQuestions]);
 
   const questions: WwqTestQuestionType[] = useMemo(() => {
     return data ?? [];
@@ -41,7 +74,11 @@ const WwqTestForm = ({ invitationId }: TestFormProps) => {
 
   const participantName = profileTester?.name;
   const [currentPage, setCurrentPage] = useState(0);
-  const [answers, setAnswers] = useState<Map<string, boolean>>(new Map());
+  // Lazy initializer restores the draft before the first persist write,
+  // so an empty {} can never clobber a stored draft.
+  const [answers, setAnswers] = useState<Map<string, boolean>>(() =>
+    readStoredAnswers(storageKey),
+  );
 
   const questionsPerPage = 10;
   const totalPages = Math.ceil(questions.length / questionsPerPage);
@@ -52,35 +89,13 @@ const WwqTestForm = ({ invitationId }: TestFormProps) => {
 
   const progressPercentage = (answers.size / questions.length) * 100;
 
-  // Auto-save answers to localStorage (question id -> boolean)
-  useEffect(() => {
-    const savedAnswers = localStorage.getItem("wwq-responses");
-    if (savedAnswers) {
-      try {
-        // parse with type assertion
-        const parsed = JSON.parse(savedAnswers) as Record<string, boolean>;
-
-        // validate that it's actually an object of question id -> answer
-        if (
-          parsed &&
-          typeof parsed === "object" &&
-          !Array.isArray(parsed) &&
-          Object.values(parsed).every((v) => typeof v === "boolean")
-        ) {
-          setAnswers(new Map(Object.entries(parsed)));
-        }
-      } catch (e) {
-        console.error("Failed to parse saved answers", e);
-      }
-    }
-  }, []);
-
+  // Auto-save answers to localStorage, scoped per invitation (see storageKey)
   useEffect(() => {
     localStorage.setItem(
-      "wwq-responses",
+      storageKey,
       JSON.stringify(Object.fromEntries(answers)),
     );
-  }, [answers]);
+  }, [answers, storageKey]);
 
   const handleResponse = (questionId: string, answer: boolean) => {
     setAnswers((prev) => new Map(prev.set(questionId, answer)));
@@ -118,9 +133,11 @@ const WwqTestForm = ({ invitationId }: TestFormProps) => {
   }, [currentPage]);
 
   if (isLoading) {
-    <div className="flex h-screen w-screen flex-row items-center justify-center gap-x-4 text-xl">
-      <LoaderSpinner />
-    </div>;
+    return (
+      <div className="flex h-screen w-screen flex-row items-center justify-center gap-x-4 text-xl">
+        <LoaderSpinner />
+      </div>
+    );
   }
   return (
     <WwqWrapper>
@@ -159,6 +176,7 @@ const WwqTestForm = ({ invitationId }: TestFormProps) => {
         <TestNavigation
           canGoPrevious={canGoPrevious}
           canGoNext={canGoNext}
+          isSubmitting={isSubmitting}
           currentPageAnswered={currentPageAnswered}
           currentQuestionsAnswered={
             currentQuestions.filter((q) => answers.has(q.id)).length
