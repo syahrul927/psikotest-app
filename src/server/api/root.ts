@@ -23,6 +23,7 @@ import {
   wwqInvitationProtectedRouter,
   wwqInvitationPublicRouter,
 } from "./routers/wwq-invitation-router";
+import { wwqTestPublicRouter } from "./routers/wwq-test-router";
 
 /**
  * This is the primary router for your server.
@@ -46,6 +47,7 @@ export const appRouter = createTRPCRouter({
   papiKostickTest: papiKostickTestPublicRouter,
   wwqInvitation: wwqInvitationProtectedRouter,
   publicWwqInvitation: wwqInvitationPublicRouter,
+  wwqTest: wwqTestPublicRouter,
 });
 
 // export type definition of API
