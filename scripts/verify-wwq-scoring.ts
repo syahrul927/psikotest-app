@@ -37,6 +37,11 @@ const zero = new Map<number, boolean>();
 for (let i = 1; i <= 75; i++) zero.set(i, false);
 const z = calculateWWQScores(zero);
 assert.ok(Number.isFinite(z.overallValue));
+assert.ok(
+  z.aspects.every(
+    (a) => a.category === "Normal" || a.category === "Kecendrungan Pathologis",
+  ),
+);
 
 // category thresholds
 assert.strictEqual(wwqCategory(119), "Normal");
