@@ -1,4 +1,5 @@
 import type { NavigationType } from "@/components/sidebar/types";
+import { wwqSettingsEnabled } from "@/lib/feature-flags";
 import { PAGE_URLS } from "@/lib/page-url";
 import {
   BrainCogIcon,
@@ -43,11 +44,15 @@ export const NavigationSecondaryConstant: NavigationType[] = [
     url: PAGE_URLS.IST_SETTINGS,
     icon: Settings,
   },
-  {
-    title: "WWQ Settings",
-    url: PAGE_URLS.WWQ_SETTINGS,
-    icon: Settings,
-  },
+  ...(wwqSettingsEnabled
+    ? [
+        {
+          title: "WWQ Settings",
+          url: PAGE_URLS.WWQ_SETTINGS,
+          icon: Settings,
+        },
+      ]
+    : []),
   {
     title: "User Akses",
     url: PAGE_URLS.USER_ACCESS,
