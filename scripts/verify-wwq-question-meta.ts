@@ -28,7 +28,10 @@ for (let order = 1; order <= WWQ_TOTAL_QUESTIONS; order++) {
   total += getWwqQuestionMeta(order).length;
 }
 assert(WWQ_KEY.length === 94, `WWQ_KEY length ${WWQ_KEY.length}, expected 94`);
-assert(total === WWQ_KEY.length, `meta entries ${total} !== WWQ_KEY ${WWQ_KEY.length}`);
+assert(
+  total === WWQ_KEY.length,
+  `meta entries ${total} !== WWQ_KEY ${WWQ_KEY.length}`,
+);
 
 // 3. per-order deep comparison: aspect numbers, inverted flags, resolved names
 const nameByNo = new Map(WWQ_ASPECTS.map((a) => [a.no, a.name] as const));
@@ -62,7 +65,9 @@ assert(
 );
 const o14 = getWwqQuestionMeta(14);
 assert(
-  o14.length === 1 && o14[0]!.inverted === true && o14[0]!.aspectName === "Ketidakstabilan Emosi",
+  o14.length === 1 &&
+    o14[0]!.inverted === true &&
+    o14[0]!.aspectName === "Ketidakstabilan Emosi",
   "order 14 should be single-aspect Ketidakstabilan Emosi scored on TIDAK",
 );
 
