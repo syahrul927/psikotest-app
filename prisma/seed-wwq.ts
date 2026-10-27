@@ -1,5 +1,7 @@
 // Seeds WwqQuestion from docs/wwq-data/wwq-questions.json (extracted from docs/WWQ.xlsx).
-// Idempotent: upserts by `order` in one transaction. Run from repo root:
+// Install-only: creates orders that are missing and NEVER overwrites existing
+// rows — admin edits made in WWQ Settings live in the DB. To restore JSON text
+// for an order, delete that row first (prisma studio), then re-run. Run from repo root:
 //   ./node_modules/.bin/tsc --strict --target es2022 --module commonjs \
 //     --moduleResolution node --esModuleInterop --skipLibCheck \
 //     --outDir /tmp/wwqseed prisma/seed-wwq.ts \
@@ -32,16 +34,24 @@ async function main() {
     throw new Error("Fixture has duplicate question numbers");
   }
 
+  const existing = await prisma.wwqQuestion.findMany({
+    select: { order: true },
+  });
+  const existingOrders = new Set(existing.map((q) => q.order));
+  const missing = questions.filter((q) => !existingOrders.has(q.no));
+
   await prisma.$transaction(
-    questions.map((q) =>
-      prisma.wwqQuestion.upsert({
-        where: { order: q.no },
-        create: { order: q.no, description: q.text },
-        update: { description: q.text },
+    missing.map((q) =>
+      prisma.wwqQuestion.create({
+        data: { order: q.no, description: q.text },
       }),
     ),
   );
-  console.log(`Seeded wwq questions: ${questions.length}`);
+  console.log(
+    `Seeded wwq questions: created ${missing.length}, skipped ${
+      questions.length - missing.length
+    } (existing rows keep DB text)`,
+  );
 }
 
 main()
