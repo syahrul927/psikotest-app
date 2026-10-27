@@ -13,6 +13,7 @@ import { localDate } from "@/lib/date-utils";
 import { WwqParticipantInfoCard } from "./participant-info-card";
 import { WwqRadarChart } from "./radar-chart";
 import { WwqCategoryBadge } from "./category-badge";
+import { WwqDiagnosisCard } from "./diagnosis-card";
 import { WwqResultTable } from "./table-card";
 import { WwqDetailAnswerCard } from "./detail-answer-card";
 
@@ -111,6 +112,9 @@ export const WwqInvitationResultWrapper = () => {
       <WwqRadarChart chartData={chartData} isLoading={isLoading} />
       <div className="md:col-span-2">
         <WwqOverallResultCard />
+      </div>
+      <div className="md:col-span-2">
+        <WwqDiagnosisCard />
       </div>
       <div className="md:col-span-2">
         <WwqResultTable

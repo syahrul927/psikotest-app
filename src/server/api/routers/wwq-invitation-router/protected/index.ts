@@ -13,21 +13,6 @@ export const wwqInvitationProtectedRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
 
-      // Secret key is used by the guest link and must stay unique
-      const duplicate = await ctx.db.wwqInvitation.findFirst({
-        where: {
-          secretKey: data.secretKey,
-          ...(id ? { id: { not: id } } : {}),
-        },
-      });
-
-      if (duplicate) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Secret key sudah digunakan oleh undangan lain",
-        });
-      }
-
       if (id) {
         // Update existing invitation
         const existing = await ctx.db.wwqInvitation.findUnique({
