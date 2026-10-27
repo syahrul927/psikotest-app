@@ -44,6 +44,11 @@ export const NavigationSecondaryConstant: NavigationType[] = [
     icon: Settings,
   },
   {
+    title: "WWQ Settings",
+    url: PAGE_URLS.WWQ_SETTINGS,
+    icon: Settings,
+  },
+  {
     title: "User Akses",
     url: PAGE_URLS.USER_ACCESS,
     icon: UsersIcon,

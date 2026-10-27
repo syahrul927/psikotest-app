@@ -52,6 +52,7 @@ export const PAGE_URLS = {
   // WWQ
   WWQ_INVITATION: "/wwq-invitation",
   WWQ_INVITATION_RESULT: (id: string) => `/wwq-invitation/${id}`,
+  WWQ_SETTINGS: "/wwq-settings",
 
   // public WWQ
   WWQ_TEST_CONFIRMATION: (id: string) => `/guest/wwq/${id}/confirmation`,
