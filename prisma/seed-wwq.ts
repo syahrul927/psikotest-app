@@ -1,7 +1,10 @@
 // Seeds WwqQuestion from docs/wwq-data/wwq-questions.json (extracted from docs/WWQ.xlsx).
 // Install-only: creates orders that are missing and NEVER overwrites existing
 // rows — admin edits made in WWQ Settings live in the DB. To restore JSON text
-// for an order, delete that row first (prisma studio), then re-run. Run from repo root:
+// for an order, edit that row's description (WWQ Settings or SQL UPDATE).
+// Do NOT delete answered rows: WwqAnswer.questionId is ON DELETE RESTRICT, so
+// the delete fails, and removing its answers first would destroy real test data.
+// Run from repo root:
 //   ./node_modules/.bin/tsc --strict --target es2022 --module commonjs \
 //     --moduleResolution node --esModuleInterop --skipLibCheck \
 //     --outDir /tmp/wwqseed prisma/seed-wwq.ts \
