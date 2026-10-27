@@ -122,6 +122,27 @@ export const WWQ_KEY: [number, WwqAspectNo, boolean][] = [
   [75, 8, false],
 ];
 
+export interface WwqQuestionMetaEntry {
+  aspectNo: WwqAspectNo;
+  aspectName: string;
+  inverted: boolean; // true = the scoring answer is TIDAK
+}
+
+// Read-only view of which aspects a question order feeds and which answer
+// scores it, derived purely from WWQ_KEY. Used by the WWQ Settings table so
+// admins see what a question does before editing its text. Never write to
+// this — scoring uses WWQ_KEY directly.
+export function getWwqQuestionMeta(order: number): WwqQuestionMetaEntry[] {
+  return WWQ_KEY.filter(([questionOrder]) => questionOrder === order).map(
+    ([, aspectNo, inverted]) => ({
+      aspectNo,
+      aspectName:
+        WWQ_ASPECTS.find((a) => a.no === aspectNo)?.name ?? `Aspek ${aspectNo}`,
+      inverted,
+    }),
+  );
+}
+
 export type WwqCategory =
   | "Normal"
   | "Kecendrungan Pathologis"
