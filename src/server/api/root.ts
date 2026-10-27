@@ -24,6 +24,7 @@ import {
   wwqInvitationPublicRouter,
 } from "./routers/wwq-invitation-router";
 import { wwqTestPublicRouter } from "./routers/wwq-test-router";
+import { wwqSettingsRouter } from "./routers/wwq-settings-router";
 
 /**
  * This is the primary router for your server.
@@ -48,6 +49,7 @@ export const appRouter = createTRPCRouter({
   wwqInvitation: wwqInvitationProtectedRouter,
   publicWwqInvitation: wwqInvitationPublicRouter,
   wwqTest: wwqTestPublicRouter,
+  wwqSettings: wwqSettingsRouter,
 });
 
 // export type definition of API
