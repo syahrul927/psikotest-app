@@ -79,7 +79,7 @@ export function WwqQuestionForm({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-h-[90vh] w-full overflow-y-auto md:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Edit Soal WWQ</DialogTitle>
+          <DialogTitle>Edit Soal WWQ No. {question.order}</DialogTitle>
           <DialogDescription>
             Ubah teks soal saja. Jawaban kunci, aspek, dan perhitungan skor
             tidak berubah.

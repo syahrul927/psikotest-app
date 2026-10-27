@@ -1,2 +1,2 @@
-export * from "./wwq-question-table";
-export * from "./wwq-question-form";
+export { WwqQuestionTable } from "./wwq-question-table";
+export { WwqQuestionForm } from "./wwq-question-form";
