@@ -368,3 +368,86 @@ enum StatusPapiKostickInvitation {
   ONPROGRESS
   DONE
 }
+
+enum StatusWwqInvitation {
+  PENDING
+  ONPROGRESS
+  DONE
+}
+
+model WwqTesterProfile {
+  id            String          @id @default(cuid())
+  name          String
+  phone         String
+  dateOfBirth   DateTime        @db.Timestamptz(3)
+  createdAt     DateTime        @default(now()) @db.Timestamptz(3)
+  WwqInvitation WwqInvitation[]
+}
+
+model WwqInvitation {
+  id              String              @id @default(cuid())
+  name            String?
+  secretKey       String
+  status          StatusWwqInvitation @default(PENDING)
+  testerProfileId String?
+  testerProfile   WwqTesterProfile?   @relation(fields: [testerProfileId], references: [id])
+  createdAt       DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime            @updatedAt @db.Timestamptz(3)
+  WwqAnswer       WwqAnswer[]
+  WwqResult       WwqResult?
+}
+
+model WwqQuestion {
+  id          String      @id @default(cuid())
+  order       Int         @unique
+  description String      @db.Text
+  createdAt   DateTime    @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime    @updatedAt @db.Timestamptz(3)
+  WwqAnswer   WwqAnswer[]
+}
+
+model WwqAnswer {
+  id           String        @id @default(cuid())
+  invitationId String
+  invitation   WwqInvitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     WwqQuestion   @relation(fields: [questionId], references: [id])
+  answer       Boolean
+  createdAt    DateTime      @default(now()) @db.Timestamptz(3)
+
+  @@unique([invitationId, questionId])
+  @@index([invitationId])
+  @@index([questionId])
+}
+
+model WwqResult {
+  id              String            @id @default(cuid())
+  invitationId    String            @unique
+  invitation      WwqInvitation     @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  totalWeighted   Int
+  overallValue    Float
+  category        String
+  completedAt     DateTime          @default(now()) @db.Timestamptz(3)
+  createdAt       DateTime          @default(now()) @db.Timestamptz(3)
+  updatedAt       DateTime          @updatedAt @db.Timestamptz(3)
+  WwqResultDetail WwqResultDetail[]
+
+  @@index([invitationId])
+}
+
+model WwqResultDetail {
+  id        String    @id @default(cuid())
+  resultId  String
+  result    WwqResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+  aspectNo  Int
+  aspect    String
+  rawScore  Int
+  acuan     Int
+  weighted  Int
+  percent   Float
+  category  String
+  createdAt DateTime  @default(now()) @db.Timestamptz(3)
+
+  @@unique([resultId, aspectNo])
+  @@index([resultId])
+}

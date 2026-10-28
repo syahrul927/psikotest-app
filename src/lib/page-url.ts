@@ -48,4 +48,15 @@ export const PAGE_URLS = {
     `/guest/papi-kostick/${id}/profile`,
   PAPI_KOSTICK_TEST: (id: string) => `/guest/papi-kostick/${id}/test`,
   PAPI_KOSTICK_THANKS: "/guest/papi-kostick/thanks",
+
+  // WWQ
+  WWQ_INVITATION: "/wwq-invitation",
+  WWQ_INVITATION_RESULT: (id: string) => `/wwq-invitation/${id}`,
+  WWQ_SETTINGS: "/wwq-settings",
+
+  // public WWQ
+  WWQ_TEST_CONFIRMATION: (id: string) => `/guest/wwq/${id}/confirmation`,
+  WWQ_TEST_PROFILE: (id: string) => `/guest/wwq/${id}/profile`,
+  WWQ_TEST: (id: string) => `/guest/wwq/${id}/test`,
+  WWQ_THANKS: "/guest/wwq/thanks",
 } as const;

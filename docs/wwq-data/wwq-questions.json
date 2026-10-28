@@ -1,0 +1,828 @@
+[
+ {
+  "no": 1,
+  "text": "Apa sdr. selalu takut bahwa orang akan membentak sdr.?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   },
+   {
+    "scale": 4,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 2,
+  "text": "Apakah sdr. Takut jika berada dalam gelap?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 3,
+  "text": "Apakah sdr. Takut akan bunyi gledek?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 4,
+  "text": "Apakah sdr. Takut air?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 5,
+  "text": "Apakah sdr. Takut melalui sebuah terowongan?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 6,
+  "text": "Apakah sdr. Takut juga apabila sdr. Melewati sebuah sungai?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 7,
+  "text": "Pernahkah timbul keinginan pada sdr. Untuk melompat kedalam air jika sdr. Melalui sebuah jembatan?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 8,
+  "text": "Jika dibandingkan dengan orang-orang lain apakah saudara sering mengalami rasa takut?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 9,
+  "text": "Apakah sdr. Merasa takut pada waktu tengah malam?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   },
+   {
+    "scale": 6,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 10,
+  "text": "Apakah sdr. Pada malam hari mendengarkan bunyi-bunyi yang menakutkan?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   },
+   {
+    "scale": 6,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 11,
+  "text": "Apakah sdr. Kadang-kadang mimpi tentang orang-orang yang mati?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 12,
+  "text": "pernahkah sdr. Mengigit jari kuku sdr. Sedemikian rupa sehingga sdr. Merasa kesakitan?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 13,
+  "text": "Apakah sdr. Kadang-kadang menganggap bila sdr. Sedang meluap atau marah?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 14,
+  "text": "Dapatkah sdr. Lama duduk dengan tenang?",
+  "items": [
+   {
+    "scale": 7,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 15,
+  "text": "Apakah sdr. Mempunyai kebiasaan untuk menggerak-gerakan kepala, leher, bahu sdr.?",
+  "items": [
+   {
+    "scale": 7,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 16,
+  "text": "Apakah anda senang mengganti-ganti pekerjaan/sekolah?",
+  "items": [
+   {
+    "scale": 7,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 17,
+  "text": "Seringkah orang mengatakan kepada sdr. Bahwa saudara orang pelupa?",
+  "items": [
+   {
+    "scale": 7,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 18,
+  "text": "Sukakah saudara untuk waktu yang agak lama memainkan permainan yang sama?",
+  "items": [
+   {
+    "scale": 7,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 19,
+  "text": "Adakah orang yang kadang-kadang demikian menganggu sdr. Hingga sdr. Menangis?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   },
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 20,
+  "text": "Sanggupkah sdr. Menahan sakit seperti orang lain lamanya?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": true
+   },
+   {
+    "scale": 8,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 21,
+  "text": "cukup tahankah sdr. Melihat darah?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 22,
+  "text": "Seringkah sdr. Merasa sakit?",
+  "items": [
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 23,
+  "text": "Seringkah sdr. Mempunyai perasaan bahwa sdr. Tak dapat bernafas lagi?",
+  "items": [
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 24,
+  "text": "Apakah sdr. Pada umumnya merasa sungguh-sungguh sehat?",
+  "items": [
+   {
+    "scale": 5,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 25,
+  "text": "Apakah sdr. Masih merasa salah setiap kali sdr. Bangun pada pagi hari?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   },
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 26,
+  "text": "apakah sdr. Selalu merasa lelah?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   },
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 27,
+  "text": "seringkah sdr. Merasa jemu?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": false
+   },
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 28,
+  "text": "Seringkah sdr. Merasa sakit kepala?",
+  "items": [
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 29,
+  "text": "Adakah makanan yang sdr. Tidak dapat memakannya",
+  "items": [
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 30,
+  "text": "apakah makanan tersebut sdr. Benci hingga sdr. Tak dapat memakannya?",
+  "items": [
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 31,
+  "text": "Apakah sdr. Umumnya nyenyak tidur?",
+  "items": [
+   {
+    "scale": 5,
+    "inverted": true
+   },
+   {
+    "scale": 6,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 32,
+  "text": "Apakah sdr. Selalu tahu pasti apa  yang sdr. Kehendaki?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 33,
+  "text": "Sukarkah bagi sdr. Untuk memutuskan sesuatu?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 34,
+  "text": "Apakah sdr. Percahaya pada tahayul?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   },
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 35,
+  "text": "Pernahkah sdr. Mempunyai keinginan untuk lari dari rumah?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": false
+   },
+   {
+    "scale": 4,
+    "inverted": false
+   },
+   {
+    "scale": 7,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 36,
+  "text": "Pernahkah sdr. Mempunyai perasaan seakan-akan ada yang mendorong anda untuk melarikan diri?",
+  "items": [
+   {
+    "scale": 6,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 37,
+  "text": "Pernahkah sdr. Lari dari rumah?",
+  "items": [
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 38,
+  "text": "Pernahkah sdr. Takut untuk menyeberang jalan atau melalui lapangan yang luas?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 39,
+  "text": "Apakah sdr. Kadang-kadang merasa takut untuk duduk dalam suatu ruangan yang tertutup?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 40,
+  "text": "Apakah sdr. Takut sekali dengan api?",
+  "items": [
+   {
+    "scale": 1,
+    "inverted": false
+   },
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 41,
+  "text": "Apakah sdr. Kadang-kadang takut menyalakan api?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 42,
+  "text": "Apakah sdr. Biasanya melihat dahulu kekolong tempat tidur sebelum sdr. Pergi untuk tidur?",
+  "items": [
+   {
+    "scale": 2,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 43,
+  "text": "Senangkah sdr. Bermain-main dengan orang lain?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": true
+   },
+   {
+    "scale": 4,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 44,
+  "text": "Apakah sdr. Lebih suka bermain sendiri daripada dengan orang lain?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": false
+   },
+   {
+    "scale": 4,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 45,
+  "text": "Apakah orang lain setuju jika sdr. Bermain dengan mereka?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 46,
+  "text": "Seringkah sdr. Menjadi marah?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": false
+   },
+   {
+    "scale": 6,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 47,
+  "text": "Pada waktu bermain-main apakah sdr. Selalu memerintah?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 48,
+  "text": "Pada umumnya apakah sdr. Merasa bahagia?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 49,
+  "text": "adakah kalanya merasa tidak sama dengan orang-orang lain?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 50,
+  "text": "Adakah kalanya anda merasa bahwa tidak ada orang yang mengerti dengan kondisi anda?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 51,
+  "text": "Apakah sdr. Mempunyai idaman untuk mempunyai penghidupan yang lain disamping penghidupan sehari-hari?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 52,
+  "text": "pernahkah sdr. Membayangkan diri sdr. Sebagai anak pungut, dan sukarkah bagi sdr.untuk melepaskan diri dari bayangan ini?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 53,
+  "text": "Adakah bayangan-bayangan lain yang serupa ini?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": false
+   },
+   {
+    "scale": 4,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 54,
+  "text": "Seringkah sdr. Diganggu oleh bayangan-bayangan bahwa benda-benda yang ada disekitar sdr. Dalam kenyataannya tidak ada?",
+  "items": [
+   {
+    "scale": 3,
+    "inverted": false
+   },
+   {
+    "scale": 5,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 55,
+  "text": "Mudahkah sdr. Mendapatkan teman?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 56,
+  "text": "Seringkah sdr. Merasa akan melakukan tindakan-tindakan yang buruk?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 57,
+  "text": "Apakah sdr. Yakin bahwa sdr. Disukai orang-orang  sebagaimana orang lain?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 58,
+  "text": "Adakah kalanya sdr. Merasa yakin bahwa sdr. Tak mencintai seorangpun?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 59,
+  "text": "Apakah sdr. Sukar mengikuti keadaan di tempat kerja/sekolah?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 60,
+  "text": "Apakah keluarga sdr. Bijaksana terhadap sdr.?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 61,
+  "text": "Apakah guru/atasan sdr. Bijaksana terhadap anda?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": true
+   }
+  ]
+ },
+ {
+  "no": 62,
+  "text": "Apakah sdr. Sering diganggu oleh bayangan bahwa sdr. Diikuti orang?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 63,
+  "text": "Seringkah sdr. Mempunyai bayangan bahwa ada orang yang hendak berbuat jahat terhadap sdr.?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 64,
+  "text": "Apakah sdr. Jadi gusar jika orang tak melakukan apa yang sdr. Kehendaki?",
+  "items": [
+   {
+    "scale": 4,
+    "inverted": false
+   },
+   {
+    "scale": 6,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 65,
+  "text": "Pernahkah sdr. Merusak barang-barang pada waktu sdr. Marah?",
+  "items": [
+   {
+    "scale": 6,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 66,
+  "text": "Seringkah sdr. Marah-marah tanpa alasan?",
+  "items": [
+   {
+    "scale": 6,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 67,
+  "text": "Pernahkah sdr. Jatuh pingsan?",
+  "items": [
+   {
+    "scale": 6,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 68,
+  "text": "seringkah sdr. Jatuh pingsan?",
+  "items": [
+   {
+    "scale": 6,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 69,
+  "text": "Adakah kalanya sdr. Tak dapat melihat sesuatu dengan baik?",
+  "items": [
+   {
+    "scale": 6,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 70,
+  "text": "Sukakah sdr. Pada suatu pekerjaan dimana dilakukan pembunuhan binatang?",
+  "items": [
+   {
+    "scale": 8,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 71,
+  "text": "Pernahkah sdr. Mempunyai keinginan untuk membuat orang marah?",
+  "items": [
+   {
+    "scale": 8,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 72,
+  "text": "senangkah sdr. Menganggu orang lain sedemikian hingga ia menangis?",
+  "items": [
+   {
+    "scale": 8,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 73,
+  "text": "Pernahkah timbul perasaan senang pada sdr. Jika sdr. Dapat menyakiti orang lain?",
+  "items": [
+   {
+    "scale": 8,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 74,
+  "text": "Pernahkah sdr.merasa senang jika sdr. Menyiksa seekor binatang?",
+  "items": [
+   {
+    "scale": 8,
+    "inverted": false
+   }
+  ]
+ },
+ {
+  "no": 75,
+  "text": "Pernahkah sdr. Mempunyai keinginan untuk mencuri?",
+  "items": [
+   {
+    "scale": 8,
+    "inverted": false
+   }
+  ]
+ }
+]
