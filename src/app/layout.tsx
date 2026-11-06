@@ -8,9 +8,18 @@ import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { TailwindIndicator } from "@/components/ui/tailwind-indicator";
 
+/**
+ * Search-facing copy for the app. Its SEO is deliberately not maintained here —
+ * https://selsafical.app is the site built for that — but these tags are still what Google
+ * shows for this domain, and the old description ("Capture your moments!") was left over
+ * from a different product: it described nothing a recruiter or candidate searches for.
+ * Metadata only; no routes, robots.txt, sitemap or rendering touched.
+ */
 export const metadata: Metadata = {
-  title: "Selsafical",
-  description: "Capture your moments!",
+  title: "Selsafical — Aplikasi Psikotes Online",
+  description:
+    "Aplikasi tempat kandidat mengerjakan psikotes online: Kraepelin, IST, PAPI-Kostick, dan WWQ dibuka lewat link undangan, tanpa install.",
+  applicationName: "Selsafical",
   icons: [{ rel: "icon", url: "/favicon.svg" }],
 };
 
